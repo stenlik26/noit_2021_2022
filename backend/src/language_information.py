@@ -3,15 +3,10 @@ import subprocess
 
 
 class Language(ABC):
-    def __init__(self, name: str, executable: str, file_extension: str, is_compiled: bool):
-        self.__name = name
+    def __init__(self, executable: str, file_extension: str, is_compiled: bool):
         self.__file_extension = file_extension
         self.__is_compiled = is_compiled
         self.__executable = executable
-
-    @property
-    def name(self) -> str:
-        return self.__name
 
     @property
     def file_extension(self) -> str:
@@ -28,7 +23,7 @@ class Language(ABC):
     @staticmethod
     def execute_command(command: str, args: list[str]) -> tuple:
         full_command = [command] + args
-        result = subprocess.run(full_command, shell=True, text=True,
+        result = subprocess.run(full_command, text=True,
                                 stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)

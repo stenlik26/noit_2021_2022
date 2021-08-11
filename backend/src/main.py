@@ -1,8 +1,9 @@
-from language_information import Language
 from python import PythonLanguage
+from src.executor import Executor
 
 if __name__ == "__main__":
-    inst = PythonLanguage("python", "python", '.py', False)
+    python_lang = PythonLanguage("python3", '.py', False)
+    executor = Executor(python_lang)
 
-    print(inst.execute('test.py'))
-    print("Hello world")
+    out, err, rc = executor.run("print('Hello from Python')")
+    print("Out = {}\nErr = {}\nrc = {}\n".format(out, err, rc))
