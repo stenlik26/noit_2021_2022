@@ -1,12 +1,12 @@
 import os
 from language_information import Language
-
-DEFAULT_PATH = '/tmp/code'
+from config import Config
 
 
 class Executor:
     def __init__(self, language: Language):
         self.__language = language
+        self.__config = Config()
 
     def run(self, code: str) -> tuple:
         path = self.__save_code_to_file(code)
@@ -18,8 +18,8 @@ class Executor:
             return ()
 
     def __save_code_to_file(self, code: str) -> str:
-        if not os.path.exists(DEFAULT_PATH):
-            os.mkdir(DEFAULT_PATH)
+        if not os.path.exists(self.__config.work_dir_root):
+            os.mkdir(self.__config.work_dir_root)
 
         code_path = self.__generate_file_path()
 
@@ -33,7 +33,8 @@ class Executor:
         return code_path
 
     def __generate_file_path(self) -> str:
-        return os.path.join(DEFAULT_PATH, self.__generate_file_name())
+        return os.path.join(self.__config.work_dir_root, self.__generate_file_name())
 
     def __generate_file_name(self) -> str:
+        # TODO - Add session id to file name
         return "code" + self.__language.file_extension

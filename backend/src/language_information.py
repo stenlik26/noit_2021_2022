@@ -21,7 +21,7 @@ class Language(ABC):
         return self.__executable
 
     @staticmethod
-    def execute_command(command: str, args: list[str]) -> tuple:
+    def execute_command(command: str, args: list[str] = []) -> tuple:
         full_command = [command] + args
         result = subprocess.run(full_command, text=True,
                                 stdin=subprocess.PIPE,
