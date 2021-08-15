@@ -21,7 +21,7 @@ class Language(ABC):
         return self.__executable
 
     @staticmethod
-    def execute_command(command: str, args: list[str] = []) -> tuple:
+    def execute_command(command: str, args: list = []) -> tuple:
         full_command = [command] + args
         result = subprocess.run(full_command, text=True,
                                 stdin=subprocess.PIPE,
@@ -32,3 +32,5 @@ class Language(ABC):
     def execute(self, code_path) -> tuple:
         pass
 
+    def run_linter(self, code_path) -> tuple:
+        pass

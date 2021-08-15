@@ -17,6 +17,15 @@ class Executor:
             print("Can't execute")
             return ()
 
+    def run_linter(self, code: str) -> tuple:
+        path = self.__save_code_to_file(code)
+
+        if path != "":
+            return self.__language.run_linter(path)
+        else:
+            print("Can't execute")
+            return ()
+
     def __save_code_to_file(self, code: str) -> str:
         if not os.path.exists(self.__config.work_dir_root):
             os.mkdir(self.__config.work_dir_root)
