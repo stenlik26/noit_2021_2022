@@ -24,7 +24,7 @@ class Executor:
             return self.__language.lint(path)
         else:
             print("Can't execute")
-            return ()
+            return None
 
     def __save_code_to_file(self, code: str) -> str:
         if not os.path.exists(self.__config.work_dir_root):
