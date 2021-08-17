@@ -8,9 +8,9 @@ if __name__ == "__main__":
     executorCpp = Executor(cpp_lang)
 
     outPy, errPy, rcPy = executorPy.run("print('Hello from Python')")
-    outLint, errLint, rcLint = executorPy.run_linter("print('Hello from Python')")
+    outLint, errLint, rcLint = executorPy.lint("print('Hello from Python')")
 
-    executorCpp.run_linter('#include <iostream>\nint main(){\nstd::cout<<"Hello from C++\\n";\nreturn 0;\n}')
+    executorCpp.lint('#include <iostream>\nint main(){\nstd::cout<<"Hello from C++\\n";\nreturn 0;\n}')
 
     outCpp, errCpp, rcCpp = executorCpp.run('#include <iostream>\nint main(){\nstd::cout<<"Hello from C++\\n";\nreturn 0;\n}')
 

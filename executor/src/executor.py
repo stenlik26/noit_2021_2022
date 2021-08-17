@@ -17,11 +17,11 @@ class Executor:
             print("Can't execute")
             return ()
 
-    def run_linter(self, code: str) -> tuple:
+    def lint(self, code: str) -> tuple:
         path = self.__save_code_to_file(code)
 
         if path != "":
-            return self.__language.run_linter(path)
+            return self.__language.lint(path)
         else:
             print("Can't execute")
             return ()

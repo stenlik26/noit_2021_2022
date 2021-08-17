@@ -3,10 +3,11 @@ import subprocess
 
 
 class Language(ABC):
-    def __init__(self, executable: str, file_extension: str, is_compiled: bool):
+    def __init__(self, executable: str, file_extension: str, is_compiled: bool, linter: str):
         self.__file_extension = file_extension
         self.__is_compiled = is_compiled
         self.__executable = executable
+        self.__linter = linter
 
     @property
     def file_extension(self) -> str:
@@ -20,6 +21,10 @@ class Language(ABC):
     def executable(self) -> str:
         return self.__executable
 
+    @property
+    def linter(self) -> str:
+        return self.__linter
+
     @staticmethod
     def execute_command(command: str, args: list = []) -> tuple:
         full_command = [command] + args
@@ -32,5 +37,5 @@ class Language(ABC):
     def execute(self, code_path) -> tuple:
         pass
 
-    def run_linter(self, code_path) -> tuple:
+    def lint(self, code_path) -> tuple:
         pass

@@ -6,10 +6,9 @@ from config import Config
 
 class CppLanguage(CompiledLanguage):
     def __init__(self, executable: str, file_extension: str, is_compiled: bool, linter: str):
-        super().__init__(executable, file_extension, is_compiled)
+        super().__init__(executable, file_extension, is_compiled, linter)
         self.__config = Config()
         self.__output_file_path = os.path.join(self.__config.work_dir_root, "a.out")
-        self.linter = linter
 
     def compile(self, code_path: str) -> tuple:
         return super().execute_command(self.executable, [code_path, "-o", self.__output_file_path])
@@ -22,7 +21,7 @@ class CppLanguage(CompiledLanguage):
 
         return out, err, return_code
 
-    def run_linter(self, code_path):
+    def lint(self, code_path):
         # TODO - implement cpp linter
         print("No cpp linter implemented")
         pass
