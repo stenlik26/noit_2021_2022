@@ -26,7 +26,7 @@ class Language(ABC):
         return self.__linter
 
     @staticmethod
-    def execute_command(command: str, args: list = []) -> tuple:
+    def execute_command(command: str, args: list) -> tuple:
         full_command = [command] + args
         result = subprocess.run(full_command, text=True,
                                 stdin=subprocess.PIPE,
