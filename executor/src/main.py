@@ -64,8 +64,8 @@ if __name__ == "__main__":
     
     '''
 
-    executor = language_executors.get_executor('java')
+    #executor = language_executors.get_executor('csharp')
 
-    #out_run, err_run, rc_run = executor.run('class Simple{public static void main(String args[]){System.out.println("Hello from java");}}')
+    #out_run, err_run, rc_run = executor.run('using System;public class TestProgram{public static void Main(){Console.WriteLine("Hello World");}}')
 
     app.run()

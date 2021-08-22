@@ -1,6 +1,7 @@
 import os
 from language_information import Language
 from config import Config
+import csharp
 
 
 class Executor:
@@ -30,14 +31,32 @@ class Executor:
         if not os.path.exists(self.__config.work_dir_root):
             os.mkdir(self.__config.work_dir_root)
 
-        code_path = self.__generate_file_path()
+        if type(self.__language) == csharp.CsharpLanguage:
 
-        with open(code_path, 'w') as f:
-            try:
-                f.write(code)
-            except IOError as err:
-                print("IO error caught: {}".format(err))
-                return ""
+            csharp_path = os.path.join(self.__config.work_dir_root, self.__generate_csharp_project_folder())
+
+            if not os.path.exists(csharp_path):
+                os.mkdir(csharp_path)
+
+            self.__language.execute_command('dotnet', ['new', 'console', '-o', csharp_path])
+
+            code_path = os.path.join(csharp_path, 'Program.cs')
+            with open(code_path, 'w') as f:
+                try:
+                    f.write(code)
+                except IOError as err:
+                    print("IO error caught: {}".format(err))
+                    return ""
+            code_path = code_path.replace('/Program.cs', '')
+        else:
+            code_path = self.__generate_file_path()
+
+            with open(code_path, 'w') as f:
+                try:
+                    f.write(code)
+                except IOError as err:
+                    print("IO error caught: {}".format(err))
+                    return ""
 
         return code_path
 
@@ -47,3 +66,7 @@ class Executor:
     def __generate_file_name(self) -> str:
         # TODO - Add session id to file name
         return "code" + self.__language.file_extension
+
+    def __generate_csharp_project_folder(self) -> str:
+        # TODO - Think about this
+        return "project1"
