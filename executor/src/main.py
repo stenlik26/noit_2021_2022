@@ -43,7 +43,7 @@ def run_code():
 
 @app.route('/')
 def debug_page():
-    return 'This is the debug page for the API. (API works)'
+    return 'This is the debug page for the executor api. (API works)'
 
 
 if __name__ == "__main__":
