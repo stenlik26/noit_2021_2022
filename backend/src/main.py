@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify
-from backend.src.handle_code.handle_code import HandleCode
 import flask_cors
 import requests
 

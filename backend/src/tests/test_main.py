@@ -7,7 +7,7 @@ class MainTests(flask_unittest.ClientTestCase):
     app = app
 
     def test_java(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
@@ -25,12 +25,12 @@ class MainTests(flask_unittest.ClientTestCase):
               "status": "OK"
             }
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_csharp(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "using System;public class TestProgram{public static void Main(){Console.WriteLine(\"Hello World\");}}",
             "language": "csharp",
@@ -48,12 +48,12 @@ class MainTests(flask_unittest.ClientTestCase):
               "status": "OK"
             }
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_python(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "print(3+3)\nprint('Hello... testing')",
             "language": "python",
@@ -71,12 +71,12 @@ class MainTests(flask_unittest.ClientTestCase):
             "status": "OK"
         }
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_cpp(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "#include <iostream>\nint main(){\nstd::cout<<\"Hello from C++\\n\";\nreturn 0;\n}",
             "language": "cpp",
@@ -94,12 +94,12 @@ class MainTests(flask_unittest.ClientTestCase):
             "status": "OK"
             }
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_wrong_code_java(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{pblc static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
@@ -108,11 +108,11 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = rv.get_json()
-        self.assertTrue(json_data['message']['return_code'] == 1)
+        json_data = resultFromRequest.get_json()
+        self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_wrong_code_csharp(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "using System;public class TestProgram{pbic static void Main(){Console.WriteLine(\"Hello World\");}}",
             "language": "csharp",
@@ -121,12 +121,12 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data['message']['return_code'] == 1)
+        self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_wrong_code_python(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "proint(3+3)\nprint('Hello... testing')",
             "language": "python",
@@ -135,12 +135,12 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data['message']['return_code'] == 1)
+        self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_wrong_code_cpp(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
             "code": "#include <iostream>\nint mion(){\nstd::cout<<\"Hello from C++\\n\";\nreturn 0;\n}",
             "language": "cpp",
@@ -149,11 +149,11 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = rv.get_json()
-        self.assertTrue(json_data['message']['return_code'] == 1)
+        json_data = resultFromRequest.get_json()
+        self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_missing_token(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
@@ -163,12 +163,12 @@ class MainTests(flask_unittest.ClientTestCase):
 
         expected_output = {'status': 'error_missing_params', 'message': 'Needed params are missing'}
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_missing_user_id(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
@@ -178,12 +178,12 @@ class MainTests(flask_unittest.ClientTestCase):
 
         expected_output = {'status': 'error_missing_params', 'message': 'Needed params are missing'}
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_missing_language(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "user_id": "testid",
@@ -193,12 +193,12 @@ class MainTests(flask_unittest.ClientTestCase):
 
         expected_output = {'status': 'error_missing_params', 'message': 'Needed params are missing'}
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
 
     def test_missing_code(self, client):
-        rv = client.post('/run_code', json={
+        resultFromRequest = client.post('/run_code', json={
 
                 "language": "java",
                 "user_id": "testid",
@@ -208,6 +208,6 @@ class MainTests(flask_unittest.ClientTestCase):
 
         expected_output = {'status': 'error_missing_params', 'message': 'Needed params are missing'}
 
-        json_data = rv.get_json()
+        json_data = resultFromRequest.get_json()
 
-        self.assertTrue(json_data == expected_output)
+        self.assertEqual(json_data, expected_output)
