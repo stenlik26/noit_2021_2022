@@ -11,8 +11,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
-                "user_id": "testid",
-                "token": "testtoken"
+                "user_id": "test_id",
+                "token": "test_token"
 
         })
 
@@ -34,8 +34,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "using System;public class TestProgram{public static void Main(){Console.WriteLine(\"Hello World\");}}",
             "language": "csharp",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -57,8 +57,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "print(3+3)\nprint('Hello... testing')",
             "language": "python",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -80,8 +80,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "#include <iostream>\nint main(){\nstd::cout<<\"Hello from C++\\n\";\nreturn 0;\n}",
             "language": "cpp",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -103,8 +103,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
                 "code": "class Simple{pblc static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
-                "user_id": "testid",
-                "token": "testtoken"
+                "user_id": "test_id",
+                "token": "test_token"
 
         })
 
@@ -116,8 +116,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "using System;public class TestProgram{pbic static void Main(){Console.WriteLine(\"Hello World\");}}",
             "language": "csharp",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -130,8 +130,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "proint(3+3)\nprint('Hello... testing')",
             "language": "python",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -144,8 +144,8 @@ class MainTests(flask_unittest.ClientTestCase):
 
             "code": "#include <iostream>\nint mion(){\nstd::cout<<\"Hello from C++\\n\";\nreturn 0;\n}",
             "language": "cpp",
-            "user_id": "testid",
-            "token": "testtoken"
+            "user_id": "test_id",
+            "token": "test_token"
 
         })
 
@@ -157,7 +157,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
-                "user_id": "testid"
+                "user_id": "test_id"
 
         })
 
@@ -172,7 +172,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
                 "language": "java",
-                "token": "testtoken"
+                "token": "test_token"
 
         })
 
@@ -186,8 +186,8 @@ class MainTests(flask_unittest.ClientTestCase):
         resultFromRequest = client.post('/run_code', json={
 
                 "code": "class Simple{public static void main(String args[]){System.out.println(\"Hello from java\");}}",
-                "user_id": "testid",
-                "token": "testtoken"
+                "user_id": "test_id",
+                "token": "test_token"
 
         })
 
@@ -199,11 +199,9 @@ class MainTests(flask_unittest.ClientTestCase):
 
     def test_missing_code(self, client):
         resultFromRequest = client.post('/run_code', json={
-
                 "language": "java",
-                "user_id": "testid",
-                "token": "testtoken"
-
+                "user_id": "test_id",
+                "token": "test_token"
         })
 
         expected_output = {'status': 'error_missing_params', 'message': 'Needed params are missing'}
