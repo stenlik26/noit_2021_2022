@@ -6,10 +6,12 @@ import { AppComponent } from './app.component';
 
 import {FormsModule} from "@angular/forms";
 import {MonacoEditorModule} from "ngx-monaco-editor";
+import { MenuComponent } from './menu/menu.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MenuComponent
   ],
   imports: [
     BrowserModule,
