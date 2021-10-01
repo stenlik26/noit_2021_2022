@@ -14,16 +14,30 @@ def is_user_valid(token: str, user_id: str) -> bool:
     return True
 
 
-def validate_guest_token(token: str) -> bool:
+def is_guest_token_valid(token: str) -> bool:
     # TODO: implement this
     return True
 
 
 def check_for_post_params(needed_params: tuple, given_params: dict) -> bool:
+    """
+    Функцията проверява нужните параметри съответстват с получените.
+    Проверката се извършва чрез tuple от низове, които трябва да присъстват като ключове в dictionary-то.
+    :param needed_params: Нужните параметри от тип tuple.
+    :param given_params: Получените параметри от тип dictionary.
+    :return: Връща True или False, в зависимост от това дали всички нужни параметри присъстват.
+    """
     return all(key in given_params for key in needed_params)
 
 
 def check_if_empty(keys_to_check: tuple, params: dict) -> bool:
+    """
+    Функцията проверява дали дадени полета в dictionary-то са празни.
+    Ако име празни полета се връща True, ако няма False.
+    :param keys_to_check: Ключове в dictionary за проверка.
+    :param params: Dictionary с ключове и стойности.
+    :return: Връща True или False в зависимост от това дали има празни полета в dictionary-то.
+    """
     for x in keys_to_check:
         if not params[x]:
             return True
@@ -62,7 +76,7 @@ def register_user():
     if not check_for_post_params(('username', 'name', 'email', 'password', 'token'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if not validate_guest_token(post_info['token']):
+    if not is_guest_token_valid(post_info['token']):
         return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
     if check_if_empty(('username', 'name', 'email', 'password'), post_info):

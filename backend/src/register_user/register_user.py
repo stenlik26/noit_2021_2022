@@ -1,5 +1,6 @@
 from bson.objectid import ObjectId
 from json import dumps
+from pymongo import errors
 
 
 class RegisterUserClass:
@@ -21,25 +22,28 @@ class RegisterUserClass:
             if emailCheck:
                 return dumps({"status": "error_email_exists", "message": "Email already registered."})
 
-            insertionData = {
-                "username": post_info['username'],
-                "name": post_info['name'],
-                "email": post_info['email'],
-                "password": post_info['password'],
-                "picture": '',
-                "groups": [],
-                "file_created_by_user": [],
-                "friends": [],
-                "description": '',
-                "role": '0'
-                }
-            db.insert_one(insertionData)
-            return dumps({"status": "OK", "message": "successfully created an account."})
+        except errors.ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
 
-        except Exception as ex:
-            template = "An exception of type {0} occurred. Arguments:{1!r}"
-            message = template.format(type(ex).__name__, ex.args)
-            return dumps({"status": "error", "message": message})
+        insertionData = {
+            "username": post_info['username'],
+            "name": post_info['name'],
+            "email": post_info['email'],
+            "password": post_info['password'],
+            "picture": '',
+            "groups": [],
+            "files_created_by_user": [],
+            "friends": [],
+            "description": '',
+            "role": '0'
+            }
+
+        try:
+            db.insert_one(insertionData)
+        except errors.ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return dumps({"status": "OK", "message": "successfully created an account."})
 
     def run(self, post_info, mongo_client):
         return self.__registerUser(post_info, mongo_client)
