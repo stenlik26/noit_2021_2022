@@ -1,0 +1,23 @@
+/* You can add global styles to this file, and also import other style files */
+
+$color-black: #07020D;
+$color-blue: #5DB7DE;
+$color-white: #F1E9DB;
+$color-gray: #716A5C;
+$color-dark-blue: #19647E;
+
+$primary: $color-dark-blue;
+
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+$editor-bg: #1E1E1E;
+
+body {
+  background-color: $color-black;
+  color: $color-white
+}
+
+textarea {
+  background-color: $editor-bg;
+  color: $color-white;
+}
