@@ -6,6 +6,7 @@ import time
 from pymongo.errors import ConnectionFailure
 from backend.src.mongo_connection.mongo_connection import get_jwt_key
 
+
 class LoginUserClass:
     def __init__(self):
         pass

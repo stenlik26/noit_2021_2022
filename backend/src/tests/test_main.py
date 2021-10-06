@@ -25,7 +25,7 @@ class MainTests(flask_unittest.ClientTestCase):
               "status": "OK"
             }
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data, expected_output)
 
@@ -48,7 +48,7 @@ class MainTests(flask_unittest.ClientTestCase):
               "status": "OK"
             }
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data, expected_output)
 
@@ -71,7 +71,7 @@ class MainTests(flask_unittest.ClientTestCase):
             "status": "OK"
         }
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data, expected_output)
 
@@ -94,7 +94,7 @@ class MainTests(flask_unittest.ClientTestCase):
             "status": "OK"
             }
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data, expected_output)
 
@@ -108,7 +108,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
         self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_wrong_code_csharp(self, client):
@@ -121,7 +121,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data['message']['return_code'], 1)
 
@@ -135,7 +135,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
 
         self.assertEqual(json_data['message']['return_code'], 1)
 
@@ -149,7 +149,7 @@ class MainTests(flask_unittest.ClientTestCase):
 
         })
 
-        json_data = resultFromRequest.get_json()
+        json_data = resultFromRequest.get_json()['message']
         self.assertEqual(json_data['message']['return_code'], 1)
 
     def test_missing_token(self, client):
