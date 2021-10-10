@@ -46,7 +46,6 @@ class LoginUserClass:
     def validate_token(token: str) -> str:
         try:
             result = jwt.decode(token, get_jwt_key(), algorithms=['HS256'])
-
         except jwt.ExpiredSignatureError:
             return dumps({'status': 'error_token_expired', 'message': 'Expired token!'})
         except jwt.InvalidTokenError:
@@ -61,7 +60,6 @@ class LoginUserClass:
     def get_user_id_from_token(token: str) -> str:
         try:
             result = jwt.decode(token, get_jwt_key(), algorithms=['HS256'])
-
         except jwt.ExpiredSignatureError:
             return dumps({'status': 'error_token_expired', 'message': 'Expired token!'})
         except jwt.InvalidTokenError:
@@ -75,7 +73,6 @@ class LoginUserClass:
 
         try:
             user = db.find_one({'email': input_email})
-
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
