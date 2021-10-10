@@ -4,6 +4,7 @@ import requests
 from backend.src.mongo_connection.mongo_connection import get_executor_address
 from backend.src.mongo_connection.mongo_connection import get_connection
 from backend.src.register_user.register_user import RegisterUserClass
+from backend.src.login_user.login_user import LoginUserClass
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -23,6 +24,7 @@ def check_for_post_params(needed_params: tuple, given_params: dict) -> bool:
     """
     Функцията проверява нужните параметри съответстват с получените.
     Проверката се извършва чрез tuple от низове, които трябва да присъстват като ключове в dictionary-то.
+
     :param needed_params: Нужните параметри от тип tuple.
     :param given_params: Получените параметри от тип dictionary.
     :return: Връща True или False, в зависимост от това дали всички нужни параметри присъстват.
@@ -34,6 +36,7 @@ def check_if_empty(keys_to_check: tuple, params: dict) -> bool:
     """
     Функцията проверява дали дадени полета в dictionary-то са празни.
     Ако име празни полета се връща True, ако няма False.
+
     :param keys_to_check: Ключове в dictionary за проверка.
     :param params: Dictionary с ключове и стойности.
     :return: Връща True или False в зависимост от това дали има празни полета в dictionary-то.
@@ -85,8 +88,23 @@ def register_user():
     return inst.run(post_info, get_connection())
 
 
+@app.route('/login_user', methods=['POST'])
+def login_user():
+    post_info = request.get_json()
+    inst = LoginUserClass()
+
+    if not check_for_post_params(('email', 'password'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('email', 'password'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return inst.login_panel(post_info['email'], post_info['password'], get_connection())
+
+
 @app.route('/')
 def debug_page():
+    inst = LoginUserClass()
     return 'This is the debug page for the backend api. (API works)'
 
 

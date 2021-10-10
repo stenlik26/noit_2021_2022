@@ -20,3 +20,8 @@ def get_executor_address():
         data = json.load(json_file)
         return data['executor_address']
 
+
+def get_jwt_key():
+    with open('mongo_connection/app_config.json') as json_file:
+        data = json.load(json_file)
+        return data['jwt_key']
