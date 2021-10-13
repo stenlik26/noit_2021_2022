@@ -12,8 +12,21 @@ class HandleProblemsClass:
         db = mongo_client["Main"]
         db = db["Problems"]
 
-        # TODO: Това тука трябва да се помисли. Как ще получим датата и часа от frontend-а
-        d = datetime.datetime.strptime("2021-11-26T23:55:55.000Z", "%Y-%m-%dT%H:%M:%S.000Z")
+        # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23:59-59)
+
+        start_date = info['start_date'].split('-')
+
+        start_date_string = start_date[0] + '-' + start_date[1] + '-' + start_date[2] + 'T' + start_date[3] + ':' + \
+            start_date[4] + ":" + start_date[5] + '.000Z'
+
+        start_date_mongo_string = datetime.datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S.000Z")
+
+        end_date = info['end_date'].split('-')
+
+        end_date_string = end_date[0] + '-' + end_date[1] + '-' + end_date[2] + 'T' + end_date[3] + ':' + \
+            end_date[4] + ":" + end_date[5] + '.000Z'
+
+        end_date_mongo_string = datetime.datetime.strptime(end_date_string, "%Y-%m-%dT%H:%M:%S.000Z")
 
         insertionData = {
             'title': info['title'],
@@ -22,8 +35,8 @@ class HandleProblemsClass:
             'text': info['text'],
             'tests': [],
             'solutions': [],
-            'start_date': d,
-            'end_date': d,
+            'start_date': start_date_mongo_string,
+            'end_date': end_date_mongo_string,
             'time_limit': info['time_limit'],
             'attempts': '0'
             }
