@@ -1,0 +1,40 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<div class="w3-panel bg-dark" id="registerPanel">
+    <div class="container">
+
+        <h1>Регистрация</h1>
+        <p>Моля, попълнете всички полета от формата за регистрация:</p>
+        <p type="hidden" id="status"></p>
+
+
+        <!-- <label for="name">Име:</label> -->
+
+        <div id="mainInputPanel">
+            <div class="inputField">
+                <i class="fa fa-user fa-2x"></i>
+                <input type="text" placeholder="Име" name="name" id="name" required>
+            </div>
+
+            <div class="inputField">
+                <i class="fa fa-at fa-2x"></i>
+                <input type="text" placeholder="Email" name="email" id="email">
+            </div>
+
+            <div class="inputField">
+                <i class="fa fa-lock fa-2x"></i>
+                <input type="password" placeholder="Парола" name="psw" id="psw">
+
+            </div>
+
+            <div class="inputField">
+                <i class="fa fa-lock fa-2x"></i>
+                <input type="password" placeholder="Повторете паролата" name="psw-repeat" id="psw-repeat" required>
+            </div>
+            <button (click)="registerBtn()" type="submit" class="registerbtn button-green">Регистрация</button>
+
+            <p style="text-align: center;"><a href="/login">Имате вече акаунт? Влезте тук</a>.</p>
+
+        </div>
+    </div>
+
+</div>

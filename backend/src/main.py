@@ -47,6 +47,33 @@ def check_if_empty(keys_to_check: tuple, params: dict) -> bool:
     return False
 
 
+@app.route('/generate_guest_token', methods=['POST'])
+def generate_guest_token():
+    post_info = request.get_json()
+    inst = LoginUserClass()
+
+    if not check_for_post_params(('timestamp', ), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('timestamp', ), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    token = inst.give_guest_token(post_info['timestamp'])
+    return jsonify({'token': token})
+
+
+@app.route('/validate_token', methods=['POST'])
+def validate_token():
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', ), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', ), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return LoginUserClass.validate_token(post_info['token'])
+
 @app.route('/run_code', methods=['POST'])
 def run_code():
     post_info = request.get_json()
@@ -76,13 +103,13 @@ def register_user():
     post_info = request.get_json()
     inst = RegisterUserClass()
 
-    if not check_for_post_params(('username', 'name', 'email', 'password', 'token'), post_info):
+    if not check_for_post_params(('name', 'email', 'password', 'token'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
     if not is_guest_token_valid(post_info['token']):
         return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
-    if check_if_empty(('username', 'name', 'email', 'password'), post_info):
+    if check_if_empty(('name', 'email', 'password'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     return inst.run(post_info, get_connection())

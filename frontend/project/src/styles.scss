@@ -12,6 +12,12 @@ $primary: $color-dark-blue;
 
 $editor-bg: #1E1E1E;
 
+
+//Трябва да се обсъдят цветовете
+$background-color: #030027;
+$panel-color: #DFE0E2;
+$accent-green: #6AB547;
+
 body {
   background-color: $color-black;
   color: $color-white
@@ -20,4 +26,10 @@ body {
 textarea {
   background-color: $editor-bg;
   color: $color-white;
+}
+
+
+.button-green {
+  background-color: $accent-green;
+  color: white;
 }

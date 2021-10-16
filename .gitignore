@@ -54,3 +54,5 @@ __pycache__/
 *venv
 app_config.json
 *.idea
+*.coverage
+conf.json
