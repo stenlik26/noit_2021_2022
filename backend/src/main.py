@@ -5,6 +5,7 @@ from backend.src.mongo_connection.mongo_connection import get_executor_address
 from backend.src.mongo_connection.mongo_connection import get_connection
 from backend.src.register_user.register_user import RegisterUserClass
 from backend.src.login_user.login_user import LoginUserClass
+from backend.src.handle_problems.handle_problems import HandleProblemsClass
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -129,9 +130,23 @@ def login_user():
     return inst.login_panel(post_info['email'], post_info['password'], get_connection())
 
 
+@app.route('/create_problem', methods=['POST'])
+def create_problem():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass()
+
+    if not check_for_post_params(('title', 'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('title', 'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return inst.create_problem(post_info, get_connection())
+
+
 @app.route('/')
 def debug_page():
-    inst = LoginUserClass()
     return 'This is the debug page for the backend api. (API works)'
 
 
