@@ -12,21 +12,22 @@ class HandleProblemsClass:
         db = mongo_client["Main"]
         db = db["Problems"]
 
-        # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23:59-59)
+        # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23-59-59)
 
         start_date = info['start_date'].split('-')
 
-        start_date_string = start_date[0] + '-' + start_date[1] + '-' + start_date[2] + 'T' + start_date[3] + ':' + \
-            start_date[4] + ":" + start_date[5] + '.000Z'
+        # Целта е да се преобразува полученият timestamp във формат удобен за MongoDB както и за четене от хора
+        # Добавя се година, месец и ден със разделител "-". След това се добавят час, минути и секудни със разделител :
+        # Между датата и часът има разделителна буква "T"
+        start_date_string = "-".join(start_date[:3]) + "T" + ":".join(start_date[3:])
 
-        start_date_mongo_string = datetime.datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S.000Z")
+        start_date_mongo_string = datetime.datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S")
 
         end_date = info['end_date'].split('-')
 
-        end_date_string = end_date[0] + '-' + end_date[1] + '-' + end_date[2] + 'T' + end_date[3] + ':' + \
-            end_date[4] + ":" + end_date[5] + '.000Z'
+        end_date_string = "-".join(end_date[:3]) + "T" + ":".join(end_date[3:])
 
-        end_date_mongo_string = datetime.datetime.strptime(end_date_string, "%Y-%m-%dT%H:%M:%S.000Z")
+        end_date_mongo_string = datetime.datetime.strptime(end_date_string, "%Y-%m-%dT%H:%M:%S")
 
         insertionData = {
             'title': info['title'],
