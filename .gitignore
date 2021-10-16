@@ -55,3 +55,6 @@ __pycache__/
 app_config.json
 *.idea
 *.coverage
+
+conf.json
+

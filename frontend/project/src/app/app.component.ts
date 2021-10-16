@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserTokenHandling } from './user_token_handling';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'project';
+
+  constructor(){
+    UserTokenHandling.getUserToken();
+  }
 }

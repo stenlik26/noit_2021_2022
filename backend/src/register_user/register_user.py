@@ -26,7 +26,6 @@ class RegisterUserClass:
             raise ConnectionError("Failed to connect to db")
 
         insertionData = {
-            "username": post_info['username'],
             "name": post_info['name'],
             "email": post_info['email'],
             "password": post_info['password'],

@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: 'edit',
     loadChildren: () => import('./edit-code/edit-code.module').then(m => m.EditCodeModule)
+  },
+  {
+    path: 'register',
+    loadChildren: () => import('./register/register-routing.module').then(m => m.RegisterRoutingModule)
   }
 ];
 
