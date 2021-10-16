@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {Router, RouterModule} from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { sha256 } from 'js-sha256';
 import { UserTokenHandling } from 'src/app/user_token_handling';
 import projectConfig from '../../../assets/conf.json'
@@ -18,22 +18,16 @@ export class RegisterPageComponent implements OnInit {
     return re.test(email);
   }
 
-  
+
   async registerApiOutput(apiStatus: any): Promise<void> {
 
     const statusString = document.getElementById('status') as HTMLParagraphElement;
 
-    console.log(apiStatus.status);
-    console.log(apiStatus);
-
-    switch (apiStatus.status)
-    {
+    switch (apiStatus.status) {
       case 'OK':
         {
           statusString.textContent = 'Успешна регистрация!';
           statusString.style.color = 'green';
-          
-          const mainInputPanel = document.getElementById('mainInputPanel') as HTMLDivElement;
 
           statusString.style.visibility = 'hidden';
 
@@ -42,11 +36,15 @@ export class RegisterPageComponent implements OnInit {
         }
       case 'error_name_exists':
         {
-          statusString.textContent = 'Името вече е заето!';
+          statusString.textContent = 'Потребител с това име вече съществува!';
           statusString.style.color = 'red';
           break;
         }
       case 'error_missing_params':
+        {
+          console.log(apiStatus);
+          break;
+        }
       case 'error_fields_not_filled':
         {
           statusString.style.color = 'red';
@@ -82,7 +80,7 @@ export class RegisterPageComponent implements OnInit {
       body: JSON.stringify(requestBody),
       headers: { 'Content-type': 'application/json' }
     })
-      .then(response => response.json()) 
+      .then(response => response.json())
       .then(json => {
         this.registerApiOutput(json);
       });
@@ -91,8 +89,8 @@ export class RegisterPageComponent implements OnInit {
   registerBtn(): void {
     const email: string = (document.getElementById('email') as HTMLInputElement).value;
     const name: string = (document.getElementById('name') as HTMLInputElement).value;
-    const password: string = (document.getElementById('psw') as HTMLInputElement).value;
-    const passwordRepeat: string = (document.getElementById('psw-repeat') as HTMLInputElement).value;
+    const password: string = (document.getElementById('password') as HTMLInputElement).value;
+    const passwordRepeat: string = (document.getElementById('password-repeat') as HTMLInputElement).value;
     const statusString = (document.getElementById('status') as HTMLInputElement);
 
     statusString.style.color = 'yellow';
@@ -101,30 +99,30 @@ export class RegisterPageComponent implements OnInit {
     if (email === '' || name === '' || password === '' || passwordRepeat === '') {
       statusString.style.color = 'red';
       statusString.textContent = 'Моля попълнете всички полета!';
+      return;
     }
-    else {
-      if (this.validateEmail(email)) {
-        if (password === passwordRepeat) {
-          this.sendRegisterRequest(email, name, password);
-        }
-        else {
 
-          statusString.style.color = 'red';
-          statusString.textContent = 'Паролите в полетата не съвпадат!';
-        }
-      }
-      else {
-        statusString.style.color = 'red';
-        statusString.textContent = 'Невалиден email адрес!';
-      }
+    if (!this.validateEmail(email)) {
+      statusString.style.color = 'red';
+      statusString.textContent = 'Невалиден email адрес!';
+      return;
     }
+
+    if (password != passwordRepeat) {
+      statusString.style.color = 'red';
+      statusString.textContent = 'Паролите в полетата не съвпадат!';
+      return;
+    }
+
+    this.sendRegisterRequest(email, name, password);
+
   }
 
   ngOnInit(): void {
-    
+
     if (!UserTokenHandling.isUserTokenSet()) {
       UserTokenHandling.setGuestToken();
     }
-    
+
   }
 }

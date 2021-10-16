@@ -20,29 +20,27 @@ export class UserTokenHandling {
     }
 
     static validateToken(): void {
-        const data = {token: localStorage.getItem('userToken')};
+        const data = { token: localStorage.getItem('userToken') };
         fetch((projectConfig.api_url + 'validate_token'), {
             method: 'POST',
             body: JSON.stringify(data),
-            headers: {'Content-type': 'application/json'}
+            headers: { 'Content-type': 'application/json' }
         }).then(response => response.json())
             .then(response => {
-                if (response.status === 'error_token_expired') {
-                    if (UserTokenHandling.isUserTokenSet()) {
-                        UserTokenHandling.logOut();
-                    }
-                    else {
-                        UserTokenHandling.setGuestToken();
-                    }
+                if (response.status === 'error_token_expired' && UserTokenHandling.isUserTokenSet()) {
+                    UserTokenHandling.logOut();
+                }
+                else if(response.status === 'error_token_expired') {
+                    UserTokenHandling.setGuestToken();
                 }
             });
     }
     static setGuestToken(): void {
-        const data = {timestamp: Date.now().toString()};
+        const data = { timestamp: Date.now().toString() };
         fetch((projectConfig.api_url + 'generate_guest_token'), {
             method: 'POST',
             body: JSON.stringify(data),
-            headers: {'Content-type': 'application/json'}
+            headers: { 'Content-type': 'application/json' }
         })
             .then(response => response.json())
             .then(json => {
