@@ -1,0 +1,27 @@
+<div class="w3-panel bg-dark" id="loginPanel">
+    <div class="container">
+
+        <h1>Вход</h1>
+
+        <p type="hidden" id="status"></p>
+
+        <div id="mainInputPanel">
+
+            <div class="inputField">
+                <i class="fa fa-at fa-2x"></i>
+                <input type="text" placeholder="Въведете имейл" id="email" name="email" required>
+            </div>
+
+            <div class="inputField">
+                <i class="fa fa-lock fa-2x"></i>
+                <input type="password" placeholder="Въведете парола" id="password" name="password" required>
+            </div>
+
+
+            <button (click)="loginBtn()" type="submit" class="loginBtn button-green">Вход</button>
+            <p class="forgotenPassword"><a href="#">Забравена парола?</a></p>
+
+        </div>
+
+    </div>
+</div>
