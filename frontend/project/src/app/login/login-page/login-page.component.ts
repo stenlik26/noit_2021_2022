@@ -20,8 +20,8 @@ export class LoginPageComponent implements OnInit {
     {
       case 'OK':
       {
-        statusString.textContent = 'Успешен вход!';
         statusString.style.color = 'green';
+        statusString.textContent = 'Успешен вход!';
         UserTokenHandling.setUserToken(apiStatus.token);
         UserTokenHandling.setUserToId(apiStatus.userId);
         window.location.href = projectConfig.site_url;
@@ -29,8 +29,8 @@ export class LoginPageComponent implements OnInit {
       }
       case 'error_no_such_user':
       {
-        statusString.textContent = 'Потребител с такова име не същестува';
         statusString.style.color = 'red';
+        statusString.textContent = 'Потребител с такова име не същестува';
         break;
       }
       case 'error_wrong_password':
