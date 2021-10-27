@@ -1,5 +1,6 @@
 import os
 import re
+from typing import Optional
 
 from compiled_language import CompiledLanguage
 from config import Config
@@ -13,7 +14,7 @@ class JavaLanguage(CompiledLanguage):
     def compile(self, code_path: str) -> tuple:
         return super().execute_command(self.executable, [code_path])
 
-    def execute(self, code_path) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
         out, err, return_code = self.compile(code_path)
 
         with open(code_path, 'r') as file:
@@ -24,7 +25,7 @@ class JavaLanguage(CompiledLanguage):
         compiled_name = compiled_name.replace('class ', '')
 
         if return_code == 0:
-            return super().execute_command('java', ['-cp', self.__config.work_dir_root, compiled_name])
+            return super().execute_command('java', ['-cp', self.__config.work_dir_root, compiled_name], stdin_path)
 
         return out, err, return_code
 

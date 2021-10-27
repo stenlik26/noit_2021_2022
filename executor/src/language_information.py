@@ -1,5 +1,6 @@
 from abc import ABC
 import subprocess
+from typing import Optional
 
 
 class Language(ABC):
@@ -26,15 +27,17 @@ class Language(ABC):
         return self.__linter
 
     @staticmethod
-    def execute_command(command: str, args: list) -> tuple:
+    def execute_command(command: str, args: list, stdin_path: Optional[str] = None) -> tuple:
+
+        stdin = subprocess.PIPE if stdin_path is None else open(stdin_path)
         full_command = [command] + args
         result = subprocess.run(full_command, text=True,
-                                stdin=subprocess.PIPE,
+                                stdin=stdin,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
         return result.stdout, result.stderr, result.returncode
 
-    def execute(self, code_path) -> tuple:
+    def execute(self, code_path: str, stdin: str) -> tuple:
         pass
 
     def lint(self, code_path) -> tuple:

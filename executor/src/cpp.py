@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from compiled_language import CompiledLanguage
 from config import Config
@@ -13,11 +14,11 @@ class CppLanguage(CompiledLanguage):
     def compile(self, code_path: str) -> tuple:
         return super().execute_command(self.executable, [code_path, "-o", self.__output_file_path])
 
-    def execute(self, code_path) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
         out, err, return_code = self.compile(code_path)
 
         if return_code == 0:
-            return super().execute_command(self.__output_file_path, [])
+            return super().execute_command(self.__output_file_path, [], stdin_path)
 
         return out, err, return_code
 
