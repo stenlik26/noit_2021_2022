@@ -75,6 +75,7 @@ def validate_token():
 
     return LoginUserClass.validate_token(post_info['token'])
 
+
 @app.route('/run_code', methods=['POST'])
 def run_code():
     post_info = request.get_json()
@@ -136,11 +137,16 @@ def create_problem():
 
     inst = HandleProblemsClass()
 
-    if not check_for_post_params(('title', 'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+    if not check_for_post_params(('token', 'user_id', 'tests', 'title',
+                                  'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if check_if_empty(('title', 'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+    if check_if_empty(('user_id', 'token', 'tests', 'title',
+                       'public', 'text', 'start_date', 'end_date'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
     return inst.create_problem(post_info, get_connection())
 

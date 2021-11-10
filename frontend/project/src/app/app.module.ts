@@ -7,7 +7,8 @@ import { AppComponent } from './app.component';
 import {FormsModule} from "@angular/forms";
 import {MonacoEditorModule} from "ngx-monaco-editor";
 import { MenuComponent } from './menu/menu.component';
-
+import { CreateProblemModule } from './create-problem/create-problem.module';
+import '@fortawesome/fontawesome-free/js/all.js';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,7 +18,8 @@ import { MenuComponent } from './menu/menu.component';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    MonacoEditorModule.forRoot() // use forRoot() in main app module only.
+    MonacoEditorModule.forRoot(), // use forRoot() in main app module only.
+    CreateProblemModule
   ],
   providers: [],
   bootstrap: [AppComponent]

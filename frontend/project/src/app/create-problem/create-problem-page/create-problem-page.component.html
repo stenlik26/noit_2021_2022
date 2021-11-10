@@ -1,0 +1,83 @@
+<div class="wrapper">
+
+    <h3 id="title">
+        Създаване на задача
+    </h3>
+
+    <div class="tab">
+        <button class="tablinks" (click)="switchTab('problem_options')">Опции</button>
+        <button class="tablinks" (click)="switchTab('problem_text_editor')">Условие</button>
+        <button class="tablinks" (click)="switchTab('problem_tests')">Тестове</button>
+    </div>
+
+    <div id="problem_title" class="tabcontent">
+        <label for="problem_title_input">Заглавие на задача: </label>
+        <input id="problem_title_input"type="text">
+    </div>
+
+    <div id="problem_options" class="tabcontent">
+        <label for="problem_start_date">Начална дата:</label>
+        <input id="problem_start_date" type="datetime-local">
+
+        <label for="problem_end_date">Крайна дата:</label>
+        <input id="problem_end_date" type="datetime-local">
+
+        <label for="problem_time_limit">Времеви лимит (минути):</label>
+        <input id="problem_time_limit" type="text">
+
+        <label for="problem_acces">Достъп до задачата: 
+            <select name="access" id="access">
+                <option value="public">Публична</option>
+                <option value="by_groups">По групи</option>
+                <option value="only_me">Само аз</option>
+            </select>
+        </label>
+        
+
+        <label for="problem_tags">Тагове (разделени с , ):</label>
+        <input id="problem_tags" type="text">
+
+    </div>
+
+    <div id="problem_text_editor" class="tabcontent">
+        <h5>Условие на задача: (<i class="fab fa-markdown"></i>)</h5>
+        <div id="editor"></div>
+    </div>
+
+    <div id="problem_tests" class="tabcontent">
+        <h4>Тестове:</h4>
+            <ul>
+                <div class="test_element" *ngFor="let test of test_fields">
+                    <div class="test_header">
+                        <h5>Тест</h5>
+                        <button (click)="remove_test_field(test)"id="remove_test_button" class="button-red">X</button>
+                    </div>
+                    <div id="test_input">
+                        <p>Вход:</p>
+                        <textarea class="test_input_output_field" id="test_input_field_{{test.get_test_num()}}"></textarea>
+                    </div>
+
+                    <div id="test_output">
+                        <p>Изход:</p>
+                        <textarea class="test_input_output_field" id="test_output_field_{{test.get_test_num()}}"></textarea>
+                    </div>
+
+                    <label >Скрит: 
+                        <input id="is_test_hidden_{{test.get_test_num()}}" type="checkbox" name="is_test_hidden">
+                    </label>
+                    
+                    <label id="test_time_limit">Времеви лимит (ms): 
+                        <input class= "test_time_limit_input" id="test_time_limit_input_{{test.get_test_num()}}" type="text">
+                    </label>
+
+                </div>
+                <button (click)="add_test_field()" class="add_test_button button-green">Добави тест</button>
+            </ul>
+
+    </div>
+    <div id="create_problem_button">
+        <button class="createButton button-gray">Отказ</button>
+        <button (click)="create_problem()" class="createButton button-green">Създай задача</button>
+    </div>
+
+</div>
