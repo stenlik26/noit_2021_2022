@@ -17,6 +17,9 @@ $editor-bg: #1E1E1E;
 $background-color: #030027;
 $panel-color: #DFE0E2;
 $accent-green: #6AB547;
+$red_color: #f44336; 
+$button-gray: #202225;
+
 
 body {
   background-color: $color-black;
@@ -28,9 +31,23 @@ textarea {
   color: $color-white;
 }
 
+input[type=checkbox]{
+  color: $accent-green;
+}
+
 
 .button-green {
   background-color: $accent-green;
+  color: white;
+}
+
+.button-gray{
+  background-color: $button-gray;
+  color: white;
+}
+
+.button-red{
+  background-color: $red_color;
   color: white;
 }
 
