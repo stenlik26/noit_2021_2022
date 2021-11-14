@@ -1,5 +1,5 @@
 from bson.objectid import ObjectId
-from json import dumps
+from json import dumps, loads
 from pymongo.errors import ConnectionFailure
 import datetime
 
@@ -13,8 +13,10 @@ class HandleProblemsClass:
         db = db["Problems"]
 
         # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23-59-59)
-
-        start_date = info['start_date'].split('-')
+        # Подадената дата е във формат: yyyy-mm-ddThh:mm
+        start_date = info['start_date'].replace('T', '-').replace(':', '-').split('-')
+        start_date.append('00')
+        # Секундите не могат да се избират от timepicker-а затова се добавят тук
 
         # Целта е да се преобразува полученият timestamp във формат удобен за MongoDB както и за четене от хора
         # Добавя се година, месец и ден със разделител "-". След това се добавят час, минути и секудни със разделител :
@@ -23,7 +25,8 @@ class HandleProblemsClass:
 
         start_date_mongo_string = datetime.datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S")
 
-        end_date = info['end_date'].split('-')
+        end_date = info['end_date'].replace('T', '-').replace(':', '-').split('-')
+        end_date.append('00')
 
         end_date_string = "-".join(end_date[:3]) + "T" + ":".join(end_date[3:])
 
@@ -32,9 +35,9 @@ class HandleProblemsClass:
         insertionData = {
             'title': info['title'],
             'public': info['public'] == 'true' and True or False,
-            'tags': info['tags'],
+            'tags': [tag.strip() for tag in info['tags'].split(',')],
             'text': info['text'],
-            'tests': [],
+            'tests': loads(info['tests']),
             'solutions': [],
             'start_date': start_date_mongo_string,
             'end_date': end_date_mongo_string,
