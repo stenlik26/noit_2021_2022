@@ -19,28 +19,32 @@ export class CreateProblemPageComponent implements OnInit {
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
 
-  switchTab(name: string)
-  {
+  switchTab(name: string) {
+
     let i, tabcontent, tablinks;
+
     tabcontent = Array.from(document.getElementsByClassName('tabcontent') as HTMLCollectionOf<HTMLElement>);
+    tablinks = document.getElementsByClassName("tablinks");
+
     for (i = 0; i < tabcontent.length; i++) {
       tabcontent[i].style.display = "none";
     }
-    tablinks = document.getElementsByClassName("tablinks");
+
     for (i = 0; i < tablinks.length; i++) {
       tablinks[i].className = tablinks[i].className.replace(" active", "");
     }
-    if(name === "problem_options"){
+
+    if (name === "problem_options") {
       document.getElementById(name)!.style.display = "flex";
     }
-    else{
+    else {
       document.getElementById(name)!.style.display = "block";
     }
 
     //evt.currentTarget!.className += " active";
   }
 
-  create_problem(): void{
+  create_problem(): void {
     const problem_text: string = this.editor.getContent();
     const title: string = (document.getElementById('problem_title_input') as HTMLInputElement).value;
     const problem_access: HTMLSelectElement = (document.getElementById('access') as HTMLSelectElement);
@@ -73,22 +77,21 @@ export class CreateProblemPageComponent implements OnInit {
       body: JSON.stringify(requestBody),
       headers: { 'Content-type': 'application/json' }
     })
-        .then(response => response.json())
-        .then(json => {
-          console.log(json);
-        });
+      .then(response => response.json())
+      .then(json => {
+        console.log(json);
+      });
 
 
   }
 
-  update_test_array(): void{
+  update_test_array(): void {
     let input: string;
     let output: string;
     let time_limit: string;
     let is_hidden: boolean;
 
-    for (let i = 1; i <= this.test_fields.length; i++)
-    {
+    for (let i = 1; i <= this.test_fields.length; i++) {
       input = (document.getElementById('test_input_field_' + i.toString()) as HTMLTextAreaElement).value;
       output = (document.getElementById('test_output_field_' + i.toString()) as HTMLTextAreaElement).value;
       time_limit = (document.getElementById('test_time_limit_input_' + i.toString()) as HTMLInputElement).value;

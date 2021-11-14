@@ -13,6 +13,7 @@ class HandleProblemsClass:
         db = db["Problems"]
 
         # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23-59-59)
+        # Подадената дата е във формат: yyyy-mm-ddThh:mm
         start_date = info['start_date'].replace('T', '-').replace(':', '-').split('-')
         start_date.append('00')
         # Секундите не могат да се избират от timepicker-а затова се добавят тук
@@ -34,7 +35,7 @@ class HandleProblemsClass:
         insertionData = {
             'title': info['title'],
             'public': info['public'] == 'true' and True or False,
-            'tags': info['tags'].split(','),
+            'tags': [tag.strip() for tag in info['tags'].split(',')],
             'text': info['text'],
             'tests': loads(info['tests']),
             'solutions': [],
