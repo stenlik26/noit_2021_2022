@@ -186,7 +186,7 @@ def create_problem():
 def create_group():
     post_info = request.get_json()
 
-    inst = HandleGroupsClass()
+    inst = HandleGroupsClass(get_connection())
 
     if not check_for_post_params(('token', 'user_id', 'group_name'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
@@ -197,14 +197,14 @@ def create_group():
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.create_group(get_connection(), post_info)
+    return inst.create_group(post_info)
 
 
 @app.route('/send_group_invite', methods=['POST'])
 def send_group_invite():
     post_info = request.get_json()
 
-    inst = HandleGroupsClass()
+    inst = HandleGroupsClass(get_connection())
 
     if not check_for_post_params(('token', 'admin_user_id', 'group_id', 'invited_user_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
@@ -215,14 +215,14 @@ def send_group_invite():
     if not is_user_valid(post_info['token'], post_info['admin_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.send_group_invite(get_connection(), post_info)
+    return inst.send_group_invite(post_info)
 
 
 @app.route('/reject_group_invite', methods=['POST'])
 def reject_group_invite():
     post_info = request.get_json()
 
-    inst = HandleGroupsClass()
+    inst = HandleGroupsClass(get_connection())
 
     if not check_for_post_params(('token', 'group_id', 'my_user_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
@@ -233,14 +233,14 @@ def reject_group_invite():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.reject_group_invite(get_connection(), post_info['group_id'], post_info['my_user_id'])
+    return inst.reject_group_invite(post_info['group_id'], post_info['my_user_id'])
 
 
 @app.route('/accept_group_invite', methods=['POST'])
 def accept_group_invite():
     post_info = request.get_json()
 
-    inst = HandleGroupsClass()
+    inst = HandleGroupsClass(get_connection())
 
     if not check_for_post_params(('token', 'group_id', 'my_user_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
@@ -251,14 +251,14 @@ def accept_group_invite():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.accept_group_invite(get_connection(), post_info['group_id'], post_info['my_user_id'])
+    return inst.accept_group_invite(post_info['group_id'], post_info['my_user_id'])
 
 
 @app.route('/get_user_group_invites', methods=['POST'])
 def get_user_group_invites():
     post_info = request.get_json()
 
-    inst = HandleGroupsClass()
+    inst = HandleGroupsClass(get_connection())
 
     if not check_for_post_params(('token', 'my_user_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
@@ -269,7 +269,7 @@ def get_user_group_invites():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.get_user_group_invites(get_connection(), post_info['my_user_id'])
+    return inst.get_user_group_invites(post_info['my_user_id'])
 
 
 @app.route('/')
