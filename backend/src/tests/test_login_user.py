@@ -1,5 +1,4 @@
 import unittest
-from json import loads
 from backend.src.login_user.login_user import LoginUserClass
 import jwt
 from backend.src.mongo_connection.mongo_connection import get_jwt_key
@@ -43,7 +42,7 @@ class LoginUsersTest(unittest.TestCase):
 
     def test_validate_token(self):
         tempToken = self.loginHandler.give_guest_token('test')
-        t = loads(self.loginHandler.validate_token(tempToken))
+        t = self.loginHandler.validate_token(tempToken)
         self.assertEqual(t['status'], 'OK')
 
     def test_get_user_id_from_token(self):
@@ -52,13 +51,13 @@ class LoginUsersTest(unittest.TestCase):
         self.assertTrue('guestToken' in result)
 
     def test_login_panel_no_user(self):
-        result = loads(self.loginHandler.login_panel('testemail@testemail.com', 'nopassword', self.mockMongo))
+        result = self.loginHandler.login_panel('testemail@testemail.com', 'nopassword', self.mockMongo)
         self.assertEqual(result['status'], 'error_no_such_user')
 
     def test_login_panel_wrong_password(self):
-        result = loads(self.loginHandler.login_panel('testemail@testemail.com', 'nopassword', self.mockMongoWithPass))
+        result = self.loginHandler.login_panel('testemail@testemail.com', 'nopassword', self.mockMongoWithPass)
         self.assertEqual(result['status'], 'error_wrong_password')
 
     def test_login_panel_correct_password(self):
-        result = loads(self.loginHandler.login_panel('testemail@testemail.com', 'testpassword', self.mockMongoWithPass))
+        result = self.loginHandler.login_panel('testemail@testemail.com', 'testpassword', self.mockMongoWithPass)
         self.assertEqual(result['status'], 'OK')

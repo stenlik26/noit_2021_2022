@@ -1,5 +1,4 @@
 import unittest
-from json import loads
 import pymongo.errors
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 
@@ -28,5 +27,5 @@ class HandleProblemsTest(unittest.TestCase):
             'end_date': 'somedate',
             'time_limit': '01:00:00'
         }
-        t = loads(self.handle_problems_class.create_problem(post_info, self.mockMongoSuccess))
+        t = self.handle_problems_class.create_problem(post_info, self.mockMongoSuccess)
         self.assertEqual(t['status'], 'OK')

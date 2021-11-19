@@ -74,7 +74,7 @@ def validate_token():
     if check_if_empty(('token', ), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    return LoginUserClass.validate_token(post_info['token'])
+    return jsonify(LoginUserClass.validate_token(post_info['token']))
 
 
 @app.route('/run_code', methods=['POST'])
@@ -145,7 +145,7 @@ def register_user():
     if check_if_empty(('name', 'email', 'password'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    return inst.run(post_info, get_connection())
+    return jsonify(inst.run(post_info, get_connection()))
 
 
 @app.route('/login_user', methods=['POST'])
@@ -159,7 +159,7 @@ def login_user():
     if check_if_empty(('email', 'password'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    return inst.login_panel(post_info['email'], post_info['password'], get_connection())
+    return jsonify(inst.login_panel(post_info['email'], post_info['password'], get_connection()))
 
 
 @app.route('/create_problem', methods=['POST'])
@@ -173,13 +173,13 @@ def create_problem():
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
     if check_if_empty(('user_id', 'token', 'tests', 'title',
-                       'public', 'text', 'start_date', 'end_date'), post_info):
+                       'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.create_problem(post_info, get_connection())
+    return jsonify(inst.create_problem(post_info, get_connection()))
 
 
 @app.route('/create_group', methods=['POST'])
@@ -197,7 +197,7 @@ def create_group():
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.create_group(post_info)
+    return jsonify(inst.create_group(post_info))
 
 
 @app.route('/send_group_invite', methods=['POST'])
@@ -215,7 +215,7 @@ def send_group_invite():
     if not is_user_valid(post_info['token'], post_info['admin_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.send_group_invite(post_info)
+    return jsonify(inst.send_group_invite(post_info))
 
 
 @app.route('/reject_group_invite', methods=['POST'])
@@ -233,7 +233,7 @@ def reject_group_invite():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.reject_group_invite(post_info['group_id'], post_info['my_user_id'])
+    return jsonify(inst.reject_group_invite(post_info['group_id'], post_info['my_user_id']))
 
 
 @app.route('/accept_group_invite', methods=['POST'])
@@ -251,7 +251,7 @@ def accept_group_invite():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.accept_group_invite(post_info['group_id'], post_info['my_user_id'])
+    return jsonify(inst.accept_group_invite(post_info['group_id'], post_info['my_user_id']))
 
 
 @app.route('/get_user_group_invites', methods=['POST'])
@@ -269,7 +269,7 @@ def get_user_group_invites():
     if not is_user_valid(post_info['token'], post_info['my_user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return inst.get_user_group_invites(post_info['my_user_id'])
+    return jsonify(inst.get_user_group_invites(post_info['my_user_id']))
 
 
 @app.route('/')

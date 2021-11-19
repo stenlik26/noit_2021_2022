@@ -16,11 +16,11 @@ class RegisterUserClass:
 
             nameCheck = db.find_one({"name": post_info['name']})
             if nameCheck:
-                return dumps({"status": "error_name_exists", "message": "Name is in use."})
+                return {"status": "error_name_exists", "message": "Name is in use."}
 
             emailCheck = db.find_one({"email": post_info['email']})
             if emailCheck:
-                return dumps({"status": "error_email_exists", "message": "Email already registered."})
+                return {"status": "error_email_exists", "message": "Email already registered."}
 
         except errors.ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
@@ -43,7 +43,7 @@ class RegisterUserClass:
         except errors.ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        return dumps({"status": "OK", "message": "successfully created an account."})
+        return {"status": "OK", "message": "successfully created an account."}
 
     def run(self, post_info, mongo_client):
         return self.__registerUser(post_info, mongo_client)
