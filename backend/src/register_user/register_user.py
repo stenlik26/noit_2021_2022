@@ -33,6 +33,7 @@ class RegisterUserClass:
             "groups": [],
             "files_created_by_user": [],
             "friends": [],
+            "group_invites": [],
             "description": '',
             "role": '0'
             }
