@@ -1,5 +1,4 @@
 import unittest
-from json import loads
 from backend.src.register_user.register_user import RegisterUserClass
 
 
@@ -59,7 +58,7 @@ class RegisterUsersTest(unittest.TestCase):
             'username': 'testUserName',
             'email': 'email@email.com'
         }
-        t = loads(self.registerHandler.run(post_info, self.mockMongoNameFail))
+        t = self.registerHandler.run(post_info, self.mockMongoNameFail)
         self.assertEqual(t['status'], 'error_name_exists')
 
     def test_register_email_in_use(self):
@@ -69,7 +68,7 @@ class RegisterUsersTest(unittest.TestCase):
             'username': 'testUserName',
             'email': 'email@email.com'
         }
-        t = loads(self.registerHandler.run(post_info, self.mockMongoEmailFail))
+        t = self.registerHandler.run(post_info, self.mockMongoEmailFail)
         self.assertEqual(t['status'], 'error_email_exists')
 
     def test_register_success(self):
@@ -79,7 +78,7 @@ class RegisterUsersTest(unittest.TestCase):
             'username': 'testUserName',
             'email': 'email@email.com'
         }
-        t = loads(self.registerHandler.run(post_info, self.mockMongoSuccess))
+        t = self.registerHandler.run(post_info, self.mockMongoSuccess)
         self.assertEqual(t['status'], 'OK')
 
 

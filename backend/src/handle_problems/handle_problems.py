@@ -50,4 +50,4 @@ class HandleProblemsClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        return dumps({"status": "OK", "message": "successfully created a problem."})
+        return {"status": "OK", "message": "successfully created a problem."}
