@@ -21,6 +21,10 @@ const routes: Routes = [
   {
     path: 'create_problem',
     loadChildren: () => import('./create-problem/create-problem-routing.module').then(m => m.CreateProblemRoutingModule)
+  },
+  {
+    path: 'create_group',
+    loadChildren: () => import('./create-group/create-group-routing.module').then(m => m.CreateGroupRoutingModule)
   }
 ];
 
