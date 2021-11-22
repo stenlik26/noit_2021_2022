@@ -14,21 +14,17 @@ export class CreateGroupPageComponent implements OnInit {
   async api_output(apiStatus: any): Promise<void> {
     const statusString = document.getElementById('status') as HTMLParagraphElement;
 
-    switch (apiStatus.status)
+
+    if(apiStatus.status === 'OK')
     {
-      case 'OK':
-      {
-        statusString.style.color = 'green';
-        statusString.textContent = 'Успешено е създадена групата!';
-        window.location.href = projectConfig.site_url;
-        break;
-      }
-      default:
-      {
-        statusString.style.color = 'red';
-        statusString.textContent = 'Възникна проблем!';
-        break;
-      }
+      statusString.style.color = 'green';
+      statusString.textContent = 'Успешено е създадена групата!';
+      window.location.href = projectConfig.site_url;
+    }
+    else
+    {
+      statusString.style.color = 'red';
+      statusString.textContent = 'Възникна проблем!';
     }
   }
   send_request(name: string): void {
@@ -53,12 +49,12 @@ export class CreateGroupPageComponent implements OnInit {
     const name: string = (document.getElementById('group_name') as HTMLInputElement).value;
     const statusString = (document.getElementById('status') as HTMLInputElement);
 
-    if (name === '') {
-      statusString.style.color = 'red';
-      statusString.textContent = 'Моля попълнете всички полета!';
+    if (name !== '') {
+      this.send_request(name);
     }
     else {
-      this.send_request(name);
+      statusString.style.color = 'red';
+      statusString.textContent = 'Моля попълнете всички полета!';
     }
 
   }
