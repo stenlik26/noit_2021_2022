@@ -6,7 +6,21 @@ $color-white: #F1E9DB;
 $color-gray: #716A5C;
 $color-dark-blue: #19647E;
 
-$primary: $color-dark-blue;
+$primary: #6AB547;
+
+$form-select-indicator-color: white;
+
+$accordion-icon-active-color: white;
+$accordion-icon-color: white;
+
+$accordion-color: #202225;
+$accordion-bg:  #202225;
+
+$accordion-button-color:  #202225;
+$accordion-button-bg: #202225;
+
+$accordion-button-active-color:  #202225;
+$accordion-button-active-bg: #202225;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
@@ -20,6 +34,8 @@ $accent-green: #6AB547;
 $red_color: #f44336; 
 $button-gray: #202225;
 $button-light-gray: #313131;
+
+
 
 
 body {

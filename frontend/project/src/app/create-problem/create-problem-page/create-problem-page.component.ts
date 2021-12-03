@@ -70,8 +70,6 @@ export class CreateProblemPageComponent implements OnInit {
       token: UserTokenHandling.getUserToken()
     }
 
-    console.log(requestBody);
-
     fetch((projectConfig.api_url + 'create_problem'), {
       method: 'POST',
       body: JSON.stringify(requestBody),
@@ -120,7 +118,7 @@ export class CreateProblemPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.editor = new Editor('editor', new MdFormatter(), customTheme);
+    this.editor = new Editor('editor', new MdFormatter(), customTheme, false);
     this.editor.setContent(sampleMarkdownText);
     this.editor.setContentBasic();
 

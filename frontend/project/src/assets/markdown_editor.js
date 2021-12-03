@@ -352,12 +352,13 @@ class CssRules {
 
 
 class Editor {
-  constructor(wrapperId, formatter, theme) {
+  constructor(wrapperId, formatter, theme, view_only_input) {
     this.formatter = formatter;
     this.theme = theme;
     this.wrapper = document.createElement('div');
     this.editor = document.createElement('div');
     this.menu = document.createElement('div');
+    this.view_only = view_only_input;
     this.idPrefix = wrapperId;
     this.initializeWrapper(this.idPrefix);
     this.applyTheme();
@@ -405,8 +406,10 @@ class Editor {
     futureWrapperParent.replaceChild(this.wrapper, futureWrapper);
   }
   createMenu() {
-    this.createMenuBase();
-    this.createMenuSettingsItems();
+    if (this.view_only === false) {
+      this.createMenuBase();
+      this.createMenuSettingsItems();
+    }
   }
   createMenuBase() {
     this.wrapper.appendChild(this.menu);
@@ -441,7 +444,12 @@ class Editor {
   createEditor() {
     this.wrapper.appendChild(this.editor);
     this.editor.id = this.getEditorId();
+    if(this.view_only){
+      this.editor.contentEditable = 'false';
+    }
+    else{
     this.editor.contentEditable = 'true';
+    }
   }
   initializeWrapper(futureWrapperId) {
     this.createWrapper(futureWrapperId);
@@ -899,7 +907,9 @@ class MdFormatter extends Formatter {
       this.editor.contentEditable = 'false';
     }
     else {
+      if(this.view_only === false){
       this.editor.contentEditable = 'true';
+      }
     }
 
     if (this.settings.dynamicRender) {
@@ -1123,7 +1133,7 @@ const darkScrollbar = {
 const darkEditorTheme = {
   'background': '#202225',
   'color': '#dcddde',
-  'height': '90%',
+  'height': '100%',
   'box-shadow': '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
 };
 const sampleMarkdownText = `
