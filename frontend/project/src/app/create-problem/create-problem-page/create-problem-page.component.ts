@@ -118,7 +118,12 @@ export class CreateProblemPageComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.editor = new Editor('editor', new MdFormatter(), customTheme, false);
+    // Обясненеие за аргументите:
+    // 'editor' - id-то на div елемента в html страницата
+    // MdFormatter - създава се нов клас като изисква атрибут за режим на редактора. (Прочети последното)
+    // customTheme - Темата на полето за условието (тема на scrollbar, тема на редактора, други css настройки и т.н.)
+    // Последният атрибут false или ture е затова дали редактора е във read-only режим. Ако е false, може да се пише в редактора, ако е true, може само да се чете от редактора.
+    this.editor = new Editor('editor', new MdFormatter(false), customTheme, false);
     this.editor.setContent(sampleMarkdownText);
     this.editor.setContentBasic();
 

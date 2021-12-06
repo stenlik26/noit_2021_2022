@@ -359,6 +359,7 @@ class Editor {
     this.editor = document.createElement('div');
     this.menu = document.createElement('div');
     this.view_only = view_only_input;
+    console.log(this.view_only, view_only_input);
     this.idPrefix = wrapperId;
     this.initializeWrapper(this.idPrefix);
     this.applyTheme();
@@ -443,12 +444,12 @@ class Editor {
   }
   createEditor() {
     this.wrapper.appendChild(this.editor);
-    this.editor.id = this.getEditorId();
+    this.editor.id = this.getEditorId();   
     if(this.view_only){
       this.editor.contentEditable = 'false';
     }
     else{
-    this.editor.contentEditable = 'true';
+      this.editor.contentEditable = 'true';
     }
   }
   initializeWrapper(futureWrapperId) {
@@ -653,9 +654,10 @@ class MdCssRules extends CssRules {
 
 
 class MdFormatter extends Formatter {
-  constructor() {
+  constructor(view_only) {
     super(...arguments);
     this.editor = document.createElement('invalid');
+    this.view_only = view_only;
     this.settings = {
       dynamicRender: false,
       showSyntax: false,
@@ -911,6 +913,8 @@ class MdFormatter extends Formatter {
       this.editor.contentEditable = 'true';
       }
     }
+    console.log(this.editor.contentEditable);
+    console.log(this.view_only)
 
     if (this.settings.dynamicRender) {
       this.setContent(this.getContent());

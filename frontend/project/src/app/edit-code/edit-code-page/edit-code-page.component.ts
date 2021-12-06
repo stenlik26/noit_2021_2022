@@ -33,7 +33,7 @@ export class EditCodePageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.markdown_viewer = new Editor('editor', new MdFormatter(), customTheme, true);
+    this.markdown_viewer = new Editor('editor', new MdFormatter(true), customTheme, true);
     this.markdown_viewer.setContent('# Зареждане...');
 
   }
