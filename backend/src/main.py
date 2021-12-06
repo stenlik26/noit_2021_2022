@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, request, jsonify
 import flask_cors
 import requests
@@ -272,9 +273,15 @@ def get_user_group_invites():
     return jsonify(inst.get_user_group_invites(post_info['my_user_id']))
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    return 'This is the debug page for the backend api. (API works)'
+
+    #t = get_connection()
+    #t = t['Main']['Problems']
+    #x = t.find_one({"_id": bson.ObjectId("61898d4d14c76c04b63be258")}, {"_id": 0, "text": 1, "tests": 1, "start_date": 1, "end_date": 1, "time_limit": 1})
+    x = {'text': '```javascript\nvar s = "Test syntax highlighting";\nalert( s );\n```\n\n# Test\n\n1. Test item\n\n2. Test item 2\n\n3. Test item 3\n\n- Unordered test item\n\n- Unordered test item\n\n- Unordered test item\n\n', 'tests': [{'input': '12', 'output': '123', 'is_hidden': True, 'time_limit': '200'}, {'input': '186', 'output': '123', 'is_hidden': True, 'time_limit': '200'}], 'start_date': datetime.datetime(2021, 11, 12, 22, 46), 'end_date': datetime.datetime(2021, 11, 25, 22, 46), 'time_limit': ''}
+    return jsonify(x)
+    #return 'This is the debug page for the backend api. (API works)'
 
 
 if __name__ == '__main__':
