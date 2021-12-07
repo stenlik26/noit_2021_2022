@@ -37,7 +37,7 @@ class Language(ABC):
                                 stdout=subprocess.PIPE)
         return result.stdout, result.stderr, result.returncode
 
-    def execute(self, code_path: str, stdin: str) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
         pass
 
     def lint(self, code_path) -> tuple:

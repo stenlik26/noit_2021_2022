@@ -27,7 +27,7 @@ def run_code():
     post_info = request.get_json()
     executor: Executor = language_executors.get_executor(post_info['language'])
 
-    result: RunResult = executor.run_test(post_info['code'])
+    result: RunResult = executor.run(post_info['code'])
 
     return jsonify({
         "status": "OK",
