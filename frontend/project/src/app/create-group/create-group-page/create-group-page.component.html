@@ -1,0 +1,18 @@
+<div class="w3-panel bg-dark" id="create_group_panel">
+    <div class="container">
+
+        <h2>Създаване на група:</h2>
+
+        <p type="hidden" id="status"></p>
+
+        <div id="mainInputPanel">
+
+            <label for="group_name">Име на групата: </label>
+            <input type="text" id="group_name" name="group_name" required>
+            
+            <button (click)="create_group_button()" type="submit" class="create_group button-green">Създаване</button>
+            <button (click)="back()" type="submit" class="create_group button-gray">Отказ</button>
+        </div>
+
+    </div>
+</div>

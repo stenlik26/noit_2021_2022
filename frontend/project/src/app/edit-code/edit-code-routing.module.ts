@@ -6,7 +6,7 @@ import { EditCodePageComponent} from './edit-code-page/edit-code-page.component'
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':id',
     component: EditCodePageComponent
   }
 ];

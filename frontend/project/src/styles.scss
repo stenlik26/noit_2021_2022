@@ -6,7 +6,21 @@ $color-white: #F1E9DB;
 $color-gray: #716A5C;
 $color-dark-blue: #19647E;
 
-$primary: $color-dark-blue;
+$primary: #6AB547;
+
+$form-select-indicator-color: white;
+
+$accordion-icon-active-color: white;
+$accordion-icon-color: white;
+
+$accordion-color: #202225;
+$accordion-bg:  #202225;
+
+$accordion-button-color:  #202225;
+$accordion-button-bg: #202225;
+
+$accordion-button-active-color:  #202225;
+$accordion-button-active-bg: #202225;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
@@ -17,6 +31,12 @@ $editor-bg: #1E1E1E;
 $background-color: #030027;
 $panel-color: #DFE0E2;
 $accent-green: #6AB547;
+$red_color: #f44336; 
+$button-gray: #202225;
+$button-light-gray: #313131;
+
+
+
 
 body {
   background-color: $color-black;
@@ -28,9 +48,23 @@ textarea {
   color: $color-white;
 }
 
+input[type=checkbox]{
+  color: $accent-green;
+}
+
 
 .button-green {
   background-color: $accent-green;
+  color: white;
+}
+
+.button-gray{
+  background-color: $button-light-gray;
+  color: white;
+}
+
+.button-red{
+  background-color: $red_color;
   color: white;
 }
 

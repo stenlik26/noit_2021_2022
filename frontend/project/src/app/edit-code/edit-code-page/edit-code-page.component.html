@@ -1,40 +1,71 @@
-<div class="row">
-  <div class="col">
-    <div class="btn-group" id="buttons">
-      <button type="button" class="btn btn-success" (click)="executeCode()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-play-fill" viewBox="0 0 16 16">
-          <path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/>
-        </svg>
-        Изпълни код
-      </button>
-      <button type="button" class="btn btn-primary text-white" (click)="executeCode()">Проверка за стил</button>
-    </div>
-  </div>
+<div id="content" class="grid-container panel">
 
-  <div class="col-4">
-    <select id="language-selector" (change)="changeLanguageSelect()" class="form-select" aria-label="Default select example">
+  <div id="code_buttons" class="grid-item">
+    <select id="language-selector" (change)="changeLanguageSelect()" class="form-select bg-dark"
+      aria-label="Default select example">
       <option value="cpp">C++</option>
       <option value="csharp">C#</option>
       <option value="java">Java</option>
       <option value="python">Python</option>
     </select>
-  </div>
-</div>
-<div class="row">
-  <div class="col">
-    <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)"></ngx-monaco-editor>
-  </div>
-  <div class="col-4">
-    <div id="output">
-      <div class="form-outline">
-        <label class="form-label" for="stdout">stdout:</label>
-        <textarea class="form-control" id="stdout" rows="8"></textarea>
-      </div>
 
-      <div class="form-outline">
-        <label class="form-label" for="stderr">stderr:</label>
-        <textarea class="form-control" id="stderr" rows="8"></textarea>
-      </div>
+    <button class="button-green buttons">Изпълни код</button>
+    <button class="button-green buttons">Изпълни тестове</button>
+
+  </div>
+
+  <div id="tabs" class="grid-item tab">
+    <button class="tablinks" (click)="switchTab('problem_text_editor')">Условие</button>
+    <button class="tablinks" (click)="switchTab('problem_tests')">Тестове</button>
+  </div>
+
+  <div id="monaco_editor" class="grid-item">
+    <ngx-monaco-editor class="editor_test_class" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)"></ngx-monaco-editor>
+  </div>
+
+  <div id="problem_text" class="grid-item">
+
+    <div id="problem_text_editor" class="tabcontent">
+      <div id="editor"></div>
+    </div>
+
+    <div id="problem_tests" class="tabcontent">
+      <h4>Резултат от тестове: x / y</h4>
+      <ul>
+        <div class="test_element" *ngFor="let test of problem_information.test_fields">
+
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="test">
+              <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                attr.data-bs-target="#test-info-{{test.get_test_num()}}" aria-expanded="true"
+                aria-controls="collapseOne">
+                <div class="test_info_field">
+                  <h5>Тест {{test.get_test_num()}}</h5>
+                  <div class="test_info_field_right">
+                    <i class="fa fa-times fa-lg icon_class test_failed"></i>
+                    <h6>Тестът не премина успешно.</h6>
+                  </div>
+                </div>
+              </button>
+            </h2>
+
+
+            <div id="test-info-{{test.get_test_num()}}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
+                plugin adds the appropriate classes that we use to style each element. These classes control the overall
+                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
+                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
+                within the <code>.accordion-body</code>, though the transition does limit overflow.
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </ul>
     </div>
   </div>
+
 </div>

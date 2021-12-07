@@ -1,0 +1,70 @@
+  label {
+    font-weight: bold;
+  }
+  
+  input[type=text], input[type=password] {
+
+    width: 90%;
+    padding: 1em;
+    margin: 1em 0;
+    border: 0.1em solid;
+    background:transparent;
+    border-radius: .5em;
+    border-color: white;
+    color: rgba(160, 160, 160);
+    text-align: center;
+  }
+  
+  input[type=text]:focus, input[type=password]:focus {
+    outline: none;
+    border-color: yellowgreen;
+    color: white
+  }
+  
+  #loginPanel
+  {
+    width: 50%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 3%;
+  }
+
+  .container {
+    padding: 0.8em;
+  }
+
+  .loginBtn {
+    color: white;
+    padding: 0.6em 0.6em;
+    margin: 0.6em 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+    border-radius: .5em;
+  }
+
+  .forgotenPassword{
+    text-align: center;
+  }
+  
+  .loginBtn:hover {
+    opacity:1;
+  }
+
+  .icon_class{
+    margin: 1em 0.5em;
+    align-items: center;
+  }
+  
+  .inputField{
+    display: flex;
+    flex-direction: horizontal;
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+
+  
+  
