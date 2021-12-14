@@ -8,6 +8,7 @@ from backend.src.register_user.register_user import RegisterUserClass
 from backend.src.login_user.login_user import LoginUserClass
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
+from backend.src.solve_problem.solve_problem import SolveProblemClass
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -273,15 +274,45 @@ def get_user_group_invites():
     return jsonify(inst.get_user_group_invites(post_info['my_user_id']))
 
 
+@app.route('/get_problem_info', methods=['POST'])
+def get_problem_info():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_problem_info(post_info['problem_id']))
+
+
+@app.route('/upload_code', methods=['POST', 'GET'])
+def upload_code():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.upload_solution(post_info))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-
-    #t = get_connection()
-    #t = t['Main']['Problems']
-    #x = t.find_one({"_id": bson.ObjectId("61898d4d14c76c04b63be258")}, {"_id": 0, "text": 1, "tests": 1, "start_date": 1, "end_date": 1, "time_limit": 1})
-    x = {'text': '```javascript\nvar s = "Test syntax highlighting";\nalert( s );\n```\n\n# Test\n\n1. Test item\n\n2. Test item 2\n\n3. Test item 3\n\n- Unordered test item\n\n- Unordered test item\n\n- Unordered test item\n\n', 'tests': [{'input': '12', 'output': '123', 'is_hidden': True, 'time_limit': '200'}, {'input': '186', 'output': '123', 'is_hidden': True, 'time_limit': '200'}], 'start_date': datetime.datetime(2021, 11, 12, 22, 46), 'end_date': datetime.datetime(2021, 11, 25, 22, 46), 'time_limit': ''}
-    return jsonify(x)
-    #return 'This is the debug page for the backend api. (API works)'
+    return 'This is the debug page for the backend api. (API works)'
 
 
 if __name__ == '__main__':
