@@ -28,6 +28,7 @@ class SolveProblemClass:
         return {"status": "OK", "message": x}
 
     def run_tests(self, problem_id, code, language):
+        # Needs the executor working...
         if not ObjectId.is_valid(problem_id):
             return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
 

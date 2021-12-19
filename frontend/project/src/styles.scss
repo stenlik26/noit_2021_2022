@@ -8,19 +8,23 @@ $color-dark-blue: #19647E;
 
 $primary: #6AB547;
 
+//Bootstrap dropdown select arrow color
 $form-select-indicator-color: white;
 
+//Bootstrap accordian custom colors
 $accordion-icon-active-color: white;
 $accordion-icon-color: white;
-
 $accordion-color: #202225;
 $accordion-bg:  #202225;
-
 $accordion-button-color:  #202225;
 $accordion-button-bg: #202225;
-
 $accordion-button-active-color:  #202225;
 $accordion-button-active-bg: #202225;
+
+//Bootstrap toast colors
+$toast-background-color: #202225;
+$toast-header-background-color: #6AB547;
+$toast-header-color: white;
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
@@ -34,7 +38,7 @@ $accent-green: #6AB547;
 $red_color: #f44336; 
 $button-gray: #202225;
 $button-light-gray: #313131;
-
+$secondary-color: #3b3162;
 
 
 
@@ -60,6 +64,11 @@ input[type=checkbox]{
 
 .button-gray{
   background-color: $button-light-gray;
+  color: white;
+}
+
+.button-secondary{
+  background-color: $secondary-color;
   color: white;
 }
 

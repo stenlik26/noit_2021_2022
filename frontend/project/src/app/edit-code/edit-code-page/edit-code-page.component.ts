@@ -24,6 +24,9 @@ export class EditCodePageComponent implements OnInit {
   problem_title: any;
   problem_information: any;
   problem_id: any;
+  toast: any;
+  toastEl: any;
+  toast_content: any;
 
 
   constructor(private activatedRoute: ActivatedRoute) {
@@ -37,7 +40,12 @@ export class EditCodePageComponent implements OnInit {
   ngOnInit(): void {
     this.markdown_viewer = new Editor('editor', new MdFormatter(true), customTheme, true);
     this.markdown_viewer.setContent('# Зареждане...');
-
+    this.toast_content = document.getElementById('toast_content') as HTMLParagraphElement;
+    this.toastEl = document.getElementById('liveToast');
+    console.log(this.toastEl);
+    //@ts-ignore
+    this.toast = new Toast(this.toastEl);
+    console.log(this.toast);
   }
 
   // @ts-ignore
@@ -69,12 +77,11 @@ export class EditCodePageComponent implements OnInit {
     }
   }
 
-  showToast(){
-    var toastEl = document.getElementById('liveToast');
+  showToast(message: string){
+    
+    this.toast_content.innerHTML = message;
     //@ts-ignore
-    var toast = Toast.getInstance(toastEl);
-    //@ts-ignore
-    toast.show();
+    this.toast.show();
   }
 
   changeLanguageSelect() {
@@ -183,11 +190,12 @@ export class EditCodePageComponent implements OnInit {
 
   upload_code_output(json: any)
   {
+    this.showToast("Вашето решение е качено успешно.");
     console.log(json);
   }
 
-  upload_code() {
-    this.showToast();
+  upload_code(message: string) {
+    this.showToast(message);
     // @ts-ignore
     const current_code = this.editor.getValue();
 
@@ -205,6 +213,6 @@ export class EditCodePageComponent implements OnInit {
       headers: { 'Content-type': 'application/json' }
     })
       .then(response => response.json())
-      .then(json => this.problem_info_output(json.message));
+      .then(json => this.upload_code_output(json.message));
   }
 }
