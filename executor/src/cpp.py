@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 
-from compiled_language import CompiledLanguage
-from config import Config
+from src.compiled_language import CompiledLanguage
+from src.config import Config
 
 
 class CppLanguage(CompiledLanguage):

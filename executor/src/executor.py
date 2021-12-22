@@ -1,8 +1,8 @@
 import os
 from typing import Optional
 
-from language_information import Language
-from config import Config
+from src.language_information import Language
+from src.config import Config
 import csharp
 
 
