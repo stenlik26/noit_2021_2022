@@ -114,6 +114,14 @@ class CppTest(unittest.TestCase):
         self.assertNotEqual(result[1], "")
         self.assertNotEqual(result[2], 0)
 
+    def test_06_lint_valid_code(self):
+        self.__write_to_tmp_file(self.valid_code_lines)
+
+        result = self.cpp.lint(self.tmp_cpp_file_path)
+
+        print(result[0])
+        self.assertEqual(result[2], 0)
+
     def __write_to_tmp_file(self, content: List[str]):
         with open(self.tmp_cpp_file_path, 'w+') as fp:
             fp.writelines(content)
