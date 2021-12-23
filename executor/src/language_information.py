@@ -35,6 +35,8 @@ class Language(ABC):
                                 stdin=stdin,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
+        if stdin_path is not None:
+            stdin.close()
         return result.stdout, result.stderr, result.returncode
 
     def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
