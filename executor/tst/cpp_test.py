@@ -95,7 +95,7 @@ class CppTest(unittest.TestCase):
         ]
         self.__write_to_tmp_file(cpp_lines)
 
-        stdin_content = "3\n5\n";
+        stdin_content = "3\n5\n"
         stdin_path = os.path.join("/tmp", "test_03_stdin.txt")
         with open(stdin_path, 'w+') as fp:
             fp.write(stdin_content)
