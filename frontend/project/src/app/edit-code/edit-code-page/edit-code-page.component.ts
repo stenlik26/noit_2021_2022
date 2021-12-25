@@ -62,18 +62,13 @@ export class EditCodePageComponent implements OnInit {
     const stdout_area = document.getElementById('stdout') as HTMLTextAreaElement;
     const stderr_area = document.getElementById('stderr') as HTMLTextAreaElement;
 
-    switch (apiStatus.status) {
-      case 'OK':
-        {
-          stdout_area.value = apiStatus.message.stdout;
-          stderr_area.value = apiStatus.message.stderr;
-          break;
-        }
-      default:
-        {
-          stdout_area.value = "Грешка при заявката";
-          break;
-        }
+    if (apiStatus.status === 'OK')
+    {
+      stdout_area.value = apiStatus.message.stdout;
+      stderr_area.value = apiStatus.message.stderr;
+    }
+    else{
+      stdout_area.value = "Грешка при заявката";
     }
   }
 

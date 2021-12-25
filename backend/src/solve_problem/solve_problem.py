@@ -46,10 +46,7 @@ class SolveProblemClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        if x is not None:
-            return True
-        else:
-            return False
+        return x is not None
 
     def __get_solution_id(self, user_id, problem_id):
         try:
@@ -69,10 +66,7 @@ class SolveProblemClass:
         except ConnectionError:
             raise ConnectionError("Failed to connect to db")
 
-        if res is not None:
-            return True
-        else:
-            return False
+        return res is not None
 
     def __save_code(self, info):
         insertionData = {
