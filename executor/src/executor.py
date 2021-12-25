@@ -3,7 +3,7 @@ from typing import Optional
 
 from src.language_information import Language
 from src.config import Config
-import csharp
+from src.csharp import CsharpLanguage
 
 
 class RunResult:
@@ -45,7 +45,7 @@ class Executor:
         else:
             return RunResult(("", "Can't execute", 1))
 
-    def run_test(self, code: str, stdin: Optional[str], stdout: Optional[str]) -> (RunResult, Optional[TestResult]):
+    def run_test(self, code: str, stdin: Optional[str]=None, stdout: Optional[str]=None) -> (RunResult, Optional[TestResult]):
         path = self.__save_code_to_file(code)
 
         stdin_path = None
@@ -81,7 +81,7 @@ class Executor:
         if not os.path.exists(self.__config.work_dir_root):
             os.mkdir(self.__config.work_dir_root)
 
-        if type(self.__language) == csharp.CsharpLanguage:
+        if type(self.__language) == CsharpLanguage:
 
             csharp_path = os.path.join(self.__config.work_dir_root,
                                        self.__generate_csharp_project_folder())
