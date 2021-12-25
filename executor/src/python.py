@@ -1,6 +1,6 @@
 from typing import Optional
 
-from interpreted_language import InterpretedLanguage
+from src.interpreted_language import InterpretedLanguage
 
 
 class PythonLanguage(InterpretedLanguage):
@@ -12,4 +12,4 @@ class PythonLanguage(InterpretedLanguage):
         return super().execute_command(self.executable, [code_path], stdin_path)
 
     def lint(self, code_path) -> tuple:
-        return super().execute_command(self.linter, [code_path])
+        return super().execute_command(self.linter, [code_path, "--exit-zero"])
