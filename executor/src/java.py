@@ -2,8 +2,8 @@ import os
 import re
 from typing import Optional
 
-from compiled_language import CompiledLanguage
-from config import Config
+from src.compiled_language import CompiledLanguage
+from src.config import Config
 
 
 class JavaLanguage(CompiledLanguage):
@@ -30,5 +30,5 @@ class JavaLanguage(CompiledLanguage):
         return out, err, return_code
 
     def lint(self, code_path):
-        print('No java linter implemented')
-        return None
+        return super().execute_command(self.linter.format(code_path), [])
+
