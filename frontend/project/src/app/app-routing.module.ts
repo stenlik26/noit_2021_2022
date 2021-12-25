@@ -7,7 +7,7 @@ const routes: Routes = [
     loadChildren: () => import('./home/home-routing.module').then(m => m.HomeRoutingModule)
   },
   {
-    path: 'edit',
+    path: 'solve',
     loadChildren: () => import('./edit-code/edit-code.module').then(m => m.EditCodeModule)
   },
   {
@@ -32,4 +32,5 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+//@ts-ignore
 export class AppRoutingModule { }

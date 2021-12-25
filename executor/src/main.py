@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify
 import flask_cors
 from language_executors import LanguageExecutors
+from src.executor import RunResult, Executor
+
 app = Flask(__name__)
 flask_cors.CORS(app)
 
@@ -10,35 +12,51 @@ language_executors = LanguageExecutors()
 @app.route('/lint', methods=['POST'])
 def lint_code():
     post_info = request.get_json()
-    # TODO: Check if all params are given / valid. Decorator?
-    executor = language_executors.get_executor(post_info['language'])
+    executor: Executor = language_executors.get_executor(post_info['language'])
 
-    out_lint, err_lint, rc_lint = executor.lint(post_info['code'])
+    result: RunResult = executor.lint(post_info['code'])
 
     return jsonify({
         "status": "OK",
-        "message": {
-            "stdout": out_lint,
-            "stderr": err_lint,
-            "return_code": rc_lint
-        }})
+        "message": result.to_dict()
+    })
 
 
 @app.route('/run_code', methods=['POST'])
 def run_code():
     post_info = request.get_json()
-    # TODO: Check if all params are given / valid. Decorator?
-    executor = language_executors.get_executor(post_info['language'])
+    executor: Executor = language_executors.get_executor(post_info['language'])
 
-    out_run, err_run, rc_run = executor.run(post_info['code'])
+    result: RunResult = executor.run(post_info['code'])
 
     return jsonify({
         "status": "OK",
-        "message": {
-            "stdout": out_run,
-            "stderr": err_run,
-            "return_code": rc_run
-        }})
+        "message": result.to_dict()
+    })
+
+
+@app.route('/run_test', methods=['POST'])
+def run_test():
+    post_info = request.get_json()
+    executor = language_executors.get_executor(post_info['language'])
+
+    stdin = post_info['stdin'] if 'stdin' in post_info else None
+    expected_stdout = post_info['expected_stdout'] if 'expected_stdout' in post_info else None
+
+    run_result, test_result = executor.run_test(post_info['code'], stdin, expected_stdout)
+
+    run_result_dict: dict = run_result.to_dict()
+
+    if test_result is not None:
+        test_result_dict: dict = test_result.to_dict()
+
+        # This merges two dictionaries
+        run_result_dict.update(test_result_dict)
+
+    return jsonify({
+        "status": "OK",
+        "message": run_result_dict
+    })
 
 
 @app.route('/')
@@ -47,25 +65,4 @@ def debug_page():
 
 
 if __name__ == "__main__":
-
-
-
-    '''
-    outPy, errPy, rcPy = executorPy.run("print('Hello from Python')")
-    outLint, errLint, rcLint = executorPy.lint("print('Hello from Python')")
-
-    executorCpp.lint('#include <iostream>\nint main(){\nstd::cout<<"Hello from C++\\n";\nreturn 0;\n}')
-
-    outCpp, errCpp, rcCpp = executorCpp.run('#include <iostream>\nint main(){\nstd::cout<<"Hello from C++\\n";\nreturn 0;\n}')
-
-    print("Out = {}Err = {}\nrc = {}\n".format(outPy, errPy, rcPy))
-    print("Pylint Out = {}Pylint Err = {}\nPylint rc = {}\n".format(outLint, errLint, rcLint))
-    print("Cpp Out = {}Cpp Err = {}\nCpp rc = {}\n".format(outCpp, errCpp, rcCpp))
-    
-    '''
-
-    #executor = language_executors.get_executor('csharp')
-
-    #out_run, err_run, rc_run = executor.run('using System;public class TestProgram{public static void Main(){Console.WriteLine("Hello World");}}')
-
     app.run()
