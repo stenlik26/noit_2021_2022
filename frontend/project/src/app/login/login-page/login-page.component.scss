@@ -4,15 +4,15 @@
   
   input[type=text], input[type=password] {
 
-    width: 90%;
+    width: 95%;
     padding: 1em;
-    margin: 1em 0;
+    height: 3em;
     border: 0.1em solid;
     background:transparent;
     border-radius: .5em;
     border-color: white;
     color: rgba(160, 160, 160);
-    text-align: center;
+    text-align: left;
   }
   
   input[type=text]:focus, input[type=password]:focus {
@@ -20,7 +20,14 @@
     border-color: yellowgreen;
     color: white
   }
+
+  h2{
+    text-align: center;
+  }
   
+  p{
+    margin: 0;
+  }
   
   #loginPanel
   {
@@ -29,18 +36,8 @@
     margin-left: auto;
     margin-right: auto;
     border-radius: 3%;
-    //background-image: url("../../../assets/temp.jpg");
   }
 
-  #test{
-    background-image: url("../../../assets/temp.jpg");
-    min-height: 100vh;
-    width: 100%;
-    -webkit-background-size: cover;
--moz-background-size: cover;
--o-background-size: cover;
-background-size: cover;
-  }
 
   .container {
     padding: 0.8em;
@@ -58,7 +55,7 @@ background-size: cover;
   }
 
   .forgotenPassword{
-    text-align: center;
+    text-align: right;
   }
   
   .loginBtn:hover {
@@ -66,7 +63,7 @@ background-size: cover;
   }
 
   .icon_class{
-    margin: 1em 0.5em;
+    margin: 0.75em 0.1em;
     align-items: center;
   }
   
@@ -75,6 +72,7 @@ background-size: cover;
     flex-direction: horizontal;
     width: 100%;
     justify-content: space-between;
+    margin: 1em 0;
   }
   
 

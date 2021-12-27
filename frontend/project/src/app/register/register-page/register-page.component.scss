@@ -5,14 +5,15 @@
   padding: 0.8em;
 }
 
-.icon_class {
-  margin: 1em 0.5em;
+.icon_class{
+  margin: 0.75em 0.1em;
   align-items: center;
 }
 
 .inputField{
   display: flex;
   flex-direction: horizontal;
+  margin: 1em 0;
   width: 100%;
   justify-content: space-between;
 }
@@ -28,15 +29,15 @@
  
 input[type=text], input[type=password] {
 
-  width: 90%;
+  width: 95%;
   padding: 1em;
-  margin: 1em 0;
+  height: 3em;
   border: 0.1em solid;
   background:transparent;
   border-radius: .5em;
   border-color: white;
   color: rgba(160, 160, 160);
-  text-align: center;
+  text-align: left;
 }
 
 input[type=text]:focus, input[type=password]:focus {
@@ -48,6 +49,19 @@ input[type=text]:focus, input[type=password]:focus {
 
 label{
   font-weight: bold;
+}
+
+h2{
+  text-align: center;
+}
+
+p{
+  margin: 0;
+  text-align: center;
+}
+
+.has_account{
+  text-align: right;
 }
 
 .registerbtn {
