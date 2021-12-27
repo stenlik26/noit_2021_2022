@@ -37,15 +37,15 @@ class Executor:
         self.__language = language
         self.__config = Config()
 
-    def run(self, code: str) -> RunResult:
+    def run(self, code: str, timeout: float = 2) -> RunResult:
         path = self.__save_code_to_file(code)
 
         if path != "":
-            return RunResult(self.__language.execute(path))
+            return RunResult(self.__language.execute(path, timeout=timeout))
         else:
             return RunResult(("", "Can't execute", 1))
 
-    def run_test(self, code: str, stdin: Optional[str]=None, stdout: Optional[str]=None) -> (RunResult, Optional[TestResult]):
+    def run_test(self, code: str, stdin: Optional[str] = None, stdout: Optional[str] = None, timeout: float = 2) -> (RunResult, Optional[TestResult]):
         path = self.__save_code_to_file(code)
 
         stdin_path = None
@@ -57,7 +57,7 @@ class Executor:
             stdout_path = self.__create_file(stdout,  "stdout.txt")
 
         if path != "":
-            run_result = RunResult(self.__language.execute(path, stdin_path))
+            run_result = RunResult(self.__language.execute(path, stdin_path, timeout=timeout))
 
             if stdout_path is not None:
                 output_path = self.__create_file(run_result.stdout, "output.txt")
