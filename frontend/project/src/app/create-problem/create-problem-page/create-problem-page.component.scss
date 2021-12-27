@@ -13,6 +13,7 @@
   justify-content: center;
   margin-left: auto;
   margin-right: auto;
+  border-radius: .5em;
 }
 
 .tab button {
@@ -41,6 +42,11 @@
   padding: 6px 12px;
 }
 
+.tabcontent-opened {
+  display: block;
+  padding: 6px 12px;
+}
+
 /*
 #problem_title{
     grid-column: 1;
@@ -54,11 +60,14 @@
 #problem_options{
   flex-direction: column;
   justify-content: space-between;
-  width: 50%;
-  margin-left: auto;
-  margin-right: auto;
+  width: 65%;
+  margin: 0.5em auto 0 auto;
   gap: 0.5em;
+  background-color: #202225;
+  border-radius: .5em;
+  padding: 0.7em 1.5em 0.7em 1.5em;
 }
+
 
 
 #title{

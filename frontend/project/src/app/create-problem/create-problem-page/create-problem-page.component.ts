@@ -14,7 +14,8 @@ import projectConfig from '../../../assets/conf.json'
 })
 export class CreateProblemPageComponent implements OnInit {
 
-  constructor() { }
+  constructor() { 
+  }
 
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
@@ -132,7 +133,7 @@ export class CreateProblemPageComponent implements OnInit {
     if (!UserTokenHandling.isUserTokenSet) {
       UserTokenHandling.setGuestToken();
     }
-
+    this.switchTab('problem_text_editor');
   }
 
 }
