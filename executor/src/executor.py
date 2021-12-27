@@ -81,7 +81,8 @@ class Executor:
         if not os.path.exists(self.__config.work_dir_root):
             os.mkdir(self.__config.work_dir_root)
 
-        if type(self.__language) == CsharpLanguage:
+        # isinstances doesnt seem to be working correctly in this case - if there is time, rework
+        if "Csharp" in str(type(self.__language)):
 
             csharp_path = os.path.join(self.__config.work_dir_root,
                                        self.__generate_csharp_project_folder())
