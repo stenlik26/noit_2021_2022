@@ -1,43 +1,91 @@
+input[type=text]{
 
- input[type=text]{
+  width: 100%;
+  padding: 1em;
+  margin: 1em 0;
+  border: 0.1em solid;
+  background:transparent;
+  border-radius: .5em;
+  border-color: white;
+  color: white;
+  text-align: center;
+}
 
-    width: 100%;
-    padding: 1em;
-    margin: 1em 0;
-    border: 0.1em solid;
-    background:transparent;
-    border-radius: .5em;
-    border-color: white;
-    color: white;
-    text-align: center;
-  }
+input[type=text]:focus {
+  outline: none;
+  border-color: yellowgreen;
+  color: white
+}
+
+#create_group_panel
+{
+  width: 50%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: .5em;
+}
+
+.container {
+  padding: 0.8em;
+}
+
+.buttons {
+  color: white;
+  padding: 0.6em 0.6em;
+  margin: 0.6em 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+  border-radius: .5em;
+}
+
+.invite_button{
+  color: white;
+  padding: 0.6em 0.6em;
+  margin: 0.6em 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+}
+
+.remove_button{
+  color: white;
+  padding: 0.6em 0.6em;
+  margin: 0.6em 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+}
+
+.user_panel{
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  margin: 0.5em 0 0.5em 0;
+  padding: 0 0.5em 0 0.5em;
+  width: 99%;
+  border-radius: .5em;
+}
+
+.user_panel > p{
+  margin: 0;
+  flex-grow: 2;
+}
+
   
-  input[type=text]:focus {
-    outline: none;
-    border-color: yellowgreen;
-    color: white
-  }
-  
-  #create_group_panel
-  {
-    width: 50%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 3%;
-  }
+nav ul {
+  max-height: 23em;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
 
-  .container {
-    padding: 0.8em;
-  }
-
-  .create_group {
-    color: white;
-    padding: 0.6em 0.6em;
-    margin: 0.6em 0;
-    border: none;
-    cursor: pointer;
-    width: 100%;
-    opacity: 0.9;
-    border-radius: .5em;
-  }
+ul{
+  max-height: 20em;
+  padding: 0;
+  margin: 0;
+}

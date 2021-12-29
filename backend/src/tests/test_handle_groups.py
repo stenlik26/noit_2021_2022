@@ -2,9 +2,13 @@ import unittest
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
 
 
+class MockCursor:
+    inserted_id = '61bceee9a60aabad57ada76d'
+
+
 class MockDb:
     def insert_one(self, x):
-        pass
+        return MockCursor
 
     def update_one(self, x, y=None):
         pass
@@ -16,6 +20,9 @@ class MockDb:
                 "from_user_id": "test"
             }]
         }
+
+    def find(self, x=None, y=None):
+        return []
 
 
 class HandleGroupsTest(unittest.TestCase):
@@ -128,3 +135,29 @@ class HandleGroupsTest(unittest.TestCase):
         my_user_id = 'invalid_id'
         res = self.handle_groups_class.accept_group_invite(group_id, my_user_id)
         self.assertEqual(res['status'], 'error_invalid_userid')
+
+    def test_send_multiple_invites(self):
+        group_id = '507f191e810c19729de860ea'
+        my_user_id = ['507f191e810c19729de860ea']
+        admin_id = '507f191e810c19729de860ea'
+        res = self.handle_groups_class.send_multiple_invites(admin_id, group_id, my_user_id)
+        self.assertEqual(res['status'], 'OK')
+
+    def test_send_multiple_invites_fail(self):
+        group_id = 'fail'
+        my_user_id = ['507f191e810c19729de860ea']
+        admin_id = '507f191e810c19729de860ea'
+        res = self.handle_groups_class.send_multiple_invites(admin_id, group_id, my_user_id)
+        self.assertEqual(res['status'], 'error_invalid_group_id')
+
+    def test_send_multiple_invites_fail2(self):
+        group_id = '507f191e810c19729de860ea'
+        my_user_id = ['507f191e810c19729de860ea']
+        admin_id = 'fail'
+        res = self.handle_groups_class.send_multiple_invites(admin_id, group_id, my_user_id)
+        self.assertEqual(res['status'], 'error_invalid_userid')
+
+    def test_get_all_users(self):
+        my_user_id = '507f191e810c19729de860ea'
+        res = self.handle_groups_class.get_all_users(my_user_id)
+        self.assertEqual(res['status'], 'OK')

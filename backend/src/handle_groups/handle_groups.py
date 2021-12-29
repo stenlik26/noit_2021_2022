@@ -127,8 +127,54 @@ class HandleGroupsClass:
             }
 
         try:
-            self.db_groups.insert_one(insertionData)
+            data = self.db_groups.insert_one(insertionData)
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        return {"status": "OK", "message": "Successfully created a group."}
+        return {"status": "OK", "message": "Successfully created a group.", "group_id": str(data.inserted_id)}
+
+    def get_all_users(self, my_user_id):
+
+        if not ObjectId.is_valid(my_user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        try:
+            users = self.db_users.find({}, {'name': 1, 'picture': 1})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        users = list(users)
+
+        for user in users:
+            user['_id'] = str(user['_id'])
+
+        for index, entry in enumerate(users):
+            if entry['_id'] == my_user_id:
+                users.pop(index)
+
+        return {'status': 'OK', 'message': users}
+
+    def send_multiple_invites(self, admin_id, group_id, users_to_invite):
+        if not ObjectId.is_valid(admin_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_group_id", "message": "group_id was invalid"}
+
+        res = []
+
+        for user_id in users_to_invite:
+            res.append(self.send_group_invite({
+                'admin_user_id': admin_id,
+                'group_id': group_id,
+                'invited_user_id': user_id
+            })['status'])
+
+        if all([y == 'OK' for y in res]):
+            return {'status': 'OK', 'message': 'Successfully sent group invites.'}
+        else:
+            return {'status': 'error_invites_not_sent', 'message': res}
+
+
+
+

@@ -1,18 +1,58 @@
 <div class="w3-panel bg-dark" id="create_group_panel">
-    <div class="container">
+    <div id="main_panel" class="container">
 
         <h2>Създаване на група:</h2>
-
-        <p type="hidden" id="status"></p>
 
         <div id="mainInputPanel">
 
             <label for="group_name">Име на групата: </label>
             <input type="text" id="group_name" name="group_name" required>
-            
-            <button (click)="create_group_button()" type="submit" class="create_group button-green">Създаване</button>
-            <button (click)="back()" type="submit" class="create_group button-gray">Отказ</button>
+
+            <button (click)="next_page()" type="submit" class="buttons button-green">Напред</button>
+            <button (click)="back()" type="submit" class="buttons button-gray">Отказ</button>
         </div>
 
     </div>
+
+    <div id="second_panel" class="container" style="display: none;">
+
+        <h2>Създаване на група:</h2>
+
+        <p type="hidden" id="status"></p>
+
+        <div>
+
+            <label for="group_name">Добавяне на хора към групата: </label>
+
+            <nav>
+                <ul>
+                    <div class="user_panel panel-gray" *ngFor="let user of all_users">
+
+                        <img class="pic_thumbnail" src="{{user.get_picture()}}">
+                        <p>{{user.get_username()}}</p>
+                        <button (click)="add_user_to_invite_list(user.get_user_id())"
+                            id="{{user.get_user_id()}}_invite" class="button-secondary invite_button">Покани</button>
+
+                        <button (click)="remove_user_from_invite_list(user.get_user_id())"
+                            id="{{user.get_user_id()}}_remove" class="button-red remove_button"
+                            style="display: none;">Октаз</button>
+                    </div>
+
+                </ul>
+            </nav>
+
+            <button (click)="create_group_button()" type="submit" class="button-green buttons">Създаване</button>
+            <button (click)="previous_page()" type="submit" class="button-gray buttons">Назад</button>
+        </div>
+
+    </div>
+
+    <div id="success_page" class="container" style="display: none;">
+        <h2>Създаване на група:</h2>
+
+        <p>Групата е успешно създадена.</p>
+        <button (click)="back()" type="submit" class="buttons button-gray">Начало</button>
+    </div>
+
+
 </div>

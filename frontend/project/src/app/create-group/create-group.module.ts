@@ -10,7 +10,7 @@ import { CreateGroupRoutingModule } from './create-group-routing.module';
   ],
   imports: [
     CommonModule,
-    CreateGroupModule
+    CreateGroupRoutingModule
   ]
 })
 export class CreateGroupModule { }

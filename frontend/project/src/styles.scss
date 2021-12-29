@@ -81,6 +81,14 @@ input[type=checkbox]{
     background-color: #202225;
 }
 
+.pic_thumbnail{
+  height: 3em;
+}
+
+.panel-gray{
+  background-color: $button-light-gray;
+}
+
 a {
   color: rgba(160, 160, 160);
 }

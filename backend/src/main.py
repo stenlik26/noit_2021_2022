@@ -292,7 +292,7 @@ def get_problem_info():
     return jsonify(inst.get_problem_info(post_info['problem_id']))
 
 
-@app.route('/upload_code', methods=['POST', 'GET'])
+@app.route('/upload_code', methods=['POST'])
 def upload_code():
     post_info = request.get_json()
 
@@ -310,9 +310,39 @@ def upload_code():
     return jsonify(inst.upload_solution(post_info))
 
 
+@app.route('/get_all_users', methods=['POST'])
+def get_all_users():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_all_users(post_info['user_id']))
+
+
+@app.route('/send_multiple_group_invites', methods=['POST'])
+def send_multiple_group_invites():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'invited_ids', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'invited_ids', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.send_multiple_invites(post_info['user_id'], post_info['group_id'], post_info['invited_ids']))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    return 'This is the debug page for the backend api. (API works)'
+    return jsonify({"test": "api test"})
 
 
 if __name__ == '__main__':
