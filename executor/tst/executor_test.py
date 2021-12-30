@@ -20,7 +20,7 @@ class AlwaysOkLanguage(CompiledLanguage):
     def compile(self, code_path: str) -> tuple:
         return all_good_stdout, "", 0
 
-    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None, timeout: float = 2) -> tuple:
         return all_good_stdout, "", 0
 
     def lint(self, code_path) -> tuple:
@@ -36,7 +36,7 @@ class AlwaysNOkLanguage(CompiledLanguage):
     def compile(self, code_path: str) -> tuple:
         return "", not_good_stderr, 123
 
-    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None, timeout: float = 2) -> tuple:
         return "", not_good_stderr, 123
 
     def lint(self, code_path) -> tuple:
@@ -49,7 +49,7 @@ class RepeatStdinLanguage(CompiledLanguage):
         self.__config = Config()
         self.__output_file_path = os.path.join(self.__config.work_dir_root, "a.out")
 
-    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None, timeout: float = 2) -> tuple:
         if stdin_path is None:
             return all_good_stdout, "", 0
 
