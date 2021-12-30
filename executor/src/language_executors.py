@@ -1,8 +1,8 @@
-from python import PythonLanguage
-from cpp import CppLanguage
-from java import JavaLanguage
-from csharp import CsharpLanguage
-from executor import Executor
+from src.python import PythonLanguage
+from src.cpp import CppLanguage
+from src.java import JavaLanguage
+from src.csharp import CsharpLanguage
+from src.executor import Executor
 
 
 class LanguageExecutors:
