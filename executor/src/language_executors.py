@@ -9,7 +9,7 @@ class LanguageExecutors:
     def __init__(self):
         self.__python_lang = PythonLanguage("/usr/bin/python3", '.py', False, "/usr/bin/pylint")
         self.__cpp_lang = CppLanguage("/usr/bin/g++", '.cpp', True, '/usr/bin/clang-tidy')
-        self.__java_lang = JavaLanguage("/usr/bin/javac", '.java', True,  'java -jar checkstyle-9.0.1-all.jar {} -c google_checks.xml')
+        self.__java_lang = JavaLanguage("/usr/bin/javac", '.java', True,  'java -jar checkstyle-9.2.1-all.jar {} -c google_checks.xml')
         self.__csharp_lang = CsharpLanguage('/usr/bin/dotnet', '.cs', True, '')
         self.__executorPy = Executor(self.__python_lang)
         self.__executorCpp = Executor(self.__cpp_lang)

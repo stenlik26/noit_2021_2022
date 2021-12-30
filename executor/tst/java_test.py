@@ -12,7 +12,7 @@ class JavaTest(unittest.TestCase):
         cls.compiler = '/usr/bin/javac'
         cls.extension = '.java'
         cls.is_compiled = True
-        cls.linter = 'java -jar checkstyle-9.0.1-all.jar {} -c google_checks.xml'
+        cls.linter = 'java -jar checkstyle-9.2.1-all.jar {} -c google_checks.xml'
         cls.config = Config()
 
         if not os.path.exists(cls.config.work_dir_root):
