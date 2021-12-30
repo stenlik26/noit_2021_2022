@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import flask_cors
-from language_executors import LanguageExecutors
+from src.language_executors import LanguageExecutors
 from src.executor import RunResult, Executor
 
 app = Flask(__name__)
