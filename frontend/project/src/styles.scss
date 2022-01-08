@@ -26,6 +26,11 @@ $toast-background-color: #202225;
 $toast-header-background-color: #6AB547;
 $toast-header-color: white;
 
+//Bootstrap modal colors
+$modal-content-bg: #202225;
+$modal-header-border-color:#202225;
+$modal-footer-border-color:#202225;
+
 @import "../node_modules/bootstrap/scss/bootstrap";
 
 $editor-bg: #1E1E1E;
@@ -55,7 +60,6 @@ textarea {
 input[type=checkbox]{
   color: $accent-green;
 }
-
 
 .button-green {
   background-color: $accent-green;

@@ -171,11 +171,11 @@ def create_problem():
     inst = HandleProblemsClass()
 
     if not check_for_post_params(('token', 'user_id', 'tests', 'title',
-                                  'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+                                  'public', 'text', 'start_date', 'end_date', 'time_limit', 'difficulty'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
     if check_if_empty(('user_id', 'token', 'tests', 'title',
-                       'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+                       'public', 'text', 'start_date', 'end_date', 'time_limit', 'difficulty'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     if not is_user_valid(post_info['token'], post_info['user_id']):

@@ -6,6 +6,7 @@ declare var customTheme: any;
 declare var sampleMarkdownText: any;
 import { UserTokenHandling } from 'src/app/user_token_handling';
 import projectConfig from '../../../assets/conf.json'
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-create-problem-page',
@@ -19,6 +20,9 @@ export class CreateProblemPageComponent implements OnInit {
 
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
+  modal: any;
+  problem_created: boolean = false;
+  modal_content: any;
 
   switchTab(name: string) {
 
@@ -53,8 +57,12 @@ export class CreateProblemPageComponent implements OnInit {
     const start_date: string = (document.getElementById('problem_start_date') as HTMLInputElement).value;
     const end_date: string = (document.getElementById('problem_end_date') as HTMLInputElement).value;
     const tags: string = (document.getElementById('problem_tags') as HTMLInputElement).value;
+    const difficulty: string = (document.getElementById('difficulty') as HTMLInputElement).value;
 
     this.update_test_array();
+
+    this.modal_content.innerHTML = "Моля изчакайте..."
+    this.modal.show();
 
     let access = problem_access.value === "public" ? "true" : "false";
 
@@ -68,7 +76,8 @@ export class CreateProblemPageComponent implements OnInit {
       tests: JSON.stringify(this.test_fields, ["input", "output", "is_hidden", "time_limit"]),
       tags: tags,
       user_id: UserTokenHandling.getUserId(),
-      token: UserTokenHandling.getUserToken()
+      token: UserTokenHandling.getUserToken(),
+      difficulty: difficulty
     }
 
     fetch((projectConfig.api_url + 'create_problem'), {
@@ -78,10 +87,23 @@ export class CreateProblemPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        if (json.status == "OK")
+        {
+          this.problem_created = true;
+          this.modal_content.innerHTML = "Задачата е успешно създадена."
+          this.modal.show();
+        }
+        else{
+          this.modal_content.innerHTML = "Моля попълнете всички полета."
+          this.modal.show();
+        }
       });
 
 
+  }
+
+  go_to_main_page(): void{
+    window.location.href = projectConfig.site_url;
   }
 
   update_test_array(): void {
@@ -134,6 +156,9 @@ export class CreateProblemPageComponent implements OnInit {
       UserTokenHandling.setGuestToken();
     }
     this.switchTab('problem_text_editor');
+    //@ts-ignore
+    this.modal = new Modal(document.getElementById('result_modal'));
+    this.modal_content = document.getElementById('modal_content') as HTMLParagraphElement;
   }
 
 }

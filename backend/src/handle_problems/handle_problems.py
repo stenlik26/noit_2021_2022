@@ -42,7 +42,8 @@ class HandleProblemsClass:
             'start_date': start_date_mongo_string,
             'end_date': end_date_mongo_string,
             'time_limit': info['time_limit'],
-            'attempts': '0'
+            'attempts': '0',
+            'difficulty': info['difficulty']
             }
 
         try:
