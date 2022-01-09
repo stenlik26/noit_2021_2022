@@ -168,20 +168,22 @@ def login_user():
 def create_problem():
     post_info = request.get_json()
 
-    inst = HandleProblemsClass()
+    inst = HandleProblemsClass(get_connection())
 
     if not check_for_post_params(('token', 'user_id', 'tests', 'title',
-                                  'public', 'text', 'start_date', 'end_date', 'time_limit', 'difficulty'), post_info):
+                                  'public', 'text', 'start_date', 'end_date',
+                                  'time_limit', 'difficulty', 'groups_to_add_problem'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
     if check_if_empty(('user_id', 'token', 'tests', 'title',
-                       'public', 'text', 'start_date', 'end_date', 'time_limit', 'difficulty'), post_info):
+                       'public', 'text', 'start_date', 'end_date',
+                       'time_limit', 'difficulty'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return jsonify(inst.create_problem(post_info, get_connection()))
+    return jsonify(inst.create_problem(post_info))
 
 
 @app.route('/create_group', methods=['POST'])
@@ -338,6 +340,21 @@ def send_multiple_group_invites():
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     return jsonify(inst.send_multiple_invites(post_info['user_id'], post_info['group_id'], post_info['invited_ids']))
+
+
+@app.route('/get_groups_user_admin', methods=['POST'])
+def get_groups_user_admin():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_groups_where_user_is_admin(post_info['user_id']))
 
 
 @app.route('/', methods=['POST', 'GET'])

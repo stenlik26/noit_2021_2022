@@ -25,10 +25,16 @@
         <input id="problem_time_limit" type="text">
 
         <label for="access">Достъп до задачата:</label>
-        <select id="access" class="form-select bg-dark">
+        <select (change)="access_change($event)" id="access" class="form-select bg-dark">
             <option value="public">Публична</option>
             <option value="by_groups">По групи</option>
             <option value="only_me">Само аз</option>
+        </select>
+        
+
+        <label *ngIf="select_groups" for="groups">Групи:</label>
+        <select *ngIf="select_groups" id="groups" class="form-select bg-dark" multiple>
+            <option *ngFor='let group of groups' value="{{group._id}}">{{group.name}}</option>
         </select>
 
 

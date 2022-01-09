@@ -119,7 +119,7 @@ class HandleGroupsClass:
 
         insertionData = {
             'name': info['group_name'],
-            'users': [ObjectId(info['user_id'])],
+            'users': [],
             'admins': [ObjectId(info['user_id'])],
             'shared_files': '',
             'chat': '',
@@ -130,6 +130,8 @@ class HandleGroupsClass:
             data = self.db_groups.insert_one(insertionData)
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
+
+        self.accept_group_invite(data.inserted_id, info['user_id'])
 
         return {"status": "OK", "message": "Successfully created a group.", "group_id": str(data.inserted_id)}
 
@@ -175,6 +177,19 @@ class HandleGroupsClass:
         else:
             return {'status': 'error_invites_not_sent', 'message': res}
 
+    def get_groups_where_user_is_admin(self, admin_id):
+        if not ObjectId.is_valid(admin_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
 
+        try:
+            groups = self.db_groups.find({'admins': {'$in': [ObjectId(admin_id)]}}, {'name': 1})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        groups = list(groups)
+        for group in groups:
+            group['_id'] = str(group['_id'])
+
+        return groups
 
 

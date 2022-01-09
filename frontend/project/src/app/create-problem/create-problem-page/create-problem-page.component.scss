@@ -71,6 +71,22 @@
   color: white;
 }
 
+#groups{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: rgba(255, 255, 255, 0.342);
+  color: white;
+  height: 4em;
+}
+
+#groups:focus{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: greenyellow;
+  color: white;
+}
+
+
 #difficulty{
   border: 0.1em solid;
   border-radius: .5em;

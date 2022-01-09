@@ -5,12 +5,19 @@ import datetime
 
 
 class HandleProblemsClass:
-    def __init__(self):
-        pass
+    def __init__(self, mongo_client):
+        self.db_problems = mongo_client["Main"]["Problems"]
+        self.db_groups = mongo_client["Main"]["Groups"]
 
-    def create_problem(self, info, mongo_client):
-        db = mongo_client["Main"]
-        db = db["Problems"]
+    def __insert_problem_id_to_group(self, problem_id, group_id):
+        try:
+            self.db_groups.update_one(
+                {'_id': ObjectId(group_id)},
+                {'$push': {'problems': ObjectId(problem_id)}})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+    def create_problem(self, info):
 
         # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23-59-59)
         # Подадената дата е във формат: yyyy-mm-ddThh:mm
@@ -47,8 +54,11 @@ class HandleProblemsClass:
             }
 
         try:
-            db.insert_one(insertionData)
+            res = self.db_problems.insert_one(insertionData)
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
+
+        for group in info['groups_to_add_problem']:
+            self.__insert_problem_id_to_group(res.inserted_id, group)
 
         return {"status": "OK", "message": "successfully created a problem."}
