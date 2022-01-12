@@ -52,12 +52,7 @@ export class CreateProblemPageComponent implements OnInit {
   }
 
   access_change(event: any) {
-    if (event.target.value == 'by_groups') {
-      this.select_groups = true;
-    }
-    else {
-      this.select_groups = false;
-    }
+    this.select_groups = (event.target.value == 'by_groups');
   }
 
   create_problem(): void {
