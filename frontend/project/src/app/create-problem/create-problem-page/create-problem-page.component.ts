@@ -17,10 +17,10 @@ export class CreateProblemPageComponent implements OnInit {
 
   constructor() {
   }
-
+  
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
-  modal: Modal = new Modal('');
+  modal: any;
   problem_created: boolean = false;
   modal_content: any;
   groups: Array<any> = new Array<any>();
@@ -165,7 +165,8 @@ export class CreateProblemPageComponent implements OnInit {
         this.groups = json;
       });
   }
-
+  
+  
   ngOnInit(): void {
 
     // Обясненеие за аргументите:
@@ -173,6 +174,7 @@ export class CreateProblemPageComponent implements OnInit {
     // MdFormatter - създава се нов клас като изисква атрибут за режим на редактора. (Прочети последното)
     // customTheme - Темата на полето за условието (тема на scrollbar, тема на редактора, други css настройки и т.н.)
     // Последният атрибут false или ture е затова дали редактора е във read-only режим. Ако е false, може да се пише в редактора, ако е true, може само да се чете от редактора.
+      
     this.editor = new Editor('editor', new MdFormatter(false), customTheme, false);
     this.editor.setContent(sampleMarkdownText);
     this.editor.setContentBasic();
@@ -187,6 +189,7 @@ export class CreateProblemPageComponent implements OnInit {
     this.modal = new Modal(document.getElementById('result_modal'));
     this.modal_content = document.getElementById('modal_content') as HTMLParagraphElement;
     this.get_groups_where_user_is_admin();
+    
   }
 
 }
