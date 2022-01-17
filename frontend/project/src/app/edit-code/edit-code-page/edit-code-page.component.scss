@@ -97,6 +97,17 @@
 
 #problem_tests > ul {
   padding-left: 0;
+  overflow-y: scroll;
+  height: 63vh;
+  overflow-x: hidden;
+}
+
+#problem_tests{
+  height: 71.45vh;
+}
+
+#problem_tests > h4{
+  padding: 0.5em;
 }
 
 
@@ -168,4 +179,52 @@ ngx-monaco-editor{
 
 .accordion-item{
   margin-bottom: 1em;
+}
+
+#test_box{
+  display: flex;
+  justify-content: space-between;
+}
+
+textarea{
+  height: 8em;
+  resize: none;
+  width: 19vw;
+  border: 0.05em solid;
+  background:#202225;
+  border-radius: .5em;
+  //border-color: yellowgreen;
+  border-color: #62686e;
+  color: white;
+  outline: none;
+}
+
+#error_textarea
+{
+  height: 8em;
+  resize: none;
+  width: 43vw;
+  border: 0.05em solid;
+  background:#202225;
+  border-radius: .5em;
+  //border-color: yellowgreen;
+  border-color: #62686e;
+  color: white;
+  outline: none;
+  margin: 0.5em;
+}
+
+#success_manage{
+  margin: 1em;
+  display: none;
+}
+
+.test_field > p{
+  padding: 0 0 0.5em 0;
+  margin:  0;
+}
+
+.test_field{
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
 }

@@ -357,6 +357,39 @@ def get_groups_user_admin():
     return jsonify(inst.get_groups_where_user_is_admin(post_info['user_id']))
 
 
+@app.route('/run_problem_tests', methods=['POST'])
+def run_problem_tests():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'code', 'language'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'code', 'language'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.run_tests(
+        post_info['problem_id'],
+        post_info['code'],
+        post_info['language']))
+
+
+@app.route('/user_access_to_problem', methods=['POSt'])
+def user_access_to_problem():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.does_user_have_access(post_info['user_id'],post_info['problem_id']))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     return jsonify({"test": "api test"})
