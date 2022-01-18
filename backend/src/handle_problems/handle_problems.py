@@ -31,12 +31,7 @@ class HandleProblemsClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        if problem['public']:
-            return {'status': 'OK', 'has_access': True}
-        elif is_in_group is not None:
-            return {'status': 'OK', 'has_access': True}
-        else:
-            return {'status': 'OK', 'has_access': False}
+        return {'status': 'OK', 'has_access': bool(problem['public']) or is_in_group is not None}
 
     def create_problem(self, info):
 

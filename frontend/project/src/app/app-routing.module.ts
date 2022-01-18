@@ -29,6 +29,10 @@ const routes: Routes = [
   {
     path: 'not_found',
     loadChildren: () => import('./not_found_module/not_found_routing.module').then(m => m.NotFoundRoutingModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/not_found'
   }
 ];
 

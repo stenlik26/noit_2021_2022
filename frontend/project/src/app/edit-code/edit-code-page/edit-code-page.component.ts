@@ -192,28 +192,26 @@ export class EditCodePageComponent implements OnInit {
   run_tests_output(json: any) {
 
     if (json.status != 'OK') {
-
       switch (json.status) {
-
-        case 'error_executor':
-          {
+        case 'error_executor':{
             console.log("Error from API. - " + json.status + " - " + json.message);
             this.show_tests = false;
             return;
-            
           }
-
-        case 'error_compile':
-          {
+        case 'error_compile':{
             this.test_tab_message.innerHTML = "Грешка при изпълнение:";
             this.error_textarea.style.display = "block";
             this.error_textarea.innerText = json.message;
             this.show_tests = false;
             return;
           }
-
+        default:{
+            this.test_tab_message.innerHTML = "Грешка при изпълнение:";
+            this.error_textarea.style.display = "block";
+            this.show_tests = false;
+            return
+          }
       }
-
     }
 
     json = json.message;
@@ -232,12 +230,10 @@ export class EditCodePageComponent implements OnInit {
       this.success_message.style.display = 'none';
     }
 
-
     if (json.results.length != 0) {
 
       let id = 1;
       json.results.forEach((element: any) => {
-        
         
         this.problem_information.test_fields.push(new TestField(
           id.toString(),
@@ -250,10 +246,7 @@ export class EditCodePageComponent implements OnInit {
       });
 
       this.show_tests = true;
-
     }
-    
-
   }
 
   async problem_info_output(json: any) {
