@@ -17,6 +17,22 @@ class HandleProblemsClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
+    def does_user_have_access(self, user_id, problem_id):
+
+        if not ObjectId.is_valid(problem_id):
+            return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
+
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user id."}
+
+        try:
+            is_in_group = self.db_groups.find_one({'problems': [ObjectId(problem_id)], 'users': [ObjectId(user_id)]})
+            problem = self.db_problems.find_one({'_id': ObjectId(problem_id)}, {'public': 1})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {'status': 'OK', 'has_access': bool(problem['public']) or is_in_group is not None}
+
     def create_problem(self, info):
 
         # Началната дата и крайната дата се очакват във формат yyyy-mm-dd-hh-mm-ss (2021-12-23-23-59-59)

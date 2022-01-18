@@ -25,6 +25,14 @@ const routes: Routes = [
   {
     path: 'create_group',
     loadChildren: () => import('./create-group/create-group-routing.module').then(m => m.CreateGroupRoutingModule)
+  },
+  {
+    path: 'not_found',
+    loadChildren: () => import('./not_found_module/not_found_routing.module').then(m => m.NotFoundRoutingModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/not_found'
   }
 ];
 
