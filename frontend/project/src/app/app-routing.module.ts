@@ -31,9 +31,14 @@ const routes: Routes = [
     loadChildren: () => import('./not_found_module/not_found_routing.module').then(m => m.NotFoundRoutingModule)
   },
   {
+    path: 'show_problems',
+    loadChildren: () => import('./show-problems/show-problems-routing.module').then(m => m.ShowProblemsRoutingModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }
+  // Note: Ако се добавят нови страници, те трябва да са над това със path: **. В противен случай не работят.
 ];
 
 @NgModule({

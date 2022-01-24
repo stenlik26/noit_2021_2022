@@ -2,12 +2,22 @@ from bson.objectid import ObjectId
 from json import dumps, loads
 from pymongo.errors import ConnectionFailure
 import datetime
+import re
 
 
 class HandleProblemsClass:
     def __init__(self, mongo_client):
         self.db_problems = mongo_client["Main"]["Problems"]
         self.db_groups = mongo_client["Main"]["Groups"]
+        self.patterns = {
+            'array': ['масив', 'array'],
+            'string': ['низ', 'стринг', 'string'],
+            'linked-list': ['linked-list', 'свързан списък'],
+            'tree': ['дърв', 'tree'],
+            'stack': ['stack', 'стек'],
+            'list': ['списък', 'list'],
+            'queue': ['опашка', 'queue']
+        }
 
     def __insert_problem_id_to_group(self, problem_id, group_id):
         try:
@@ -58,7 +68,7 @@ class HandleProblemsClass:
         insertionData = {
             'title': info['title'],
             'public': info['public'] == 'true' and True or False,
-            'tags': [tag.strip() for tag in info['tags'].split(',')],
+            'tags': [tag.strip().lower() for tag in info['tags'].split(',')],
             'text': info['text'],
             'tests': loads(info['tests']),
             'solutions': [],
@@ -78,3 +88,39 @@ class HandleProblemsClass:
             self.__insert_problem_id_to_group(res.inserted_id, group)
 
         return {"status": "OK", "message": "successfully created a problem."}
+
+    def get_all_problems(self, difficulty, tags, name):
+
+        options = {
+            'public': True
+        }
+        if difficulty != 'any':
+            options['difficulty'] = difficulty
+
+        if tags != 'any':
+
+            tags = self.patterns[tags]
+
+            # Тука се прави regex за таговете
+            for index, value in enumerate(tags):
+                # tags[index] = '/' + value + '.*/'
+                tags[index] = re.compile(value + '.*', re.IGNORECASE)
+            options['tags'] = {'$in': tags}
+
+        if name != '':
+            options['title'] = re.compile('.*' + name + '.*', re.IGNORECASE)
+
+        try:
+            # db.Problems.find({tags: {$all:[/масив.*/, /функци.*/]}})
+            problems = self.db_problems.find(options, {'solutions': 0})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        problems = list(problems)
+
+        for problem in problems:
+            problem['_id'] = str(problem['_id'])
+
+        return {'status': 'OK', 'message': problems}
+
+
