@@ -1,0 +1,56 @@
+<div id="options">
+
+  <h3>Търсене на задачи:</h3>
+
+  <div class="selector" id="difficulty_select">
+    <p for="difficulty_selector_box">Трудност: </p>
+    <select id="difficulty_selector_box" (change)="change_difficulty()" class="selector_box form-select bg-dark">
+      <option value="any">Всички
+      <option value="easy">Лесни</option>
+      <option value="medium">Средни</option>
+      <option value="hard">Трудни</option>
+    </select>
+  </div>
+
+  <div class="selector" id="tags_select">
+    <p for="tags_selector_box">Таг: </p>
+    <select id="tags_selector_box" (change)="change_tags()" class="selector_box form-select bg-dark">
+      <option value="any">Всички
+      <option value="array">Масив</option>
+      <option value="string">Низ</option>
+      <option value="linked-list">Свързан списък</option>
+      <option value="tree">Дърво</option>
+      <option value="stack">Стек</option>
+      <option value="list">Списък</option>
+      <option value="queue">Опашка</option>
+    </select>
+  </div>
+
+  <div id="search_by_name">
+    <input type="text" placeholder="Търсене по име" id="problem_name" name="problem_name">
+    <button class="button-green solve_button" (click)="search_by_name()">Търсене</button>
+  </div>
+</div>
+
+<table class="table table-dark" id="problems_table">
+  <thead>
+    <tr>
+      <th class="text-center" scope="col">#</th>
+      <th scope="col">Име</th>
+      <th class="text-center" scope="col">Трудност</th>
+      <th scope="col">Тагове</th>
+      <th *ngIf="show_solve" scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-container *ngFor="let problem of problems">
+      <tr>
+        <th class="text-center" scope="row">{{problem.num}}</th>
+        <th>{{problem.title}}</th>
+        <td class="text-center">{{problem.difficulty}}</td>
+        <td>{{problem.get_tags()}}</td>
+        <td *ngIf="show_solve" class="text-center"><button routerLink="/solve/{{problem.object_id}}"class="button-green solve_button">Реши</button></td>
+      </tr>
+    </ng-container>
+  </tbody>
+</table>

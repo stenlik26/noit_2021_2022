@@ -9,6 +9,7 @@ import {MonacoEditorModule} from "ngx-monaco-editor";
 import { MenuComponent } from './menu/menu.component';
 import { CreateProblemModule } from './create-problem/create-problem.module';
 import { CreateGroupModule } from './create-group/create-group.module';
+import { ShowProblemsModule } from './show-problems/show-problems.module';
 import '@fortawesome/fontawesome-free/js/all.js';
 @NgModule({
   declarations: [

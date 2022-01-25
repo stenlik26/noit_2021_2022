@@ -375,7 +375,7 @@ def run_problem_tests():
         post_info['language']))
 
 
-@app.route('/user_access_to_problem', methods=['POSt'])
+@app.route('/user_access_to_problem', methods=['POST'])
 def user_access_to_problem():
     post_info = request.get_json()
 
@@ -388,6 +388,21 @@ def user_access_to_problem():
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     return jsonify(inst.does_user_have_access(post_info['user_id'],post_info['problem_id']))
+
+
+@app.route('/get_all_problems', methods=['POST'])
+def get_all_problems():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'difficulty', 'tags', 'name'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'difficulty', 'tags'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_all_problems(post_info['difficulty'], post_info['tags'], post_info['name']))
 
 
 @app.route('/', methods=['POST', 'GET'])

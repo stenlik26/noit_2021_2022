@@ -6,12 +6,15 @@ import os
 def get_connection():
     with open('mongo_connection/app_config.json') as json_file:
         data = json.load(json_file)
-        out = "mongodb+srv://" + data['user'] + \
-              ":" + data['pass'] + \
-              "@" + data['address'] + \
-              "/" + data['dbName'] + \
-              "?retryWrites=true&w=majority"
 
+        if data['user'] == 'localhost':
+            out = "mongodb://localhost:27017/"
+        else:
+            out = "mongodb+srv://" + data['user'] + \
+                  ":" + data['pass'] + \
+                  "@" + data['address'] + \
+                  "/" + data['dbName'] + \
+                  "?retryWrites=true&w=majority"
         return pymongo.MongoClient(out)
 
 
