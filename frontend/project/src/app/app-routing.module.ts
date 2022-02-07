@@ -35,6 +35,14 @@ const routes: Routes = [
     loadChildren: () => import('./show-problems/show-problems-routing.module').then(m => m.ShowProblemsRoutingModule)
   },
   {
+    path: 'group',
+    loadChildren: () => import('./group-module/group-routing.module').then(m => m.GroupRoutingModule)
+  },
+  {
+    path: 'grade_solution',
+    loadChildren: () => import('./grade-solution/grade-solution.module').then(m => m.GradeSolutionModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }

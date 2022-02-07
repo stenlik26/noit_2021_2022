@@ -46,21 +46,21 @@ export class EditCodePageComponent implements OnInit {
 
   }
 
-  check_for_access(): void{
+  check_for_access(): void {
     const requestBody = {
       problem_id: this.problem_id,
       user_id: UserTokenHandling.getUserId(),
       token: UserTokenHandling.getUserToken()
     }
-    fetch(('http://127.0.0.1:5100/user_access_to_problem'), {
+    fetch((projectConfig.api_url + 'user_access_to_problem'), {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: { 'Content-type': 'application/json' }
     })
       .then(response => response.json())
       .then(json => {
-        if(json.has_access === false)
-        {
+        
+        if (json.has_access === false) {
           window.location.href = projectConfig.site_url + 'not_found';
         }
       });
@@ -178,7 +178,8 @@ export class EditCodePageComponent implements OnInit {
       user_id: UserTokenHandling.getUserId(),
       token: UserTokenHandling.getUserToken(),
       language: this.getLanguageFromSelect(),
-      code: current_code
+      code: current_code,
+      all_tests: false
     }
     fetch((projectConfig.api_url + 'run_problem_tests'), {
       method: 'POST',
@@ -193,24 +194,24 @@ export class EditCodePageComponent implements OnInit {
 
     if (json.status != 'OK') {
       switch (json.status) {
-        case 'error_executor':{
-            console.log("Error from API. - " + json.status + " - " + json.message);
-            this.show_tests = false;
-            return;
-          }
-        case 'error_compile':{
-            this.test_tab_message.innerHTML = "Грешка при изпълнение:";
-            this.error_textarea.style.display = "block";
-            this.error_textarea.innerText = json.message;
-            this.show_tests = false;
-            return;
-          }
-        default:{
-            this.test_tab_message.innerHTML = "Грешка при изпълнение:";
-            this.error_textarea.style.display = "block";
-            this.show_tests = false;
-            return
-          }
+        case 'error_executor': {
+          console.log("Error from API. - " + json.status + " - " + json.message);
+          this.show_tests = false;
+          return;
+        }
+        case 'error_compile': {
+          this.test_tab_message.innerHTML = "Грешка при изпълнение:";
+          this.error_textarea.style.display = "block";
+          this.error_textarea.innerText = json.message;
+          this.show_tests = false;
+          return;
+        }
+        default: {
+          this.test_tab_message.innerHTML = "Грешка при изпълнение:";
+          this.error_textarea.style.display = "block";
+          this.show_tests = false;
+          return
+        }
       }
     }
 
@@ -220,13 +221,12 @@ export class EditCodePageComponent implements OnInit {
     this.problem_information.test_fields = [];
     this.test_tab_message.innerHTML = "Резултат от тестовете: " + this.total_passed + " / " + this.total_tests;
 
-    if(this.total_passed === this.total_tests && this.total_tests != undefined)
-    {
+    if (this.total_passed === this.total_tests && this.total_tests != undefined) {
       this.show_tests = false;
       this.success_message.style.display = 'block';
       this.success_message.style.margin = "1em";
     }
-    else{
+    else {
       this.success_message.style.display = 'none';
     }
 
@@ -234,7 +234,7 @@ export class EditCodePageComponent implements OnInit {
 
       let id = 1;
       json.results.forEach((element: any) => {
-        
+
         this.problem_information.test_fields.push(new TestField(
           id.toString(),
           element.input,
@@ -287,14 +287,18 @@ export class EditCodePageComponent implements OnInit {
         }));
   }
 
-  upload_code_output(json: any) {
+  upload_code_output() {
     this.showToast("Вашето решение е качено успешно.");
-    console.log(json);
+  }
+
+  upload_code_failed(){
+    this.showToast("Възникна грешка при качването на вашето решение!");
   }
 
   upload_code(message: string) {
     this.showToast(message);
-    // @ts-ignore
+
+    //@ts-ignore
     const current_code = this.editor.getValue();
 
     const requestBody = {
@@ -302,15 +306,43 @@ export class EditCodePageComponent implements OnInit {
       user_id: UserTokenHandling.getUserId(),
       token: UserTokenHandling.getUserToken(),
       language: this.getLanguageFromSelect(),
-      code: current_code
+      code: current_code,
+      all_tests: true
     }
-
-    fetch((projectConfig.api_url + 'upload_code'), {
+    fetch((projectConfig.api_url + 'run_problem_tests'), {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: { 'Content-type': 'application/json' }
     })
       .then(response => response.json())
-      .then(json => this.upload_code_output(json.message));
+      .then(json => {
+        if (json.status === "OK") {
+          
+          const requestBody2 = {
+            problem_id: this.problem_id,
+            user_id: UserTokenHandling.getUserId(),
+            token: UserTokenHandling.getUserToken(),
+            language: this.getLanguageFromSelect(),
+            code: current_code,
+            passed: json.message.passed,
+            results: json.message.results,
+            total: json.message.total
+
+          }
+
+          fetch((projectConfig.api_url + 'upload_code'), {
+            method: 'POST',
+            body: JSON.stringify(requestBody2),
+            headers: { 'Content-type': 'application/json' }
+          })
+            .then(response => response.json())
+            .then(json => this.upload_code_output());
+
+        }
+        else{
+          this.upload_code_failed();
+        }
+      });
+
   }
 }

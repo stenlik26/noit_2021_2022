@@ -1,12 +1,15 @@
 from bson.objectid import ObjectId
 from json import dumps, loads
 from pymongo.errors import ConnectionFailure
-
+import bson.json_util
+import locale
+from datetime import datetime
 
 class HandleGroupsClass:
     def __init__(self, mongo_client):
         self.db_users = mongo_client['Main']['Users']
         self.db_groups = mongo_client['Main']['Groups']
+        self.db_problems = mongo_client['Main']['Problems']
 
     def get_user_group_invites(self, my_user_id):
 
@@ -191,5 +194,84 @@ class HandleGroupsClass:
             group['_id'] = str(group['_id'])
 
         return groups
+
+    def get_user_access_level(self, user_id, group_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        try:
+            group = self.db_groups.find_one({'users': {'$in': [ObjectId(user_id)]}, '_id': ObjectId(group_id)})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        if group is None:
+            return {"status": 'error_no_access', "message": 'User doesn\'t have access to this group.'}
+        else:
+            if ObjectId(user_id) in group['admins']:
+                return {"status": 'OK', "message": 'admin'}
+            else:
+                return {"status": 'OK', 'message': 'user'}
+
+    def get_group_info(self, group_id, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        try:
+            group_info = self.db_groups.find_one({'_id': ObjectId(group_id)}, {'_id': 0})
+            users = list(self.db_users.find({
+                '_id': {
+                    '$in': group_info['users']
+                }
+            },
+                {
+                    'name': 1,
+                    'email': 1,
+                    'picture': 1
+                }))
+            problems = list(self.db_problems.find({
+                '_id':
+                    {
+                         '$in': group_info['problems']
+                    }
+            },
+                {
+                    'title': 1,
+                    'start_date': 1,
+                    'end_date': 1
+                }))
+
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        for user in users:
+            if user['_id'] in group_info['admins']:
+                user['is_admin'] = True
+            else:
+                user['is_admin'] = False
+            user['_id'] = str(user['_id'])
+
+        for index,value in enumerate(group_info['problems']):
+            group_info['problems'][index] = str(value)
+
+        group_info['users'] = users
+        del group_info['admins']
+
+        locale.setlocale(locale.LC_ALL, 'bg_BG')
+
+        for problem in problems:
+            now = datetime.now()
+            problem['is_active'] = problem['start_date'] < now < problem['end_date']
+            problem['start_date'] = problem['start_date'].strftime('%x %X')
+            problem['end_date'] = problem['end_date'].strftime('%x %X')
+
+        group_info['problems'] = problems
+
+        return {'status': 'OK', 'message': loads(bson.json_util.dumps(group_info))}
 
 

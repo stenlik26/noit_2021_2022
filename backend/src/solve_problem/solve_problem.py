@@ -30,7 +30,7 @@ class SolveProblemClass:
 
         return {"status": "OK", "message": x}
 
-    def run_tests(self, problem_id, code, language):
+    def run_tests(self, problem_id, code, language, all_tests):
         if not ObjectId.is_valid(problem_id):
             return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
 
@@ -66,7 +66,7 @@ class SolveProblemClass:
                 return {'status': 'error_compile', 'message': data['message']['stderr']}
 
             data = data['message']
-            if not data['is_passing'] and not test['is_hidden']:
+            if (not data['is_passing'] and not test['is_hidden']) or (not data['is_passing'] and all_tests):
 
                 data['diff'] = data['diff'].replace('\t', '').replace(' |', '|\t')
 
@@ -135,7 +135,9 @@ class SolveProblemClass:
             'code': info['code'],
             'language': info['language'],
             'shared': 0,
-            'score': -1,
+            'tests_passed': info['passed'],
+            'tests_total': info['total'],
+            'test_failed': info['results'],
             'timestamp': datetime.datetime.utcnow(),
             'author_id': ObjectId(info['user_id']),
             'solution_id': ObjectId(info['solution_id']),
@@ -155,6 +157,7 @@ class SolveProblemClass:
         insertionData = {
             'solution_id': solution_id,
             'author_id': ObjectId(user_id),
+            'score': -1,
             'comments': []
         }
 
@@ -192,7 +195,30 @@ class SolveProblemClass:
 
         return {'status': 'OK', 'message': 'Successfully uploaded the code.'}
 
+    def comment_solution(self, solution_id, comment):
+        if not ObjectId.is_valid(ObjectId(solution_id)):
+            return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
 
+        try:
+            self.db_problems.update_one(
+                {'solutions.solution_id': ObjectId(solution_id)},
+                {'$push': {'solutions.$.comments': comment}})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+        return {'status': 'OK', 'message': 'Successfully set a comment'}
+
+    def grade_solution(self, solution_id, grade):
+        if not ObjectId.is_valid(ObjectId(solution_id)):
+            return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
+
+        try:
+            debug = self.db_problems.update_one(
+                {'solutions.solution_id': ObjectId(solution_id)},
+                {'$set': {'solutions.$.score': grade}})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+        print(debug)
+        return {'status': 'OK', 'message': 'Successfully graded the solution'}
 
 
 

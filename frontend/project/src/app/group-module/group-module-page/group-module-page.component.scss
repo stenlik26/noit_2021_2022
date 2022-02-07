@@ -1,0 +1,139 @@
+.wrapper{
+    gap: 1em;
+    width: 98%;
+    height: 39vh;
+    margin-bottom: 2%;
+    margin-left: 1%;
+}
+
+
+.tab{
+    overflow: hidden;
+    background-color: #202225;
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: .5em;
+  }
+  
+  .tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5em;
+    color: white;
+  }
+  
+  .tab button:hover {
+    background-color: rgb(66, 66, 66);
+  }
+  
+  .tab button:active {
+    background-color: rgb(66, 66, 66);
+  }
+  
+  .tab button:focus {
+    background-color: rgb(55, 55, 55);
+  }
+  
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+  }
+  
+  .tabcontent-opened {
+    display: block;
+    padding: 6px 12px;
+  }
+
+  .solve_button{
+    color: white;
+    padding: 0.2em 1em;
+    border: none;
+    cursor: pointer;
+    opacity: 0.9;
+    border-radius: .5em;
+}
+
+.selector_box{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: rgba(255, 255, 255, 0.342);
+  color: white;
+  height: 2.5em;
+}
+
+.selector_box:focus{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: greenyellow;
+  color: white;
+}
+
+.selector{
+  display: flex;
+  width: 20%;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5em;
+}
+
+.selector > p{
+  margin: 0.5em 0em 0.5em 0.5em;
+}
+
+#options{
+  display: flex;
+  padding-bottom: 1em;
+  width: 100%;
+  align-items: center;
+}
+
+#options > h3{
+  margin: 0;
+  display: inline;
+  width: 15em;
+  flex-grow: 2;
+}
+
+#group_members{
+  width: 60%;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user_box{
+  display: flex;
+  background-color: #202225;
+  border-radius: 0.5em;
+  margin: 1em;
+}
+
+.user_box > img{
+  height: 5em;
+}
+
+.user_box_text > p{
+  margin: 0.5em;
+  padding: 0;
+}
+
+.user_box_text{
+  flex-grow: 3;
+}
+
+.user_box_buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+#members_list{
+  overflow-y: scroll;
+  height: 70vh;
+}
