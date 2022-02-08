@@ -2,6 +2,7 @@ export class UserInfo{
     username: string = '';
     picture: string = '';
     object_id: string = '';
+    is_admin: boolean = false;
 
     constructor(user_json: any)
     {
@@ -13,6 +14,9 @@ export class UserInfo{
             this.picture = '../assets/icons/user.png';
         }
         this.object_id = user_json._id;
+        if(user_json.is_admin != undefined){
+            this.is_admin = user_json.is_admin;
+        }
     }
 
     get_username(): string{
@@ -25,5 +29,13 @@ export class UserInfo{
 
     get_user_id(): string{
         return this.object_id;
+    }
+
+    get_user_is_admin(): boolean{
+        return this.is_admin;
+    }
+
+    get_user_status(): string{
+        return (this.is_admin ? "Администратор" : "Потребител");
     }
 }

@@ -10,6 +10,7 @@ import { MenuComponent } from './menu/menu.component';
 import { CreateProblemModule } from './create-problem/create-problem.module';
 import { CreateGroupModule } from './create-group/create-group.module';
 import { ShowProblemsModule } from './show-problems/show-problems.module';
+import { GroupModuleModule } from './group-module/group-module.module';
 import '@fortawesome/fontawesome-free/js/all.js';
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import '@fortawesome/fontawesome-free/js/all.js';
     FormsModule,
     MonacoEditorModule.forRoot(), // use forRoot() in main app module only.
     CreateProblemModule,
-    CreateGroupModule
+    CreateGroupModule,
+    GroupModuleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

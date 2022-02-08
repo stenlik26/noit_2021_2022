@@ -1,14 +1,19 @@
+import bson.json_util
 from bson.objectid import ObjectId
 from json import dumps, loads
 from pymongo.errors import ConnectionFailure
-import datetime
+from datetime import datetime
 import re
+import locale
+from operator import itemgetter
 
 
 class HandleProblemsClass:
     def __init__(self, mongo_client):
         self.db_problems = mongo_client["Main"]["Problems"]
         self.db_groups = mongo_client["Main"]["Groups"]
+        self.db_code = mongo_client["Main"]["Code"]
+        self.db_users = mongo_client["Main"]["Users"]
         self.patterns = {
             'array': ['масив', 'array'],
             'string': ['низ', 'стринг', 'string'],
@@ -36,12 +41,21 @@ class HandleProblemsClass:
             return {"status": "error_invalid_user_id", "message": "Invalid user id."}
 
         try:
-            is_in_group = self.db_groups.find_one({'problems': [ObjectId(problem_id)], 'users': [ObjectId(user_id)]})
-            problem = self.db_problems.find_one({'_id': ObjectId(problem_id)}, {'public': 1})
+            is_in_group = self.db_groups.find_one({
+                'problems': {
+                    '$in': [ObjectId(problem_id)]
+                },
+                'users': {
+                    '$in': [ObjectId(user_id)]
+                }})
+            problem = self.db_problems.find_one({'_id': ObjectId(problem_id), 'public': True})
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        return {'status': 'OK', 'has_access': bool(problem['public']) or is_in_group is not None}
+        if problem is not None:
+            return {'status': 'OK', 'has_access': bool(problem['public']) or is_in_group is not None}
+        else:
+            return {'status': 'OK', 'has_access': is_in_group is not None}
 
     def create_problem(self, info):
 
@@ -56,14 +70,14 @@ class HandleProblemsClass:
         # Между датата и часът има разделителна буква "T"
         start_date_string = "-".join(start_date[:3]) + "T" + ":".join(start_date[3:])
 
-        start_date_mongo_string = datetime.datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S")
+        start_date_mongo_string = datetime.strptime(start_date_string, "%Y-%m-%dT%H:%M:%S")
 
         end_date = info['end_date'].replace('T', '-').replace(':', '-').split('-')
         end_date.append('00')
 
         end_date_string = "-".join(end_date[:3]) + "T" + ":".join(end_date[3:])
 
-        end_date_mongo_string = datetime.datetime.strptime(end_date_string, "%Y-%m-%dT%H:%M:%S")
+        end_date_mongo_string = datetime.strptime(end_date_string, "%Y-%m-%dT%H:%M:%S")
 
         insertionData = {
             'title': info['title'],
@@ -122,5 +136,87 @@ class HandleProblemsClass:
             problem['_id'] = str(problem['_id'])
 
         return {'status': 'OK', 'message': problems}
+
+    def get_solutions_for_group(self, problem_id: str, user_id: str, group_problem_ids: list):
+
+        for index, value in enumerate(group_problem_ids):
+            if not ObjectId.is_valid(value):
+                return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
+            else:
+                group_problem_ids[index] = ObjectId(value)
+
+        options = {
+            '_id': {'$in': group_problem_ids}
+        }
+
+        if problem_id != 'any':
+            if not ObjectId.is_valid(problem_id):
+                return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
+
+            options['_id'] = ObjectId(problem_id)
+
+        try:
+            problems = self.db_problems.find(options, {'title': 1, 'solutions': 1, '_id': 0})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        problems = list(problems)
+
+        if user_id != 'any':
+            for problem in problems:
+                for solve in problem['solutions']:
+                    if user_id != str(solve['author_id']):
+                        problem['solutions'].remove(solve)
+
+        for problem in problems:
+
+            for solve in problem['solutions']:
+                solve['code_ids'] = len(solve['code_ids'])
+                del solve['comments']
+                solve['author_id'] = str(solve['author_id'])
+                solve['solution_id'] = str(solve['solution_id'])
+
+        return {'status': 'OK', 'message': loads(bson.json_util.dumps(problems))}
+
+    def get_solution_by_id(self, solution_id: str):
+        if solution_id != 'any' and not ObjectId.is_valid(solution_id):
+            return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
+
+        try:
+            submissions = self.db_code.find({'solution_id': ObjectId(solution_id)})
+            problem_name = self.db_problems.find_one({
+                'solutions': {
+                    '$elemMatch': {
+                        'solution_id': ObjectId(solution_id)
+                    }
+                }
+            },{
+                'title': 1,
+                '_id': 0
+            })
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        submissions = list(submissions)
+
+        locale.setlocale(locale.LC_ALL, 'bg_BG')
+
+        for submission in submissions:
+            submission['_id'] = str(submission['_id'])
+            submission['solution_id'] = str(submission['solution_id'])
+            submission['author_id'] = str(submission['author_id'])
+            submission['timestamp'] = submission['timestamp'].strftime('%x %X')
+
+        try:
+            author_name = self.db_users.find_one({'_id': ObjectId(submissions[0]['author_id'])}, {'name': 1, '_id': 0})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {
+            'status': 'OK',
+            'message': submissions,
+            'author_name': author_name['name'],
+            'problem_name': problem_name['title']
+        }
 
 
