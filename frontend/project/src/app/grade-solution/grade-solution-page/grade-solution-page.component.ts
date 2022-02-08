@@ -19,7 +19,7 @@ export class GradeSolutionPageComponent implements OnInit {
   current_submission: any;
   author_name: string = '';
   problem_name: string = '';
-  editorOptions = { theme: 'vs-dark', language: '' , readOnly: 'true'};
+  editorOptions = { theme: 'vs-dark', language: '', readOnly: 'true' };
   code = '';
   editor = null;
   show_tests: boolean = true;
@@ -76,14 +76,13 @@ export class GradeSolutionPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        if(json.status === 'error_no_access')
-        {
+        if (json.status === 'error_no_access') {
           window.location.href = projectConfig.site_url + 'not_found';
         }
       });
   }
 
-  get_submissions(): void{
+  get_submissions(): void {
     const requestBody = {
       solution_id: this.solution_id,
       user_id: UserTokenHandling.getUserId(),
@@ -96,30 +95,28 @@ export class GradeSolutionPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        if(json.status === 'OK')
-        {
+        if (json.status === 'OK') {
           json.message.forEach((element: any) => {
             this.submissions.push(new SubmissionInfo(element))
           });
           this.author_name = json.author_name;
           this.problem_name = json.problem_name;
           this.current_submission = this.submissions[0];
-          
+
           this.update_tests();
           //@ts-ignore
           monaco.editor.setModelLanguage(this.editor.getModel(), this.current_submission.get_language());
           this.code = this.current_submission.get_code();
 
-          
+
         }
-        else{
+        else {
           console.log('Възникна проблем', json);
         }
       });
   }
 
-  update_tests(): void
-  {
+  update_tests(): void {
     this.test_tab_message.innerHTML = "Резултат от тестовете: " + this.current_submission.tests_passed + " / " + this.current_submission.tests_total;
     if (this.current_submission.tests_passed === this.current_submission.tests_total && this.current_submission.tests_total != undefined) {
       this.show_tests = false;
@@ -131,8 +128,8 @@ export class GradeSolutionPageComponent implements OnInit {
       this.success_message.style.display = 'none';
     }
   }
- 
-  change_submission(): void{
+
+  change_submission(): void {
     const selector = document.getElementById("submission_time") as HTMLSelectElement;
     this.current_submission = this.submissions[parseInt(selector.value)];
     //@ts-ignore
@@ -141,21 +138,21 @@ export class GradeSolutionPageComponent implements OnInit {
     this.update_tests();
   }
 
-  grade_problem(): void{
+  grade_problem(): void {
     this.comment_body_1.style.display = "block";
     this.comment_body_2.style.display = "none";
     this.graded = false;
     this.grade_modal.show();
   }
 
-  comment_problem(): void{
+  comment_problem(): void {
     this.grade_body_1.style.display = "block";
     this.grade_body_2.style.display = "none";
     this.comment_posted = false;
     this.comment_modal.show();
   }
 
-  set_comment_to_problem(): void{
+  set_comment_to_problem(): void {
 
     const comment = (document.getElementById('comment') as HTMLTextAreaElement).value;
 
@@ -172,16 +169,15 @@ export class GradeSolutionPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        if(json.status === 'OK')
-        {
+        if (json.status === 'OK') {
           this.comment_body_1.style.display = "none";
           this.comment_body_2.style.display = "block";
           this.comment_posted = true;
         }
       });
   }
-  
-  set_solution_grade(): void{
+
+  set_solution_grade(): void {
     const grade = (document.getElementById('grade') as HTMLSelectElement).value;
 
     const requestBody = {
@@ -197,8 +193,7 @@ export class GradeSolutionPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        if(json.status === 'OK')
-        {
+        if (json.status === 'OK') {
           this.grade_body_1.style.display = "none";
           this.grade_body_2.style.display = "block";
           this.graded = true;
@@ -206,11 +201,8 @@ export class GradeSolutionPageComponent implements OnInit {
       });
   }
 
-  goto_groups(): void{
+  goto_groups(): void {
     window.location.href = projectConfig.site_url + 'group/' + this.group_id;
   }
-  
-
-
 }
 

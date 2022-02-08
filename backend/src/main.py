@@ -453,7 +453,7 @@ def get_solutions_to_problem():
     if check_if_empty(('token', 'my_user_id', 'user_id', 'problem_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    # По скоро трябва да се изпълни does_user_have_access
+    # По-скоро трябва да се изпълни does_user_have_access
 
     return jsonify(inst.get_solutions_for_group(post_info['problem_id'],
                                                 post_info['user_id'],

@@ -31,10 +31,12 @@ export class ProblemInformationPick {
     }
 
     get_active(): string {
-        if (this.is_active)
+        if (this.is_active) {
             return "Да";
-        else
+        }
+        else {
             return "Не";
+        }
     }
 
     constructor(

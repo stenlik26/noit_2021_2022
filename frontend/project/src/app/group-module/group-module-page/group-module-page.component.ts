@@ -45,12 +45,12 @@ export class GroupModulePageComponent implements OnInit {
             break;
           }
           case 'OK': {
-            if (json.message === "admin") {
-              this.is_admin = true;
-            }
-            else {
-              this.is_admin = false;
-            }
+            this.is_admin = (json.message === "admin");
+            break;
+          }
+          default: {
+            window.location.href = projectConfig.site_url + 'not_found';
+            break;
           }
         }
       });

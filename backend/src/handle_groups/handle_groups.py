@@ -250,10 +250,7 @@ class HandleGroupsClass:
             raise ConnectionError("Failed to connect to db")
 
         for user in users:
-            if user['_id'] in group_info['admins']:
-                user['is_admin'] = True
-            else:
-                user['is_admin'] = False
+            user['is_admin'] = user['_id'] in group_info['admins']
             user['_id'] = str(user['_id'])
 
         for index,value in enumerate(group_info['problems']):

@@ -162,10 +162,11 @@ class HandleProblemsClass:
 
         problems = list(problems)
 
-        for problem in problems:
-            for solve in problem['solutions']:
-                if user_id != 'any' and user_id != str(solve['author_id']):
-                    problem['solutions'].remove(solve)
+        if user_id != 'any':
+            for problem in problems:
+                for solve in problem['solutions']:
+                    if user_id != str(solve['author_id']):
+                        problem['solutions'].remove(solve)
 
         for problem in problems:
 
@@ -178,9 +179,8 @@ class HandleProblemsClass:
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(problems))}
 
     def get_solution_by_id(self, solution_id: str):
-        if solution_id != 'any':
-            if not ObjectId.is_valid(solution_id):
-                return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
+        if solution_id != 'any' and not ObjectId.is_valid(solution_id):
+            return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
 
         try:
             submissions = self.db_code.find({'solution_id': ObjectId(solution_id)})

@@ -80,9 +80,6 @@
           </div>
         </div>
       </ul>
-
-
-
     </div>
   </div>
 
@@ -99,7 +96,7 @@
           <div id="grade_body_2" style="display: none;">
             <p>Успешно е поставена оценка към решението.</p>
           </div>
-          
+
           <div id="grade_body_1">
             <p>Моля поставете оценка на решението от 1 до 10.</p>
 
@@ -117,10 +114,7 @@
                 <option value="9">9</option>
                 <option value="10">10</option>
               </select>
-          </div>
-
-
-          
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -143,7 +137,7 @@
           <div id="comment_body_2" style="display: none;">
             <p>Успешно е поставен коментар към решението.</p>
           </div>
-          
+
           <div id="comment_body_1">
             <p>Тук можете да поставите коментар за автора на решението.</p>
             <label for="comment">Коментар: </label>
@@ -152,7 +146,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button *ngIf="!comment_posted" (click)="set_comment_to_problem()" class="gr_btn button-green">Постави</button>
+          <button *ngIf="!comment_posted" (click)="set_comment_to_problem()"
+            class="gr_btn button-green">Постави</button>
         </div>
       </div>
     </div>

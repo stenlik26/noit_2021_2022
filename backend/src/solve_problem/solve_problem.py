@@ -66,7 +66,7 @@ class SolveProblemClass:
                 return {'status': 'error_compile', 'message': data['message']['stderr']}
 
             data = data['message']
-            if (not data['is_passing'] and not test['is_hidden']) or (not data['is_passing'] and all_tests):
+            if not(data['is_passing'] or test['is_hidden']) or (not data['is_passing'] and all_tests):
 
                 data['diff'] = data['diff'].replace('\t', '').replace(' |', '|\t')
 
@@ -212,12 +212,11 @@ class SolveProblemClass:
             return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
 
         try:
-            debug = self.db_problems.update_one(
+            self.db_problems.update_one(
                 {'solutions.solution_id': ObjectId(solution_id)},
                 {'$set': {'solutions.$.score': grade}})
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
-        print(debug)
         return {'status': 'OK', 'message': 'Successfully graded the solution'}
 
 
