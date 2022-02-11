@@ -55,10 +55,36 @@
     </ul>
   </div>
 
-
-
   <div id="group_options" class="tabcontent">
-    <p>Group options</p>
+    <div id="options_head">
+      <h3>Потребители:</h3>
+      <button (click)="show_invite_modal()" class="button-green options_button">Покани потребител</button>
+    </div>
+
+    <table class="table table-dark" id="users_table">
+      <thead>
+        <tr>
+          <th scope="col">Име на потребител</th>
+          <th class="text-center" scope="col">Имейл адрес</th>
+          <th class="text-center" scope="col">Статус</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let user of users">
+          <tr>
+            <th class="align-middle">{{user.get_username()}}</th>
+            <td class="text-center align-middle">{{user.get_email()}}</td>
+            <td class="text-center align-middle">{{user.get_user_status()}}</td>
+            <td class="text-end align-middle" style="width: 40%;">
+              <button *ngIf="user.get_user_is_admin()" (click)="show_ask_again_modal('revoke_admin', user.get_username(), user.get_user_id())" class="button-secondary options_button">Премахни администраторски права</button>
+              <button *ngIf="!user.get_user_is_admin()" (click)="show_ask_again_modal('become_admin', user.get_username(), user.get_user_id())" class="button-secondary options_button">Направи администратор</button>
+              <button (click)="show_ask_again_modal('remove_user', user.get_username(), user.get_user_id())" class="button-red options2_button">Премахни от групата</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
   </div>
 
   <div id="group_solutions" class="tabcontent">
@@ -118,6 +144,64 @@
 
   </div>
 
+  <div class="modal fade" id="invite_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Изпращане на покани</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="invite_modal" class="modal-body">
+          <nav>
+            <ul>
+              <div class="user_panel panel-gray" *ngFor="let user of all_users">
 
+                <img class="pic_thumbnail" src="{{user.get_picture()}}">
+                <p>{{user.get_username()}}</p>
+                <button (click)="add_user_to_invite_list(user.get_user_id())" id="{{user.get_user_id()}}_invite"
+                  class="button-secondary invite_button">Покани</button>
 
-</div>
+                <button (click)="remove_user_from_invite_list(user.get_user_id())" id="{{user.get_user_id()}}_remove"
+                  class="button-red remove_button" style="display: none;">Отказ</button>
+              </div>
+
+            </ul>
+          </nav>
+        </div>
+        <div class="modal-footer">
+          <button (click)="send_group_invites()" class="button-green invite_button">Изпращане</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="ask_again_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Съобщение</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="ask_again_modal" class="modal-body">
+          <p id="ask_again_message"></p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="ask_again_button()" class="button-green solve_button">Да</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Не</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="success_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Съобщение</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="success_modal" class="modal-body">
+          <p id="success_message"></p>
+        </div>
+      </div>
+    </div>

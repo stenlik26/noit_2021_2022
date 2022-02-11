@@ -5,6 +5,7 @@ import bson.json_util
 import locale
 from datetime import datetime
 
+
 class HandleGroupsClass:
     def __init__(self, mongo_client):
         self.db_users = mongo_client['Main']['Users']
@@ -270,5 +271,59 @@ class HandleGroupsClass:
         group_info['problems'] = problems
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(group_info))}
+
+    def make_user_admin(self, group_id, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        group_info = {'_id': ObjectId(group_id)}
+        admin = {'$push': {'admins': ObjectId(user_id)}}
+
+        try:
+            self.db_groups.update_one(group_info, admin)
+
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {"status": "OK", "message": "User was given admin access."}
+
+    def revoke_user_admin(self, group_id, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        group_info = {'_id': ObjectId(group_id)}
+        admin = {'$pull': {'admins': ObjectId(user_id)}}
+
+        try:
+            self.db_groups.update_one(group_info, admin)
+
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {"status": "OK", "message": "User was revoked admin access."}
+
+    def remove_user_from_group(self, group_id, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        group_info = {'_id': ObjectId(group_id)}
+        admin = {'$pull': {'admins': ObjectId(user_id), 'users': ObjectId(user_id)}}
+
+        try:
+            self.db_groups.update_one(group_info, admin)
+
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {"status": "OK", "message": "User was removed from the group."}
 
 

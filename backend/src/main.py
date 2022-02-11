@@ -505,6 +505,54 @@ def grade_solution():
     return jsonify(inst.grade_solution(post_info['solution_id'], post_info['grade']))
 
 
+@app.route('/give_user_admin_access', methods=['POST'])
+def give_user_admin_access():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.make_user_admin(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/revoke_user_admin_access', methods=['POST'])
+def revoke_user_admin_access():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.revoke_user_admin(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/kick_user_from_group', methods=['POST'])
+def kick_user_from_group():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.remove_user_from_group(post_info['group_id'], post_info['user_id']))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     inst = HandleProblemsClass(get_connection())
