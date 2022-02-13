@@ -6,6 +6,31 @@
     margin-left: 1%;
 }
 
+input[type=text]{
+
+  flex-grow: 3;
+  padding: 1em;
+  height: 3em;
+  border: 0.1em solid;
+  background:transparent;
+  border-radius: .5em;
+  border-color: white;
+  color: rgba(160, 160, 160);
+  text-align: left;
+}
+
+input[type=text]:focus{
+  outline: none;
+  border-color: yellowgreen;
+  color: white
+}
+
+#new_group_name_panel{
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+
 
 .tab{
     overflow: hidden;
@@ -158,6 +183,21 @@
 #options_head > h3{
   flex-grow: 3;
 }
+
+#options_group_name
+{
+  display: flex;
+  margin: 1em 0em 1em 0em;
+}
+
+.options_button_main{
+  width: 12vw;
+}
+
+#options_group_name > h3{
+  flex-grow: 3;
+}
+
 
 .user_panel{
   display: flex;

@@ -326,4 +326,18 @@ class HandleGroupsClass:
 
         return {"status": "OK", "message": "User was removed from the group."}
 
+    def change_group_name(self, group_id, new_group_name):
+        if not ObjectId.is_valid(group_id):
+            return {"status": "error_invalid_userid", "message": "group_id was invalid"}
+
+        group_info = {'_id': ObjectId(group_id)}
+        name = {'$set': {'name': new_group_name}}
+
+        try:
+            self.db_groups.update_one(group_info, name)
+
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {"status": "OK", "message": "Name was successfully changed."}
 

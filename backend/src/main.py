@@ -553,6 +553,22 @@ def kick_user_from_group():
     return jsonify(inst.remove_user_from_group(post_info['group_id'], post_info['user_id']))
 
 
+@app.route('/change_group_name', methods=['POST'])
+def change_group_name():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'new_name', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'new_name', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.change_group_name(post_info['group_id'], post_info['new_name']))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     inst = HandleProblemsClass(get_connection())

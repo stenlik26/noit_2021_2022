@@ -56,11 +56,14 @@
   </div>
 
   <div id="group_options" class="tabcontent">
+    <div id="options_group_name">
+      <h3>Име на групата: <b>{{this.group_title}}</b></h3>
+      <button (click)="change_group_name_popup()" class="button-green options_button options_button_main">Смяна</button>
+    </div>
     <div id="options_head">
       <h3>Потребители:</h3>
-      <button (click)="show_invite_modal()" class="button-green options_button">Покани потребител</button>
+      <button (click)="show_invite_modal()" class="button-green options_button options_button_main">Покани потребител</button>
     </div>
-
     <table class="table table-dark" id="users_table">
       <thead>
         <tr>
@@ -205,3 +208,26 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="modal fade" id="change_group_name_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="change_group_name_modal">Съобщение</h5>
+          
+        </div>
+        <div id="change_group_name_modal" class="modal-body">
+            <p>Текущо име: <b>{{this.group_title}}</b></p>
+            <div id="new_group_name_panel">
+              <label>Ново име: </label>
+              <input type="text" placeholder="Въведете новото име" id="new_group_name" name="new_group_name">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="change_group_name()" class="button-green solve_button">Промени</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Отказ</button>
+        </div>
+      </div>
+    </div>
+  </div>

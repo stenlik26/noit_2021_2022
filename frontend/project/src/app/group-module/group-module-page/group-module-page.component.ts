@@ -31,6 +31,7 @@ export class GroupModulePageComponent implements OnInit {
   ask_again_message: any;
   current_selected_user: string = '';
   current_clicked_option: string = '';
+  change_group_name_modal: any;
 
   ngOnInit(): void {
     this.switchTab('group_members');
@@ -45,6 +46,8 @@ export class GroupModulePageComponent implements OnInit {
     //@ts-ignore
     this.ask_again_modal = new Modal(document.getElementById('ask_again_modal'));
     this.ask_again_message = document.getElementById('ask_again_message') as HTMLParagraphElement;
+    //@ts-ignore
+    this.change_group_name_modal = new Modal(document.getElementById('change_group_name_modal'));
   }
 
   constructor(private activatedRoute: ActivatedRoute) {
@@ -78,6 +81,34 @@ export class GroupModulePageComponent implements OnInit {
             window.location.href = projectConfig.site_url + 'not_found';
             break;    
           }
+        }
+      });
+  }
+
+  change_group_name_popup(): void{
+    this.change_group_name_modal.show();
+  }
+
+  change_group_name(): void{
+
+    const new_group_name = (document.getElementById('new_group_name') as HTMLInputElement).value;
+
+    const requestBody = {
+      group_id: this.group_id,
+      my_user_id: UserTokenHandling.getUserId(),
+      token: UserTokenHandling.getUserToken(),
+      new_name: new_group_name
+    }
+    fetch((projectConfig.api_url + 'change_group_name'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status === 'OK'){
+          this.success_modal_show(this.change_group_name_modal, "Успешно е сменено името на групата.");
+          this.cleanup_after_operation();
         }
       });
   }
