@@ -6,6 +6,31 @@
     margin-left: 1%;
 }
 
+input[type=text]{
+
+  flex-grow: 3;
+  padding: 1em;
+  height: 3em;
+  border: 0.1em solid;
+  background:transparent;
+  border-radius: .5em;
+  border-color: white;
+  color: rgba(160, 160, 160);
+  text-align: left;
+}
+
+input[type=text]:focus{
+  outline: none;
+  border-color: yellowgreen;
+  color: white
+}
+
+#new_group_name_panel{
+  display: flex;
+  gap: 1em;
+  align-items: center;
+}
+
 
 .tab{
     overflow: hidden;
@@ -136,4 +161,92 @@
 #members_list{
   overflow-y: scroll;
   height: 70vh;
+}
+
+.options_button, .options2_button{
+  color: white;
+  padding: 0.2em 1em;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+#options_head
+{
+  display: flex;
+  margin: 1em 0em 1em 0em;
+}
+
+#options_head > h3{
+  flex-grow: 3;
+}
+
+#options_group_name
+{
+  display: flex;
+  margin: 1em 0em 1em 0em;
+}
+
+.options_button_main{
+  width: 12vw;
+}
+
+#options_group_name > h3{
+  flex-grow: 3;
+}
+
+
+.user_panel{
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+  margin: 0.5em 0 0.5em 0;
+  padding: 0 0.5em 0 0.5em;
+  width: 99%;
+  border-radius: .5em;
+}
+
+.user_panel > p{
+  margin: 0;
+  flex-grow: 2;
+}
+
+.invite_button{
+  color: white;
+  padding: 0.6em 0.6em;
+  margin: 0.6em 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+}
+
+.remove_button{
+  color: white;
+  padding: 0.6em 0.6em;
+  margin: 0.6em 0;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+}
+  
+#invite_modal > nav ul {
+  max-height: 23em;
+  width: 100%;
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
+#invite_modal > nav > ul{
+  max-height: 20em;
+  padding: 0;
+  margin: 0;
+}
+
+td > .options_button{
+  width: 20vw;
 }

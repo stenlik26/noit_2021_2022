@@ -3,6 +3,7 @@ export class UserInfo{
     picture: string = '';
     object_id: string = '';
     is_admin: boolean = false;
+    email: string = '';
 
     constructor(user_json: any)
     {
@@ -17,6 +18,7 @@ export class UserInfo{
         if(user_json.is_admin != undefined){
             this.is_admin = user_json.is_admin;
         }
+        this.email = user_json.email;
     }
 
     get_username(): string{
@@ -37,5 +39,9 @@ export class UserInfo{
 
     get_user_status(): string{
         return (this.is_admin ? "Администратор" : "Потребител");
+    }
+
+    get_email(): string{
+        return this.email;
     }
 }
