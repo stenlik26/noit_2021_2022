@@ -33,6 +33,7 @@ export class GradeSolutionPageComponent implements OnInit {
   grade_body_1: any;
   grade_body_2: any;
   graded: boolean = false;
+  no_submissions: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute) {
     this.solution_id = this.activatedRoute.snapshot.paramMap.get('solution_id');
@@ -41,7 +42,6 @@ export class GradeSolutionPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.test_tab_message = document.getElementById('test_tab_message') as HTMLHeadingElement;
     this.success_message = document.getElementById('success_message') as HTMLParagraphElement;
     this.get_submissions();
     //@ts-ignore
@@ -52,6 +52,7 @@ export class GradeSolutionPageComponent implements OnInit {
     this.comment_body_2 = document.getElementById('comment_body_2') as HTMLDivElement;
     this.grade_body_1 = document.getElementById('grade_body_1') as HTMLDivElement;
     this.grade_body_2 = document.getElementById('grade_body_2') as HTMLDivElement;
+    this.test_tab_message = document.getElementById('test_tab_message2') as HTMLHeadingElement;
 
   }
 
@@ -101,14 +102,18 @@ export class GradeSolutionPageComponent implements OnInit {
           });
           this.author_name = json.author_name;
           this.problem_name = json.problem_name;
-          this.current_submission = this.submissions[0];
 
+          this.current_submission = this.submissions[0];
           this.update_tests();
           //@ts-ignore
           monaco.editor.setModelLanguage(this.editor.getModel(), this.current_submission.get_language());
           this.code = this.current_submission.get_code();
-
-
+        }
+        else if(json.status === 'error_no_submissions')
+        {
+          this.author_name = json.author_name;
+          this.problem_name = json.problem_name;
+          this.no_submissions = true;
         }
         else {
           console.log('Възникна проблем', json);

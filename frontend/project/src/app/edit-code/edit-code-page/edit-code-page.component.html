@@ -19,11 +19,12 @@
     <h4 id="problem_title">Зареждане <i class="fas fa-spinner fa-spin"></i></h4>
   </div>
 
-  <div class="grid-item">
+  <div class="grid-item problem_title_class">
+    <p id="countdown">Оставащо време - {{counter_min}}:{{counter_sec_string}}</p>
   </div>
 
   <div id="code_buttons" class="grid-item">
-    <select id="language-selector" (change)="changeLanguageSelect()" class="form-select bg-dark"
+    <select *ngIf="can_work" id="language-selector" (change)="changeLanguageSelect()" class="form-select bg-dark"
       aria-label="Default select example">
       <option value="cpp">C++</option>
       <option value="csharp">C#</option>
@@ -31,8 +32,8 @@
       <option value="python">Python3</option>
     </select>
 
-    <button class="button-secondary buttons" (click)="run_tests()">Изпълни тестове</button>
-    <button class="button-green buttons" (click)="upload_code('Моля изчакайте, решението ви се качва.')">Предай решение</button>
+    <button *ngIf="can_work" class="button-secondary buttons" (click)="run_tests()">Изпълни тестове</button>
+    <button *ngIf="can_work" class="button-green buttons" (click)="upload_code('Моля изчакайте, решението ви се качва.')">Предай решение</button>
 
   </div>
 
@@ -41,7 +42,7 @@
     <button class="tablinks" (click)="switchTab('problem_tests')">Тестове</button>
   </div>
 
-  <div id="monaco_editor" class="grid-item">
+  <div *ngIf="can_work" id="monaco_editor" class="grid-item">
     <ngx-monaco-editor class="editor_test_class" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)"></ngx-monaco-editor>
   </div>
 
@@ -113,4 +114,21 @@
     </div>
   </div>
 
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="time_out_modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="time_out_modal">Съобщение</h5>
+        
+      </div>
+      <div id="time_out_modal" class="modal-body">
+          <p>{{time_out_text}}</p>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="code_uploaded" (click)="go_back_to_group()" class="button-green buttons">Добре</button>
+      </div>
+    </div>
+  </div>
 </div>

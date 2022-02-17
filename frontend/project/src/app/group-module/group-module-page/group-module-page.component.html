@@ -1,11 +1,11 @@
 <div class="wrapper">
+  <h2 id="group_title">{{group_title}}</h2>
   <div class="tab">
     <button class="tablinks" (click)="switchTab('group_members')">Членове</button>
     <button class="tablinks" (click)="switchTab('group_problems')">Задачи</button>
     <button *ngIf="this.is_admin" class="tablinks" (click)="switchTab('group_solutions')">Решения</button>
     <button *ngIf="this.is_admin" class="tablinks" (click)="switchTab('group_options')">Опции</button>
   </div>
-
 
   <div id="group_problems" class="tabcontent">
 
@@ -19,6 +19,7 @@
           <th class="text-center" scope="col">Начална дата</th>
           <th class="text-center" scope="col">Крайна дата</th>
           <th class="text-center" scope="col">Отворена</th>
+          <th class="text-center" scope="col">Времеви лимит (мин.)</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -30,8 +31,9 @@
             <td class="text-center align-middle">{{problem.start_time}}</td>
             <td class="text-center align-middle">{{problem.end_time}}</td>
             <td class="text-center align-middle">{{problem.get_active()}}</td>
+            <td class="text-center align-middle">{{problem.get_time_limit_string()}}</td>
             <td class="text-center align-middle"><button *ngIf="problem.is_active"
-                routerLink="/solve/{{problem.object_id}}" class="button-green solve_button align-middle">Реши</button>
+                (click)="solve_problem(problem.time_limit, problem.object_id)" class="button-green solve_button align-middle">Реши</button>
             </td>
           </tr>
         </ng-container>
@@ -190,6 +192,24 @@
         </div>
         <div class="modal-footer">
           <button (click)="ask_again_button()" class="button-green solve_button">Да</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Не</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="time_limit_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="time_limit_modal">Внимание</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="time_limit_modal" class="modal-body">
+          <p>Тази задача има зададен времеви лимит. Когато задачата се отвори, времевият лимит започва да тече. Сигурни ли сте че искате да започнете задачата?</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="solve_problem_time_limit(selected_task)" class="button-green solve_button">Да</button>
           <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Не</button>
         </div>
       </div>

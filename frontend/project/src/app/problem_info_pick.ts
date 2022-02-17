@@ -9,7 +9,16 @@ export class ProblemInformationPick {
     start_time: string = '';
     end_time: string = '';
     is_active: boolean = true;
+    time_limit: string = "";
 
+    get_time_limit_string(): string{
+        if (this.time_limit === '-1'){
+            return "Няма";
+        }
+        else{
+            return this.time_limit;
+        }
+    }
 
     parse_difficulty(diff: string): string {
         switch (diff) {
@@ -47,7 +56,8 @@ export class ProblemInformationPick {
         id: string = "",
         start_time: string = "",
         end_time: string = "",
-        is_active: boolean = true
+        is_active: boolean = true,
+        time_limit: string = ""
     ) {
         this.difficulty = this.parse_difficulty(difficulty);
         this.title = title;
@@ -57,6 +67,8 @@ export class ProblemInformationPick {
         this.start_time = start_time;
         this.end_time = end_time;
         this.is_active = is_active;
+        this.time_limit = time_limit;
+
     }
 
 

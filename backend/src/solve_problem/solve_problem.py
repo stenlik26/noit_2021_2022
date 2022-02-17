@@ -114,11 +114,22 @@ class SolveProblemClass:
         try:
             x = self.db_problems.find_one(
                 {'_id': ObjectId(problem_id), 'solutions': {'$elemMatch': {'author_id': ObjectId(user_id)}}},
-                {'solutions': 1, '_id': 0})
+                {'solutions.$': 1, '_id': 0})
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
         x = str(x['solutions'][0]['solution_id'])
+        return x
+
+    def __get_solution_time_of_start(self, user_id, problem_id) -> datetime.datetime:
+        try:
+            x = self.db_problems.find_one(
+                {'_id': ObjectId(problem_id), 'solutions': {'$elemMatch': {'author_id': ObjectId(user_id)}}},
+                {'solutions': 1, '_id': 0})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        x = x['solutions'][0]['time_of_start']
         return x
 
     def __does_user_have_a_saved_code(self, user_id, solution_id):
@@ -219,5 +230,45 @@ class SolveProblemClass:
             raise ConnectionError("Failed to connect to db")
         return {'status': 'OK', 'message': 'Successfully graded the solution'}
 
+    def create_solution_with_time_limit(self, user_id, problem_id):
 
+        solution_id = ObjectId.from_datetime(datetime.datetime.now())
+
+        insertionData = {
+            'solution_id': solution_id,
+            'author_id': ObjectId(user_id),
+            'score': -1,
+            'comments': [],
+            'code_ids': [],
+            'time_of_start': datetime.datetime.utcnow()
+        }
+
+        try:
+            self.db_problems.update_one({'_id': ObjectId(problem_id)}, {'$push': {'solutions': insertionData}})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+    def init_solution_with_time_limit(self, info):
+        info['problem_id'] = ObjectId(info['problem_id'])
+        info['user_id'] = ObjectId(info['user_id'])
+        if not ObjectId.is_valid(info['problem_id']):
+            return {"status": "error_invalid_problem_id", "message": "Invalid problem id."}
+
+        if not ObjectId.is_valid(info['user_id']):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
+
+        allowed_time_for_solution = int(info['time_limit']) * 60
+
+        if self.__does_user_have_a_solution(info['user_id'], info['problem_id']):
+            time_start_timestamp = self.__get_solution_time_of_start(info['user_id'], info['problem_id'])
+            now = datetime.datetime.utcnow()
+            delta = now - time_start_timestamp
+            if delta.seconds < allowed_time_for_solution:
+                return {'status': 'OK', 'message': (allowed_time_for_solution - delta.seconds)}
+            else:
+                return {'status': 'error_time_is_out', 'message': 'Time ran out.'}
+
+        else:
+            self.create_solution_with_time_limit(info['user_id'], info['problem_id'])
+            return {'status': 'OK', 'message': allowed_time_for_solution}
 

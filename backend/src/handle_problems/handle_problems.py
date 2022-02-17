@@ -171,6 +171,7 @@ class HandleProblemsClass:
         for problem in problems:
 
             for solve in problem['solutions']:
+
                 solve['code_ids'] = len(solve['code_ids'])
                 del solve['comments']
                 solve['author_id'] = str(solve['author_id'])
@@ -192,7 +193,8 @@ class HandleProblemsClass:
                 }
             },{
                 'title': 1,
-                '_id': 0
+                '_id': 0,
+                'solutions.$': 1
             })
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
@@ -208,9 +210,18 @@ class HandleProblemsClass:
             submission['timestamp'] = submission['timestamp'].strftime('%x %X')
 
         try:
-            author_name = self.db_users.find_one({'_id': ObjectId(submissions[0]['author_id'])}, {'name': 1, '_id': 0})
+            author_name = self.db_users.find_one({'_id': ObjectId(problem_name['solutions'][0]['author_id'])},
+                                                 {'name': 1, '_id': 0})
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
+
+        if len(submissions) == 0:
+            return {
+                'status': 'error_no_submissions',
+                'message': submissions,
+                'author_name': author_name['name'],
+                'problem_name': problem_name['title']
+            }
 
         return {
             'status': 'OK',

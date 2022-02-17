@@ -17,7 +17,7 @@ export class CreateProblemPageComponent implements OnInit {
 
   constructor() {
   }
-  
+
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
   modal: any;
@@ -25,6 +25,7 @@ export class CreateProblemPageComponent implements OnInit {
   modal_content: any;
   groups: Array<any> = new Array<any>();
   select_groups: boolean = false;
+  show_time_limit: boolean = false;
 
   switchTab(name: string) {
 
@@ -55,11 +56,21 @@ export class CreateProblemPageComponent implements OnInit {
     this.select_groups = (event.target.value == 'by_groups');
   }
 
+  change_time_limit(event: any) {
+    this.show_time_limit = (event.target.value == 'yes')
+  }
+
   create_problem(): void {
     const problem_text: string = this.editor.getContent();
     const title: string = (document.getElementById('problem_title_input') as HTMLInputElement).value;
     const problem_access: HTMLSelectElement = (document.getElementById('access') as HTMLSelectElement);
-    const time_limit: string = (document.getElementById('problem_time_limit') as HTMLInputElement).value;
+    let time_limit: string = '';
+    if (this.show_time_limit) {
+      time_limit = (document.getElementById('problem_time_limit') as HTMLInputElement).value;
+    }
+    else {
+      time_limit = "-1";
+    }
     const start_date: string = (document.getElementById('problem_start_date') as HTMLInputElement).value;
     const end_date: string = (document.getElementById('problem_end_date') as HTMLInputElement).value;
     const tags: string = (document.getElementById('problem_tags') as HTMLInputElement).value;
@@ -165,8 +176,8 @@ export class CreateProblemPageComponent implements OnInit {
         this.groups = json;
       });
   }
-  
-  
+
+
   ngOnInit(): void {
 
     // Обясненеие за аргументите:
@@ -174,7 +185,7 @@ export class CreateProblemPageComponent implements OnInit {
     // MdFormatter - създава се нов клас като изисква атрибут за режим на редактора. (Прочети последното)
     // customTheme - Темата на полето за условието (тема на scrollbar, тема на редактора, други css настройки и т.н.)
     // Последният атрибут false или ture е затова дали редактора е във read-only режим. Ако е false, може да се пише в редактора, ако е true, може само да се чете от редактора.
-      
+
     this.editor = new Editor('editor', new MdFormatter(false), customTheme, false);
     this.editor.setContent(sampleMarkdownText);
     this.editor.setContentBasic();
@@ -189,7 +200,7 @@ export class CreateProblemPageComponent implements OnInit {
     this.modal = new Modal(document.getElementById('result_modal'));
     this.modal_content = document.getElementById('modal_content') as HTMLParagraphElement;
     this.get_groups_where_user_is_admin();
-    
+
   }
 
 }

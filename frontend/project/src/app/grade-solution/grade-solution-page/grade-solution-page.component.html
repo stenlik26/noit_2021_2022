@@ -29,7 +29,7 @@
       </ngx-monaco-editor>
     </div>
     <div id="problem_tests" class="tabcontent panel-darkbg">
-      <h4 id="test_tab_message"></h4>
+      <h4 id="test_tab_message2"></h4>
       <textarea readonly="true" id="error_textarea" style="display: none;"></textarea>
       <p id="success_message">Всички тестове преминаха успешно.</p>
       <ul *ngIf="show_tests">
@@ -83,6 +83,9 @@
     </div>
   </div>
 
+  <div *ngIf="no_submissions">
+    <p>Потребителят няма предадени решения.</p>
+  </div>
 
   <div class="modal fade" id="result_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">

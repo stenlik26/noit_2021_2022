@@ -9,7 +9,7 @@ import projectConfig from '../../../assets/conf.json'
 import { UserTokenHandling } from 'src/app/user_token_handling';
 import { TestField } from '../../solve_problem_test_field';
 import { ProblemInformation } from 'src/app/problem_information';
-import { Toast } from 'bootstrap';
+import { Modal, Toast } from 'bootstrap';
 
 @Component({
   selector: 'app-edit-code-page',
@@ -33,7 +33,14 @@ export class EditCodePageComponent implements OnInit {
   test_tab_message: any;
   error_textarea: any;
   success_message: any;
-
+  countdown_timer: any;
+  counter_min: number = 0;
+  counter_sec: number = 0;
+  counter_sec_string: string = '00';
+  time_out_text: string = '';
+  time_out_modal: any;
+  can_work: boolean = true;
+  code_uploaded: boolean = false;
 
 
   constructor(private activatedRoute: ActivatedRoute) {
@@ -59,12 +66,18 @@ export class EditCodePageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        
+
         if (json.has_access === false) {
           window.location.href = projectConfig.site_url + 'not_found';
         }
       });
   }
+
+  go_back_to_group(): void{
+    this.time_out_modal.hide();
+    history.back();
+  }
+
   ngOnInit(): void {
 
     this.markdown_viewer = new Editor('editor', new MdFormatter(true), customTheme, true);
@@ -76,6 +89,9 @@ export class EditCodePageComponent implements OnInit {
     this.success_message = document.getElementById('success_message') as HTMLParagraphElement;
     //@ts-ignore
     this.toast = new Toast(this.toastEl);
+    this.countdown_timer = document.getElementById('countdown') as HTMLParagraphElement;
+    //@ts-ignore
+    this.time_out_modal = new Modal(document.getElementById('time_out_modal'));
   }
 
   // @ts-ignore
@@ -116,29 +132,7 @@ export class EditCodePageComponent implements OnInit {
     const selector = document.getElementById("language-selector") as HTMLSelectElement;
     return selector.value;
   }
-  /*
-  executeCode(): void {
-    const language: string = this.getLanguageFromSelect();
-    // @ts-ignore
-    const current_code = this.editor.getValue();
 
-    const requestBody = {
-      user_id: 1,
-      code: current_code,
-      language: language,
-      token: UserTokenHandling.getUserToken(),
-
-    };
-
-    fetch(('http://127.0.0.1:5100/run_code'), {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: { 'Content-type': 'application/json' }
-    })
-      .then(response => response.json())
-      .then(json => this.handleOutput(json));
-  }
-*/
   switchTab(name: string) {
 
     let i, tabcontent, tablinks;
@@ -250,13 +244,20 @@ export class EditCodePageComponent implements OnInit {
   }
 
   async problem_info_output(json: any) {
-    console.log(json);
     let problem_information = new ProblemInformation(
       json.start_date,
       json.end_date,
       json.text,
       json.time_limit,
       json.title);
+
+    if (json.time_limit != "-1") {
+      this.get_elapsed_time(json.time_limit);
+    }
+    else{
+      this.countdown_timer.style.display = "none";
+    }
+
     return problem_information;
   }
 
@@ -264,6 +265,63 @@ export class EditCodePageComponent implements OnInit {
     this.markdown_viewer.setContent(this.problem_information.get_problem_text());
     this.problem_title = document.getElementById('problem_title') as HTMLHeadingElement;
     this.problem_title.innerText = this.problem_information.get_problem_title();
+  }
+
+  async get_elapsed_time(time_limit: string) {
+    const requestBody2 = {
+      problem_id: this.problem_id,
+      user_id: UserTokenHandling.getUserId(),
+      token: UserTokenHandling.getUserToken(),
+      time_limit: time_limit
+    }
+
+    fetch((projectConfig.api_url + 'get_time_limit_solution_elapsed'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody2),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.status === 'OK')
+        {
+          this.startTimer();
+          this.counter_min = Math.trunc(json.message / 60);
+          
+          this.counter_sec = json.message % 60;
+        }
+        else{
+          this.time_out_text = "Вашето време за решаване на задачата е изтекло.";
+          this.can_work = false;
+          this.code_uploaded = true;
+          this.time_out_modal.show();
+        }
+      });
+
+  }
+
+  async startTimer() {
+    let interval = setInterval(() => {
+      if(this.counter_sec - 1 == -1){
+        this.counter_min -= 1;
+        this.counter_sec = 59;
+      }
+      else{
+        this.counter_sec -= 1;
+      }
+      if(this.counter_sec <= 9)
+      {
+        this.counter_sec_string = "0" + this.counter_sec.toString();
+      }
+      else{
+        this.counter_sec_string = this.counter_sec.toString();
+      }
+      if(this.counter_min === 0 && this.counter_sec == 0){
+        this.code_uploaded = false;
+        this.time_out_text = "Моля изчакайте решението ви се качва.";
+        this.upload_code('Моля изчакайте, решението ви се качва.');
+        this.time_out_modal.show();
+        clearInterval(interval);
+      } }, 1000)
   }
 
   getProblemInfo(id: string | null) {
@@ -288,10 +346,12 @@ export class EditCodePageComponent implements OnInit {
   }
 
   upload_code_output() {
+    this.code_uploaded = true;
+    this.time_out_text = "Вашето време за решаване на задачата изтече. Последното ви решение бе изпратено автоматично.";
     this.showToast("Вашето решение е качено успешно.");
   }
 
-  upload_code_failed(){
+  upload_code_failed() {
     this.showToast("Възникна грешка при качването на вашето решение!");
   }
 
@@ -317,7 +377,7 @@ export class EditCodePageComponent implements OnInit {
       .then(response => response.json())
       .then(json => {
         if (json.status === "OK") {
-          
+
           const requestBody2 = {
             problem_id: this.problem_id,
             user_id: UserTokenHandling.getUserId(),
@@ -339,7 +399,7 @@ export class EditCodePageComponent implements OnInit {
             .then(json => this.upload_code_output());
 
         }
-        else{
+        else {
           this.upload_code_failed();
         }
       });

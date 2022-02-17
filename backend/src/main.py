@@ -569,10 +569,29 @@ def change_group_name():
     return jsonify(inst.change_group_name(post_info['group_id'], post_info['new_name']))
 
 
+@app.route('/get_time_limit_solution_elapsed', methods=['POST'])
+def get_time_limit_solution_elapsed():
+    post_info = request.get_json()
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'time_limit'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'time_limit'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.init_solution_with_time_limit(post_info))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    inst = HandleProblemsClass(get_connection())
-    return inst.get_solution_by_id('61f4666d0000000000000000')
+    inst = SolveProblemClass(get_connection())
+    info = {
+        'user_id': '616ae290a08c9e9401c2e636',
+        'problem_id': '61b7a9bbeaeb6faebf836059',
+        'time_limit': '90'
+    }
+    return inst.init_solution_with_time_limit(info)
     #return jsonify({"test": "api test"})
 
 

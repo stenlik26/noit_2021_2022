@@ -32,6 +32,8 @@ export class GroupModulePageComponent implements OnInit {
   current_selected_user: string = '';
   current_clicked_option: string = '';
   change_group_name_modal: any;
+  selected_task: string = '';
+  time_limit_modal: any;
 
   ngOnInit(): void {
     this.switchTab('group_members');
@@ -48,6 +50,8 @@ export class GroupModulePageComponent implements OnInit {
     this.ask_again_message = document.getElementById('ask_again_message') as HTMLParagraphElement;
     //@ts-ignore
     this.change_group_name_modal = new Modal(document.getElementById('change_group_name_modal'));
+    //@ts-ignore
+    this.time_limit_modal = new Modal(document.getElementById('time_limit_modal'));
   }
 
   constructor(private activatedRoute: ActivatedRoute) {
@@ -87,6 +91,23 @@ export class GroupModulePageComponent implements OnInit {
 
   change_group_name_popup(): void{
     this.change_group_name_modal.show();
+  }
+
+  solve_problem(time_limit: string, object_id: string){
+    if(time_limit === "-1")
+    {
+      window.location.href = projectConfig.site_url + '/solve/' + object_id;
+    }
+    else{
+      this.time_limit_modal.show();
+      this.selected_task = object_id;
+    }
+  }
+
+  solve_problem_time_limit(object_id: string)
+  {
+    this.time_limit_modal.hide();
+    window.location.href = projectConfig.site_url + '/solve/' + object_id;
   }
 
   change_group_name(): void{
@@ -172,7 +193,8 @@ export class GroupModulePageComponent implements OnInit {
         element._id.$oid, 
         element.start_date, 
         element.end_date, 
-        element.is_active))
+        element.is_active,
+        element.time_limit))
         num++;
     });
 
@@ -180,7 +202,6 @@ export class GroupModulePageComponent implements OnInit {
       this.users.push(new UserInfo(element));
       this.users_by_ids.set(element._id, new UserInfo(element));
     });
-    
     this.get_user_solutions();
   }
 

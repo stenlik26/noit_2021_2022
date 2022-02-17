@@ -244,7 +244,8 @@ class HandleGroupsClass:
                 {
                     'title': 1,
                     'start_date': 1,
-                    'end_date': 1
+                    'end_date': 1,
+                    'time_limit': 1
                 }))
 
         except ConnectionFailure:
