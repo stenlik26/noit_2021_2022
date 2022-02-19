@@ -1,0 +1,41 @@
+<div class="wrapper">
+    <div id="head_part">
+        <h3>Моите групи:</h3>
+        <div id="invites_button">
+            <div *ngIf="has_invites" id="red_circle"></div>
+            <button class="button-green invites_button" (click)="open_invites_modal()">Покани</button>
+        </div>
+    </div>
+
+    <div id="main_part">
+        <ul id="groups_list">
+            <div class="group_bar" *ngFor="let group of my_groups">
+                <h5>{{group.name}}</h5>
+                <button class="button-green to_group_button" routerLink="/group/{{group._id}}">Към групата</button>
+            </div>
+            
+          </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="invites_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal_label">Получени покани за групи</h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="invites_modal" class="modal-body">
+            <p *ngIf="!has_invites">Нямате получени покани за групи.</p>
+            <ul>
+              <div class="invite_panel panel-gray" *ngFor="let invite of my_invites">
+                <h5><b>{{invite.from_user_string}}</b> ви покани в <b>{{invite.for_group_string}}</b></h5>
+                <button class="button-red to_group_button" (click)="decline_invite(invite.for_group_id)">Отхвърли</button>
+                <button class="button-green to_group_button" (click)="accept_invite(invite.for_group_id)">Приеми</button>
+              </div>
+
+            </ul>
+        </div>
+      </div>
+    </div>
+  </div>

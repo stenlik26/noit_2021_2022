@@ -43,6 +43,10 @@ const routes: Routes = [
     loadChildren: () => import('./grade-solution/grade-solution.module').then(m => m.GradeSolutionModule)
   },
   {
+    path: 'my_groups',
+    loadChildren: () => import('./my-groups/my-groups.module').then(m => m.MyGroupsModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }
