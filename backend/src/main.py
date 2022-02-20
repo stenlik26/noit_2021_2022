@@ -599,8 +599,9 @@ def get_my_groups():
     return jsonify(inst.get_users_groups(post_info['user_id']))
 
 
-@app.route('/upload_codeplayground', method=['POST'])
+@app.route('/upload_codeplayground', methods=['POST'])
 def upload_codeplayground():
+    inst = UploadCodePlaygroundClass(get_connection())
     post_info = request.get_json()
 
     if not check_for_post_params(('token', 'user_id', 'language', 'code'), post_info):
@@ -612,8 +613,7 @@ def upload_codeplayground():
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    inst = UploadCodePlaygroundClass(get_connection())
-    return jsonify(inst.upload_solution(post_info))
+    return jsonify(inst.upload_code(post_info))
 
 
 @app.route('/', methods=['POST', 'GET'])
