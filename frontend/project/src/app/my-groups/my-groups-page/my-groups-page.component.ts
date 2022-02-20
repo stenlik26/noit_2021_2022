@@ -66,14 +66,7 @@ export class MyGroupsPageComponent implements OnInit {
         if(json.status === 'OK')
         {
           this.my_invites = json.message;
-          console.log(json.message);
-          if(json.message.length != 0)
-          {
-            this.has_invites = true;
-          }
-          else{
-            this.has_invites = false;
-          }
+          this.has_invites = json.message.length != 0;
         }
       });
   }
