@@ -12,11 +12,11 @@ import { ProblemInformation } from 'src/app/problem_information';
 import { Modal, Toast } from 'bootstrap';
 
 @Component({
-  selector: 'app-edit-code-page',
-  templateUrl: './edit-code-page.component.html',
-  styleUrls: ['./edit-code-page.component.scss']
+  selector: 'app-solve-task-page',
+  templateUrl: './solve-task-page.component.html',
+  styleUrls: ['./solve-task-page.component.scss']
 })
-export class EditCodePageComponent implements OnInit {
+export class SolveTaskPageComponent implements OnInit {
   editorOptions = { theme: 'vs-dark', language: 'cpp' };
   code: string = '#include <iostream>\n\nint main() {\n\t//Program that prints "Hello world" to the console\n\tstd::cout<<"Hello world"<<std::endl;\n\treturn 0;\n}';
   editor = null;
@@ -286,7 +286,7 @@ export class EditCodePageComponent implements OnInit {
         {
           this.startTimer();
           this.counter_min = Math.trunc(json.message / 60);
-          
+
           this.counter_sec = json.message % 60;
         }
         else{

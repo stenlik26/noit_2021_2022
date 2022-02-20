@@ -127,6 +127,6 @@ class Executor:
     def __compare_outputs(self, program_output_path: str, expected_output_path: str) -> TestResult:
         # TODO - This is not ideal - consider moving `execute_command` somewhere else
         stdout, _, rc = self.__language.execute_command("diff",
-                                                        [program_output_path, expected_output_path])
+                                                        ["-y", program_output_path, expected_output_path])
 
         return TestResult(rc == 0, stdout)

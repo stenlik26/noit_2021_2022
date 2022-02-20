@@ -1,13 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { EditCodePageComponent} from './edit-code-page/edit-code-page.component';
+import { SolveTaskPageComponent} from './solve-task-page/solve-task-page.component';
+import {EditCodeComponent} from "./edit-code/edit-code.component";
 
 
 const routes: Routes = [
   {
-    path: ':id',
-    component: EditCodePageComponent
+    path: '',
+    component: EditCodeComponent
+  },
+  {
+    path: 'solve/:id',
+    component: SolveTaskPageComponent
   }
 ];
 
