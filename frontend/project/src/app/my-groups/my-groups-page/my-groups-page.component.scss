@@ -1,0 +1,83 @@
+.wrapper{
+    gap: 1em;
+    width: 98%;
+    height: 39vh;
+    margin-bottom: 2%;
+    margin-left: 1%;
+}
+
+.to_group_button{
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.25em 1em 0.25em 1em;
+}
+
+.invites_button{
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+#red_circle{
+    position: absolute;
+    background-color: red;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+}
+
+#head_part{
+    display: flex;
+}
+
+#head_part > h3{
+    flex-grow: 3;
+}
+
+.group_bar > h5{
+    flex-grow: 3;
+}
+
+.group_bar{
+    display: flex;
+    background-color: #202225;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 0.5em;
+    align-items: center;
+}
+
+#main_part{
+    width:80%;
+    margin: auto;
+}
+
+#main_part > ul{
+    margin: 0;
+    padding: 0;
+    height: 75vh;
+    overflow-y: scroll;
+}
+
+.invite_panel{
+    display: flex;
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+}
+
+#invites_modal > ul{
+    margin: 0;
+    padding: 0;
+    height: 50vh;
+    overflow-y: scroll;
+}
+
+.invite_panel > h5{
+    flex-grow: 3;
+}
+
+.invite_panel > button{
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}

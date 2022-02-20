@@ -25,11 +25,15 @@ class HandleGroupsClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
+        options = {'name': 1, '_id': 0}
+
         for group in data['group_invites']:
+            group['from_user_string'] = self.db_users.find_one({'_id': group['from_user_id']}, options)['name']
+            group['for_group_string'] = self.db_groups.find_one({'_id': group['for_group_id']}, options)['name']
             group['from_user_id'] = str(group['from_user_id'])
             group['for_group_id'] = str(group['for_group_id'])
 
-        return {"status": "OK", "message": data}
+        return {"status": "OK", "message": data['group_invites']}
 
     def send_group_invite(self, info):
         if not ObjectId.is_valid(info['admin_user_id']):
@@ -48,7 +52,7 @@ class HandleGroupsClass:
 
         user_invites = self.get_user_group_invites(info['invited_user_id'])
 
-        user_invites = user_invites['message']['group_invites']
+        user_invites = user_invites['message']
 
         if invite in user_invites:
             return {"status": "error_user_is_invited", "message": "User is already invited."}
@@ -342,3 +346,21 @@ class HandleGroupsClass:
 
         return {"status": "OK", "message": "Name was successfully changed."}
 
+    def get_users_groups(self, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_userid", "message": "Userid was invalid"}
+
+        query = {'users': {'$in': [ObjectId(user_id)]}}
+        info_to_get = {'name': 1}
+
+        try:
+            groups = self.db_groups.find(query, info_to_get)
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        groups = list(groups)
+
+        for group in groups:
+            group['_id'] = str(group['_id'])
+
+        return {'status': 'OK', 'message': groups}

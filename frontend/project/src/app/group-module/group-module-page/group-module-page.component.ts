@@ -36,6 +36,7 @@ export class GroupModulePageComponent implements OnInit {
   time_limit_modal: any;
 
   ngOnInit(): void {
+
     this.switchTab('group_members');
     this.get_group_info();
     this.get_user_solutions();
