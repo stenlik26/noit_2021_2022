@@ -1,0 +1,34 @@
+<div class="wrapper">
+    <div id="head_part">
+        <h3>Моите решения:</h3>
+    </div>
+
+    <table class="table table-dark" id="problems_table">
+        <thead>
+          <tr>
+            <th scope="col">Задача</th>
+            <th class="text-center" scope="col">Дата</th>
+            <th class="text-center" scope="col">Език</th>
+            <th class="text-center" scope="col">Публична</th>
+            <th class="text-center" scope="col">Резултат от тестове</th>
+            <th class="text-center" scope="col">Оценка</th>
+            <th class="text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let sol of my_solutions">
+            <tr>
+        
+              <td>{{sol.problem_title}}</td>
+              <td class="text-center">{{sol.timestamp}}</td>
+              <td class="text-center">{{sol.language}}</td>
+              <td class="text-center">{{sol.get_public()}}</td>
+              <td class="text-center">{{sol.get_test_score()}}</td>
+              <td class="text-center">{{sol.get_score()}}</td>
+              <td class="text-center"><button routerLink="/show_solution/{{sol.code_id}}">Преглед</button></td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+
+</div>

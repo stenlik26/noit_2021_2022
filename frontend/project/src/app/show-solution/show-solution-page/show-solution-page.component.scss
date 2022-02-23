@@ -1,0 +1,191 @@
+.main{
+    padding: 0em 1em 1em 1em;
+}
+
+.selector_box{
+    border: 0.1em solid;
+    border-radius: .5em;
+    border-color: rgba(255, 255, 255, 0.342);
+    color: white;
+    height: 2.5em;
+}
+
+.selector_box:focus{
+    border: 0.1em solid;
+    border-radius: .5em;
+    border-color: greenyellow;
+    color: white;
+}
+
+#top_bar{
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin-bottom: 0.25em;
+    align-items: center;
+}
+
+#top_bar > h3{
+    flex-grow: 2;
+}
+
+
+
+#top_bar > button{
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+
+
+#second_bar{
+    display: flex;
+    align-items: center;
+}
+
+#second_bar > *{
+    margin: 0 0.5em 0 0.5em;
+}
+
+
+.selector{
+    display: flex;
+    width: 25%;
+    gap: 1em;
+    align-items: center;
+    justify-content: center;
+    margin: 0.5em;
+}
+  
+.selector > p{
+  margin: 0.5em 0em 0.5em 0.5em;
+  width: 10em;
+}
+
+#problem_tests > ul {
+    padding-left: 0;
+    overflow-y: scroll;
+    height: 63vh;
+    overflow-x: hidden;
+  }
+  
+  #problem_tests{
+    height: 68.45vh;
+    width: 49.25%;
+  }
+  
+  #problem_tests > h4{
+    padding: 0.5em;
+  }
+
+
+.gr_btn{
+  padding: 0.4em 0.4em;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+  height: 2.5em;
+  width: 8vw;
+}
+
+.test_info_field{
+    display: flex;
+    justify-content: space-between;
+    width: 95%;
+  }
+  
+  .test_info_field_right{
+    display: flex;
+    color: rgb(150,150,150);
+  }
+ 
+  .test_failed{
+    color: red
+  }
+
+  .accordion-button{
+    color: white;
+  }
+
+  textarea{
+    height: 8em;
+    resize: none;
+    width: 19vw;
+    border: 0.05em solid;
+    background:#202225;
+    border-radius: .5em;
+    //border-color: yellowgreen;
+    border-color: #62686e;
+    color: white;
+    outline: none;
+  }
+
+  #comment{
+    width: 100%;
+    margin-top: 0.5em;
+  }
+
+  #main_part{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  
+#monaco_editor {
+  width: 49.25%;
+  height: 70vh;
+}
+
+ngx-monaco-editor{
+  height: 100%;
+  .editor-container{
+    height: 100%;
+  }
+}
+
+
+.test_field > p{
+  padding: 0 0 0.5em 0;
+  margin:  0;
+}
+#test_box{
+  display: flex;
+  justify-content: space-between;
+}
+
+.test_field{
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+#problem_tests > ul {
+  padding-left: 0;
+  overflow-y: scroll;
+  height: 54vh;
+  overflow-x: hidden;
+}
+
+#grade_box{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#grade_box > label{
+  margin-right: 1em;
+}
+
+ul{
+  height: 40vh;
+  overflow-y: scroll;
+  margin: 0;
+  padding: 0;
+}
+
+.comment{
+  padding: 1em;
+  border: 0.05em solid;
+  border-color: rgba(160, 160, 160);
+  border-radius: 0.5em;
+  margin: 1.5em 0.5em 1.5em 0.5em;
+}

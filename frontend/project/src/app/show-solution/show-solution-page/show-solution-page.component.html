@@ -1,0 +1,127 @@
+<div class="main">
+    <div id="top_bar">
+
+
+        <h3>Преглед на решение:</h3>
+        <div id="second_bar">
+            <p>Автор: <b>{{this.author_name}}</b></p>
+            <p>Задача: <b>{{problem_title}}</b></p>
+            <p>Език: <b>{{current_code.get_language()}}</b></p>
+        </div>
+        <button *ngIf="access" (click)="show_share_modal()" class="gr_btn button-green">Сподели</button>
+        <button *ngIf="access" (click)="show_comments_modal()" class="gr_btn button-secondary">Коментари</button>
+    </div>
+
+
+
+
+    <div id="main_part">
+        <div id="monaco_editor">
+            <ngx-monaco-editor id="m_editor" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)">
+            </ngx-monaco-editor>
+        </div>
+        <div id="problem_tests" class="tabcontent panel-darkbg">
+            <h4 id="test_tab_message2"></h4>
+            <textarea readonly="true" id="error_textarea" style="display: none;"></textarea>
+            <p id="success_message">Всички тестове преминаха успешно.</p>
+            <ul *ngIf="show_tests">
+                <div id="tests" class="accordion">
+                    <div class="accordion-item" *ngFor="let test of current_code.tests_failed">
+                        <h2 class="accordion-header" id="test-head-{{test.get_test_num()}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                attr.data-bs-target="#test-info-{{test.get_test_num()}}" aria-expanded="false"
+                                attr.aria-controls="test-info-{{test.get_test_num()}}">
+                                <div class="test_info_field">
+                                    <h5>Тест {{test.get_test_num()}}</h5>
+                                    <div class="test_info_field_right">
+                                        <i class="fa fa-times fa-lg icon_class test_failed"></i>
+                                        <h6>Тестът не премина успешно.</h6>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+                        <div id="test-info-{{test.get_test_num()}}" class="accordion-collapse collapse"
+                            attr.aria-labelledby="test-head-{{test.get_test_num()}}" data-bs-parent="#tests">
+                            <div class="accordion-body">
+                                <div id="test_box">
+                                    <div>
+                                        <div class="test_field">
+                                            <p>Изпълнен вход: </p>
+                                            <textarea readonly="true">{{test.get_input()}}</textarea>
+                                        </div>
+                                        <div class="test_field">
+                                            <p>Разлика: </p>
+                                            <textarea readonly="true">{{test.get_diff()}}</textarea>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="test_field">
+                                            <p>Получен изход: </p>
+                                            <textarea readonly="true">{{test.get_output()}}</textarea>
+                                        </div>
+                                        <div class="test_field">
+                                            <p>Очакван изход: </p>
+                                            <textarea readonly="true">{{test.get_expected_output()}}</textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="share_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="share_modal">Споделяне на решение</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div *ngIf="!error_occured" class="modal-body">
+
+            <p *ngIf="!problem_public">Това решение е за задача, която не е публична. Вашето решение не може да бъде споделено.</p>
+            <p *ngIf="problem_public && !problem_shared">Сигурни ли сте че искате да споделите решението във вашия профил?</p>
+            <p *ngIf="problem_public && problem_shared">Това решение е вече споделено от вас.</p>
+        </div>
+
+        <div *ngIf="error_occured" class="modal-body">
+            <p>Възникна проблем!</p>
+        </div>
+
+
+        <div class="modal-footer">
+          <button *ngIf="problem_public && !problem_shared"
+          (click)="share_solution()"
+          class="gr_btn button-green">Сподели</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="comments_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="comments_modal">Коментари</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div *ngIf="!error_occured" class="modal-body">
+            
+            <ul>
+                <p class="comment" *ngFor="let comm of this.current_code.comments">{{comm}}</p>
+            </ul>
+
+
+        </div>
+
+      </div>
+    </div>
+  </div>
