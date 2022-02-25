@@ -1,0 +1,15 @@
+#head_part{
+    display: flex;
+}
+
+#head_part > h3{
+    flex-grow: 3;
+}
+
+.wrapper{
+    gap: 1em;
+    width: 98%;
+    height: 39vh;
+    margin-bottom: 2%;
+    margin-left: 1%;
+}
