@@ -7,7 +7,7 @@ const routes: Routes = [
     loadChildren: () => import('./home/home-routing.module').then(m => m.HomeRoutingModule)
   },
   {
-    path: 'edit',
+    path: 'solve',
     loadChildren: () => import('./edit-code/edit-code.module').then(m => m.EditCodeModule)
   },
   {
@@ -25,11 +25,45 @@ const routes: Routes = [
   {
     path: 'create_group',
     loadChildren: () => import('./create-group/create-group-routing.module').then(m => m.CreateGroupRoutingModule)
+  },
+  {
+    path: 'not_found',
+    loadChildren: () => import('./not_found_module/not_found_routing.module').then(m => m.NotFoundRoutingModule)
+  },
+  {
+    path: 'show_problems',
+    loadChildren: () => import('./show-problems/show-problems-routing.module').then(m => m.ShowProblemsRoutingModule)
+  },
+  {
+    path: 'group',
+    loadChildren: () => import('./group-module/group-routing.module').then(m => m.GroupRoutingModule)
+  },
+  {
+    path: 'grade_solution',
+    loadChildren: () => import('./grade-solution/grade-solution.module').then(m => m.GradeSolutionModule)
+  },
+  {
+    path: 'my_groups',
+    loadChildren: () => import('./my-groups/my-groups.module').then(m => m.MyGroupsModule)
+  },
+  {
+    path: 'my_solutions',
+    loadChildren: () => import('./my-solutions/my-solutions.module').then(m => m.MySolutionsModule)
+  },
+  {
+    path: 'show_solution',
+    loadChildren: () => import('./show-solution/show-solution.module').then(m => m.ShowSolutionModule)
+  },
+  {
+    path: '**',
+    redirectTo: '/not_found'
   }
+  // Note: Ако се добавят нови страници, те трябва да са над това със path: **. В противен случай не работят.
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+//@ts-ignore
 export class AppRoutingModule { }

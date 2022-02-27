@@ -5,8 +5,8 @@
     </h3>
 
     <div class="tab">
-        <button class="tablinks" (click)="switchTab('problem_options')">Опции</button>
         <button class="tablinks" (click)="switchTab('problem_text_editor')">Условие</button>
+        <button class="tablinks" (click)="switchTab('problem_options')">Опции</button>
         <button class="tablinks" (click)="switchTab('problem_tests')">Тестове</button>
     </div>
 
@@ -21,20 +21,39 @@
         <label for="problem_end_date">Крайна дата:</label>
         <input id="problem_end_date" type="datetime-local">
 
-        <label for="problem_time_limit">Времеви лимит (минути):</label>
-        <input id="problem_time_limit" type="text">
+        <label for="problem_time_limit">Времеви лимит:</label>
+        <select (change)="change_time_limit($event)" id="show_time_limit" class="form-select bg-dark dropdown">
+            <option value="no">Не</option>
+            <option value="yes">Да</option>
+        </select>
 
-        <label for="problem_acces">Достъп до задачата:
-            <select name="access" id="access">
-                <option value="public">Публична</option>
-                <option value="by_groups">По групи</option>
-                <option value="only_me">Само аз</option>
-            </select>
-        </label>
+        <label *ngIf="show_time_limit" for="problem_time_limit">Времеви лимит (минути):</label>
+        <input *ngIf="show_time_limit" id="problem_time_limit" type="text">
+
+
+        <label for="access">Достъп до задачата:</label>
+        <select (change)="access_change($event)" id="access" class="form-select bg-dark dropdown">
+            <option value="public">Публична</option>
+            <option value="by_groups">По групи</option>
+            <option value="only_me">Само аз</option>
+        </select>
+        
+
+        <label *ngIf="select_groups" for="groups">Групи:</label>
+        <select *ngIf="select_groups" id="groups" class="form-select bg-dark dropdown" multiple>
+            <option *ngFor='let group of groups' value="{{group._id}}">{{group.name}}</option>
+        </select>
 
 
         <label for="problem_tags">Тагове (разделени с " , " ):</label>
         <input id="problem_tags" type="text">
+
+        <label for="difficulty">Трудност:</label>
+        <select id="difficulty" class="form-select bg-dark dropdown">
+            <option value="easy">Лесна</option>
+            <option value="medium">Средна</option>
+            <option value="hard">Трудна</option>
+        </select>
 
     </div>
 
@@ -77,6 +96,27 @@
     <div id="create_problem_button">
         <button class="createButton button-gray">Отказ</button>
         <button (click)="create_problem()" class="createButton button-green">Създай задача</button>
+    </div>
+
+    <div class="modal fade" id="result_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal_label">Съобщение</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal_content">тест</p>
+                </div>
+                <div class="modal-footer">
+                    <button *ngIf="this.problem_created" (click)="go_to_main_page()" type="button"
+                        class="btn button-green" data-bs-dismiss="modal">Продължи</button>
+                    <button *ngIf="!this.problem_created" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Назад</button>
+                </div>
+            </div>
+        </div>
     </div>
 
 </div>

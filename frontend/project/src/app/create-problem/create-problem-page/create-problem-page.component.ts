@@ -6,6 +6,7 @@ declare var customTheme: any;
 declare var sampleMarkdownText: any;
 import { UserTokenHandling } from 'src/app/user_token_handling';
 import projectConfig from '../../../assets/conf.json'
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-create-problem-page',
@@ -14,10 +15,17 @@ import projectConfig from '../../../assets/conf.json'
 })
 export class CreateProblemPageComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   test_fields: Array<TestField> = new Array<TestField>();
   editor: any;
+  modal: any;
+  problem_created: boolean = false;
+  modal_content: any;
+  groups: Array<any> = new Array<any>();
+  select_groups: boolean = false;
+  show_time_limit: boolean = false;
 
   switchTab(name: string) {
 
@@ -44,19 +52,44 @@ export class CreateProblemPageComponent implements OnInit {
     //evt.currentTarget!.className += " active";
   }
 
+  access_change(event: any) {
+    this.select_groups = (event.target.value == 'by_groups');
+  }
+
+  change_time_limit(event: any) {
+    this.show_time_limit = (event.target.value == 'yes')
+  }
+
   create_problem(): void {
     const problem_text: string = this.editor.getContent();
     const title: string = (document.getElementById('problem_title_input') as HTMLInputElement).value;
     const problem_access: HTMLSelectElement = (document.getElementById('access') as HTMLSelectElement);
-    const time_limit: string = (document.getElementById('problem_time_limit') as HTMLInputElement).value;
+    let time_limit: string = '';
+    if (this.show_time_limit) {
+      time_limit = (document.getElementById('problem_time_limit') as HTMLInputElement).value;
+    }
+    else {
+      time_limit = "-1";
+    }
     const start_date: string = (document.getElementById('problem_start_date') as HTMLInputElement).value;
     const end_date: string = (document.getElementById('problem_end_date') as HTMLInputElement).value;
     const tags: string = (document.getElementById('problem_tags') as HTMLInputElement).value;
+    const difficulty: string = (document.getElementById('difficulty') as HTMLInputElement).value;
 
     this.update_test_array();
 
-    let access = problem_access.value === "public" ? "true" : "false";
+    this.modal_content.innerHTML = "Моля изчакайте..."
+    this.modal.show();
 
+    let access = problem_access.value === "public" ? "true" : "false";
+    let groups_to_add_problem: Array<String> = new Array<String>();
+
+    let selected_groups = document.getElementById('groups') as HTMLSelectElement;
+    if (selected_groups != null) {
+      for (let i = 0; i < selected_groups.selectedOptions.length; i++) {
+        groups_to_add_problem.push(selected_groups.selectedOptions[i].value);
+      }
+    }
     const requestBody = {
       title: title,
       text: problem_text,
@@ -67,8 +100,11 @@ export class CreateProblemPageComponent implements OnInit {
       tests: JSON.stringify(this.test_fields, ["input", "output", "is_hidden", "time_limit"]),
       tags: tags,
       user_id: UserTokenHandling.getUserId(),
-      token: UserTokenHandling.getUserToken()
+      token: UserTokenHandling.getUserToken(),
+      difficulty: difficulty,
+      groups_to_add_problem: groups_to_add_problem
     }
+
 
     fetch((projectConfig.api_url + 'create_problem'), {
       method: 'POST',
@@ -77,10 +113,20 @@ export class CreateProblemPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
-        console.log(json);
+        if (json.status == "OK") {
+          this.problem_created = true;
+          this.modal_content.innerHTML = "Задачата е успешно създадена."
+          this.modal.show();
+        }
+        else {
+          this.modal_content.innerHTML = "Моля попълнете всички полета."
+          this.modal.show();
+        }
       });
+  }
 
-
+  go_to_main_page(): void {
+    window.location.href = projectConfig.site_url;
   }
 
   update_test_array(): void {
@@ -104,7 +150,6 @@ export class CreateProblemPageComponent implements OnInit {
 
   remove_test_field(test_field: any): void {
     let index_to_delete = 0;
-    console.log(this.test_fields);
     let test_num_to_delete = test_field.get_test_num();
 
     for (let i = 0; i < this.test_fields.length; i++) {
@@ -115,6 +160,23 @@ export class CreateProblemPageComponent implements OnInit {
     }
     this.test_fields.splice(index_to_delete, 1);
   }
+  get_groups_where_user_is_admin(): void {
+    const requestBody = {
+      token: UserTokenHandling.getUserToken(),
+      user_id: UserTokenHandling.getUserId()
+    };
+
+    fetch((projectConfig.api_url + 'get_groups_user_admin'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        this.groups = json;
+      });
+  }
+
 
   ngOnInit(): void {
 
@@ -123,6 +185,7 @@ export class CreateProblemPageComponent implements OnInit {
     // MdFormatter - създава се нов клас като изисква атрибут за режим на редактора. (Прочети последното)
     // customTheme - Темата на полето за условието (тема на scrollbar, тема на редактора, други css настройки и т.н.)
     // Последният атрибут false или ture е затова дали редактора е във read-only режим. Ако е false, може да се пише в редактора, ако е true, може само да се чете от редактора.
+
     this.editor = new Editor('editor', new MdFormatter(false), customTheme, false);
     this.editor.setContent(sampleMarkdownText);
     this.editor.setContentBasic();
@@ -132,6 +195,11 @@ export class CreateProblemPageComponent implements OnInit {
     if (!UserTokenHandling.isUserTokenSet) {
       UserTokenHandling.setGuestToken();
     }
+    this.switchTab('problem_text_editor');
+    //@ts-ignore
+    this.modal = new Modal(document.getElementById('result_modal'));
+    this.modal_content = document.getElementById('modal_content') as HTMLParagraphElement;
+    this.get_groups_where_user_is_admin();
 
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
+import bootstrap from 'bootstrap';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',

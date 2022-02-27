@@ -1,16 +1,39 @@
+
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+  <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Атина</strong>
+      <small>Сега</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      <p id="toast_content"></p>
+    </div>
+  </div>
+</div>
+
+
 <div id="content" class="grid-container panel">
 
+  <div class="grid-item problem_title_class">
+    <h4 id="problem_title">Зареждане <i class="fas fa-spinner fa-spin"></i></h4>
+  </div>
+
+  <div class="grid-item problem_title_class">
+    <p id="countdown">Оставащо време - {{counter_min}}:{{counter_sec_string}}</p>
+  </div>
+
   <div id="code_buttons" class="grid-item">
-    <select id="language-selector" (change)="changeLanguageSelect()" class="form-select bg-dark"
+    <select *ngIf="can_work" id="language-selector" (change)="changeLanguageSelect()" class="form-select bg-dark"
       aria-label="Default select example">
       <option value="cpp">C++</option>
       <option value="csharp">C#</option>
       <option value="java">Java</option>
-      <option value="python">Python</option>
+      <option value="python">Python3</option>
     </select>
 
-    <button class="button-green buttons">Изпълни код</button>
-    <button class="button-green buttons">Изпълни тестове</button>
+    <button *ngIf="can_work" class="button-secondary buttons" (click)="run_tests()">Изпълни тестове</button>
+    <button *ngIf="can_work" class="button-green buttons" (click)="upload_code('Моля изчакайте, решението ви се качва.')">Предай решение</button>
 
   </div>
 
@@ -19,7 +42,7 @@
     <button class="tablinks" (click)="switchTab('problem_tests')">Тестове</button>
   </div>
 
-  <div id="monaco_editor" class="grid-item">
+  <div *ngIf="can_work" id="monaco_editor" class="grid-item">
     <ngx-monaco-editor class="editor_test_class" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)"></ngx-monaco-editor>
   </div>
 
@@ -29,16 +52,20 @@
       <div id="editor"></div>
     </div>
 
-    <div id="problem_tests" class="tabcontent">
-      <h4>Резултат от тестове: x / y</h4>
-      <ul>
-        <div class="test_element" *ngFor="let test of problem_information.test_fields">
-
-          <div class="accordion-item">
-            <h2 class="accordion-header" id="test">
-              <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                attr.data-bs-target="#test-info-{{test.get_test_num()}}" aria-expanded="true"
-                aria-controls="collapseOne">
+    <div id="problem_tests" class="tabcontent panel-darkbg">
+      <h4 id="test_tab_message">Няма изпълнени тестове.</h4>
+      <textarea readonly="true" id="error_textarea" style="display: none;"></textarea>
+      <p id="success_message">Всички тестове преминаха успешно.</p>
+      <ul *ngIf="show_tests">
+        <div id="tests" class="accordion">
+          <div class="accordion-item" *ngFor="let test of problem_information.test_fields">
+            <h2 class="accordion-header" id="test-head-{{test.get_test_num()}}">
+              <button class="accordion-button collapsed" 
+              type="button" 
+              data-bs-toggle="collapse"
+                attr.data-bs-target="#test-info-{{test.get_test_num()}}" 
+                aria-expanded="false"
+                attr.aria-controls="test-info-{{test.get_test_num()}}">
                 <div class="test_info_field">
                   <h5>Тест {{test.get_test_num()}}</h5>
                   <div class="test_info_field_right">
@@ -48,24 +75,60 @@
                 </div>
               </button>
             </h2>
-
-
-            <div id="test-info-{{test.get_test_num()}}" class="accordion-collapse collapse" aria-labelledby="headingOne"
-              data-bs-parent="#accordionExample">
+            <div id="test-info-{{test.get_test_num()}}" class="accordion-collapse collapse" 
+            attr.aria-labelledby="test-head-{{test.get_test_num()}}"
+            data-bs-parent="#tests">
               <div class="accordion-body">
-                <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse
-                plugin adds the appropriate classes that we use to style each element. These classes control the overall
-                appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with
-                custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go
-                within the <code>.accordion-body</code>, though the transition does limit overflow.
+                <div id="test_box">
+                  <div>
+                    <div class="test_field">
+                      <p>Изпълнен вход: </p>
+                      <textarea readonly="true">{{test.get_input()}}</textarea>
+                    </div>
+                    <div class="test_field">
+                      <p>Разлика: </p>
+                      <textarea readonly="true">{{test.get_diff()}}</textarea>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="test_field">
+                      <p>Получен изход: </p>
+                      <textarea readonly="true">{{test.get_output()}}</textarea>
+                    </div>
+                    <div class="test_field">
+                      <p>Очакван изход: </p>
+                      <textarea readonly="true">{{test.get_expected_output()}}</textarea>
+                    </div>
+                  </div>
+                </div>
+
+
               </div>
             </div>
-
           </div>
-
         </div>
       </ul>
+
+      
+      
     </div>
   </div>
 
+</div>
+
+<div class="modal fade" data-bs-backdrop="static" data-bs-keyboard="false" id="time_out_modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="time_out_modal">Съобщение</h5>
+        
+      </div>
+      <div id="time_out_modal" class="modal-body">
+          <p>{{time_out_text}}</p>
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="code_uploaded" (click)="go_back_to_group()" class="button-green buttons">Добре</button>
+      </div>
+    </div>
+  </div>
 </div>

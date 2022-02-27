@@ -1,0 +1,254 @@
+<div class="wrapper">
+  <h2 id="group_title">{{group_title}}</h2>
+  <div class="tab">
+    <button class="tablinks" (click)="switchTab('group_members')">Членове</button>
+    <button class="tablinks" (click)="switchTab('group_problems')">Задачи</button>
+    <button *ngIf="this.is_admin" class="tablinks" (click)="switchTab('group_solutions')">Решения</button>
+    <button *ngIf="this.is_admin" class="tablinks" (click)="switchTab('group_options')">Опции</button>
+  </div>
+
+  <div id="group_problems" class="tabcontent">
+
+    <h3>Задачи:</h3>
+
+    <table class="table table-dark" id="problems_table">
+      <thead>
+        <tr>
+          <th class="text-center" scope="col">#</th>
+          <th scope="col">Име</th>
+          <th class="text-center" scope="col">Начална дата</th>
+          <th class="text-center" scope="col">Крайна дата</th>
+          <th class="text-center" scope="col">Отворена</th>
+          <th class="text-center" scope="col">Времеви лимит (мин.)</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let problem of problems">
+          <tr>
+            <th class="text-center align-middle" scope="row">{{problem.num}}</th>
+            <th class="align-middle">{{problem.title}}</th>
+            <td class="text-center align-middle">{{problem.start_time}}</td>
+            <td class="text-center align-middle">{{problem.end_time}}</td>
+            <td class="text-center align-middle">{{problem.get_active()}}</td>
+            <td class="text-center align-middle">{{problem.get_time_limit_string()}}</td>
+            <td class="text-center align-middle"><button *ngIf="problem.is_active"
+                (click)="solve_problem(problem.time_limit, problem.object_id)" class="button-green solve_button align-middle">Реши</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="group_members" class="tabcontent">
+    <ul id="members_list">
+      <div class="user_box" *ngFor="let user of users">
+        <img src="{{user.picture}}">
+
+        <div class="user_box_text">
+          <p>{{user.get_username()}}</p>
+          <p>{{user.get_user_status()}}</p>
+        </div>
+        <div class="user_box_buttons">
+          <button class="button-green solve_button">Профил</button>
+        </div>
+      </div>
+    </ul>
+  </div>
+
+  <div id="group_options" class="tabcontent">
+    <div id="options_group_name">
+      <h3>Име на групата: <b>{{this.group_title}}</b></h3>
+      <button (click)="change_group_name_popup()" class="button-green options_button options_button_main">Смяна</button>
+    </div>
+    <div id="options_head">
+      <h3>Потребители:</h3>
+      <button (click)="show_invite_modal()" class="button-green options_button options_button_main">Покани потребител</button>
+    </div>
+    <table class="table table-dark" id="users_table">
+      <thead>
+        <tr>
+          <th scope="col">Име на потребител</th>
+          <th class="text-center" scope="col">Имейл адрес</th>
+          <th class="text-center" scope="col">Статус</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let user of users">
+          <tr>
+            <th class="align-middle">{{user.get_username()}}</th>
+            <td class="text-center align-middle">{{user.get_email()}}</td>
+            <td class="text-center align-middle">{{user.get_user_status()}}</td>
+            <td class="text-end align-middle" style="width: 40%;">
+              <button *ngIf="user.get_user_is_admin()" (click)="show_ask_again_modal('revoke_admin', user.get_username(), user.get_user_id())" class="button-secondary options_button">Премахни администраторски права</button>
+              <button *ngIf="!user.get_user_is_admin()" (click)="show_ask_again_modal('become_admin', user.get_username(), user.get_user_id())" class="button-secondary options_button">Направи администратор</button>
+              <button (click)="show_ask_again_modal('remove_user', user.get_username(), user.get_user_id())" class="button-red options2_button">Премахни от групата</button>
+            </td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="group_solutions" class="tabcontent">
+    <div id="options">
+
+      <h3>Решения:</h3>
+
+      <div class="selector" id="problem_select">
+        <p for="problem_selector_box">Задача: </p>
+
+        <select id="problem_selector_box" class="selector_box form-select bg-dark">
+          <option value="any">Всички</option>
+          <option *ngFor="let problem of problems" value="{{problem.object_id}}">{{problem.title}}</option>
+        </select>
+      </div>
+
+      <div class="selector" id="user_select">
+        <p for="user_selector_box">Потребител: </p>
+
+        <select id="user_selector_box" class="selector_box form-select bg-dark">
+          <option value="any">Всички</option>
+          <option *ngFor="let user of users" value="{{user.get_user_id()}}">{{user.get_username()}}</option>
+        </select>
+      </div>
+
+      <button class="button-green solve_button" (click)="get_user_solutions()">Търсeне</button>
+    </div>
+
+
+
+    <table class="table table-dark" id="problems_table">
+      <thead>
+        <tr>
+          <th class="text-center" scope="col">#</th>
+          <th scope="col">Име на задача</th>
+          <th class="text-center" scope="col">Име на потребител</th>
+          <th class="text-center" scope="col">Брой решения</th>
+          <th class="text-center" scope="col">Оценка</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let solution of solutions">
+          <tr>
+            <th class="text-center align-middle" scope="row">{{solution.num}}</th>
+            <th class="align-middle">{{solution.problem_name}}</th>
+            <td class="text-center align-middle">{{solution.author_name}}</td>
+            <td class="text-center align-middle">{{solution.code_ids}}</td>
+            <td class="text-center align-middle">{{solution.get_score()}}</td>
+            <td class="text-center align-middle"><button
+                routerLink="/grade_solution/{{solution.solution_id}}/{{group_id}}"
+                class="button-green solve_button">Преглед</button></td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+
+  </div>
+
+  <div class="modal fade" id="invite_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Изпращане на покани</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="invite_modal" class="modal-body">
+          <nav>
+            <ul>
+              <div class="user_panel panel-gray" *ngFor="let user of all_users">
+
+                <img class="pic_thumbnail" src="{{user.get_picture()}}">
+                <p>{{user.get_username()}}</p>
+                <button (click)="add_user_to_invite_list(user.get_user_id())" id="{{user.get_user_id()}}_invite"
+                  class="button-secondary invite_button">Покани</button>
+
+                <button (click)="remove_user_from_invite_list(user.get_user_id())" id="{{user.get_user_id()}}_remove"
+                  class="button-red remove_button" style="display: none;">Отказ</button>
+              </div>
+
+            </ul>
+          </nav>
+        </div>
+        <div class="modal-footer">
+          <button (click)="send_group_invites()" class="button-green invite_button">Изпращане</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="ask_again_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Съобщение</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="ask_again_modal" class="modal-body">
+          <p id="ask_again_message"></p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="ask_again_button()" class="button-green solve_button">Да</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Не</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="time_limit_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="time_limit_modal">Внимание</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="time_limit_modal" class="modal-body">
+          <p>Тази задача има зададен времеви лимит. Когато задачата се отвори, времевият лимит започва да тече. Сигурни ли сте че искате да започнете задачата?</p>
+        </div>
+        <div class="modal-footer">
+          <button (click)="solve_problem_time_limit(selected_task)" class="button-green solve_button">Да</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Не</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="success_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modal_label">Съобщение</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="success_modal" class="modal-body">
+          <p id="success_message"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="change_group_name_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="change_group_name_modal">Съобщение</h5>
+          
+        </div>
+        <div id="change_group_name_modal" class="modal-body">
+            <p>Текущо име: <b>{{this.group_title}}</b></p>
+            <div id="new_group_name_panel">
+              <label>Ново име: </label>
+              <input type="text" placeholder="Въведете новото име" id="new_group_name" name="new_group_name">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button (click)="change_group_name()" class="button-green solve_button">Промени</button>
+          <button type="button" class="button-gray solve_button" data-bs-dismiss="modal" aria-label="Close">Отказ</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

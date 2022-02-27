@@ -1,7 +1,7 @@
 <div class="w3-panel bg-dark" id="registerPanel">
     <div class="container">
 
-        <h1>Регистрация</h1>
+        <h2>Регистрация</h2>
         <p>Моля, попълнете всички полета от формата за регистрация:</p>
         <p type="hidden" id="status"></p>
 
@@ -10,28 +10,28 @@
 
         <div id="mainInputPanel">
             <div class="inputField">
-                <i class="fa fa-user fa-2x icon_class"></i>
+                <i class="fa fa-user fa-lg icon_class"></i>
                 <input type="text" placeholder="Име" name="name" id="name" required>
             </div>
 
             <div class="inputField">
-                <i class="fa fa-at fa-2x icon_class"></i>
+                <i class="fa fa-at fa-lg icon_class"></i>
                 <input type="text" placeholder="Имейл" name="email" id="email">
             </div>
 
             <div class="inputField">
-                <i class="fa fa-lock fa-2x icon_class"></i>
+                <i class="fa fa-lock fa-lg icon_class"></i>
                 <input type="password" placeholder="Парола" name="password" id="password">
 
             </div>
 
             <div class="inputField">
-                <i class="fa fa-lock fa-2x icon_class"></i>
+                <i class="fa fa-lock fa-lg icon_class"></i>
                 <input type="password" placeholder="Повторете паролата" name="password-repeat" id="password-repeat" required>
             </div>
             <button (click)="registerBtn()" type="submit" class="registerbtn button-green">Регистрация</button>
 
-            <p style="text-align: center;"><a href="/login">Имате вече акаунт? Влезте тук</a>.</p>
+            <p class="has_account"><a href="/login">Имате вече акаунт? Влезте тук</a>.</p>
 
         </div>
     </div>

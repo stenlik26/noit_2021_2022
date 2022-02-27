@@ -8,6 +8,7 @@ from backend.src.register_user.register_user import RegisterUserClass
 from backend.src.login_user.login_user import LoginUserClass
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
+from backend.src.solve_problem.solve_problem import SolveProblemClass
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -19,6 +20,11 @@ def is_user_valid(token: str, user_id: str) -> bool:
 
 
 def is_guest_token_valid(token: str) -> bool:
+    # TODO: implement this
+    return True
+
+
+def is_user_admin_for_group(user_id: str, group_id: str) -> bool:
     # TODO: implement this
     return True
 
@@ -167,20 +173,22 @@ def login_user():
 def create_problem():
     post_info = request.get_json()
 
-    inst = HandleProblemsClass()
+    inst = HandleProblemsClass(get_connection())
 
     if not check_for_post_params(('token', 'user_id', 'tests', 'title',
-                                  'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+                                  'public', 'text', 'start_date', 'end_date',
+                                  'time_limit', 'difficulty', 'groups_to_add_problem'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
     if check_if_empty(('user_id', 'token', 'tests', 'title',
-                       'public', 'text', 'start_date', 'end_date', 'time_limit'), post_info):
+                       'public', 'text', 'start_date', 'end_date',
+                       'time_limit', 'difficulty'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return jsonify(inst.create_problem(post_info, get_connection()))
+    return jsonify(inst.create_problem(post_info))
 
 
 @app.route('/create_group', methods=['POST'])
@@ -261,27 +269,382 @@ def get_user_group_invites():
 
     inst = HandleGroupsClass(get_connection())
 
-    if not check_for_post_params(('token', 'my_user_id'), post_info):
+    if not check_for_post_params(('token', 'user_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if check_if_empty(('token', 'my_user_id'), post_info):
+    if check_if_empty(('token', 'user_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    if not is_user_valid(post_info['token'], post_info['my_user_id']):
+    if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
-    return jsonify(inst.get_user_group_invites(post_info['my_user_id']))
+    return jsonify(inst.get_user_group_invites(post_info['user_id']))
+
+
+@app.route('/get_problem_info', methods=['POST'])
+def get_problem_info():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_problem_info(post_info['problem_id']))
+
+
+@app.route('/upload_code', methods=['POST'])
+def upload_code():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.upload_solution(post_info))
+
+
+@app.route('/get_all_users', methods=['POST'])
+def get_all_users():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_all_users(post_info['user_id']))
+
+
+@app.route('/send_multiple_group_invites', methods=['POST'])
+def send_multiple_group_invites():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'invited_ids', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'invited_ids', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.send_multiple_invites(post_info['user_id'], post_info['group_id'], post_info['invited_ids']))
+
+
+@app.route('/get_groups_user_admin', methods=['POST'])
+def get_groups_user_admin():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_groups_where_user_is_admin(post_info['user_id']))
+
+
+@app.route('/run_problem_tests', methods=['POST'])
+def run_problem_tests():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'code', 'language'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'code', 'language'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.run_tests(
+        post_info['problem_id'],
+        post_info['code'],
+        post_info['language'],
+        post_info['all_tests']))
+
+
+@app.route('/user_access_to_problem', methods=['POST'])
+def user_access_to_problem():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.does_user_have_access(post_info['user_id'],post_info['problem_id']))
+
+
+@app.route('/get_all_problems', methods=['POST'])
+def get_all_problems():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'difficulty', 'tags', 'name'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'difficulty', 'tags'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_all_problems(post_info['difficulty'], post_info['tags'], post_info['name']))
+
+
+@app.route('/get_group_access_level', methods=['POST'])
+def get_group_access_level():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_user_access_level(post_info['user_id'], post_info['group_id']))
+
+
+@app.route('/get_group_data', methods=['POST'])
+def get_group_data():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_group_info(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/get_solutions_to_problem', methods=['POST'])
+def get_solutions_to_problem():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'problem_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # По-скоро трябва да се изпълни does_user_have_access
+
+    return jsonify(inst.get_solutions_for_group(post_info['problem_id'],
+                                                post_info['user_id'],
+                                                post_info['group_problem_ids']))
+
+
+@app.route('/get_problem_submissions', methods=['POST'])
+def get_problem_submissions():
+    post_info = request.get_json()
+
+    inst = HandleProblemsClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'solution_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'solution_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_solution_by_id(post_info['solution_id']))
+
+
+@app.route('/set_comment_to_solution', methods=['POST'])
+def set_comment_to_solution():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'solution_id', 'comment'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'solution_id', 'comment'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.comment_solution(post_info['solution_id'], post_info['comment']))
+
+
+@app.route('/grade_solution', methods=['POST'])
+def grade_solution():
+    post_info = request.get_json()
+
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'solution_id', 'grade'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'solution_id', 'grade'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.grade_solution(post_info['solution_id'], post_info['grade']))
+
+
+@app.route('/give_user_admin_access', methods=['POST'])
+def give_user_admin_access():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.make_user_admin(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/revoke_user_admin_access', methods=['POST'])
+def revoke_user_admin_access():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.revoke_user_admin(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/kick_user_from_group', methods=['POST'])
+def kick_user_from_group():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.remove_user_from_group(post_info['group_id'], post_info['user_id']))
+
+
+@app.route('/change_group_name', methods=['POST'])
+def change_group_name():
+    post_info = request.get_json()
+
+    inst = HandleGroupsClass(get_connection())
+
+    if not check_for_post_params(('token', 'my_user_id', 'new_name', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'my_user_id', 'new_name', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    # TODO: Check if user is admin
+    return jsonify(inst.change_group_name(post_info['group_id'], post_info['new_name']))
+
+
+@app.route('/get_time_limit_solution_elapsed', methods=['POST'])
+def get_time_limit_solution_elapsed():
+    post_info = request.get_json()
+    inst = SolveProblemClass(get_connection())
+
+    if not check_for_post_params(('token', 'user_id', 'problem_id', 'time_limit'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'problem_id', 'time_limit'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.init_solution_with_time_limit(post_info))
+
+
+@app.route('/get_my_groups', methods=['POST'])
+def get_my_groups():
+
+    inst = HandleGroupsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_users_groups(post_info['user_id']))
+
+
+@app.route('/get_my_solutions', methods=['POST'])
+def get_my_solutions():
+    inst = HandleProblemsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_my_solutions(post_info['user_id']))
+
+
+@app.route('/get_code_info', methods=['POST'])
+def get_code_info():
+    inst = HandleProblemsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_code_info(post_info['code_id'], post_info['user_id']))
+
+
+@app.route('/share_solution', methods=['POST'])
+def share_solution():
+    inst = HandleProblemsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.share_solution(post_info['code_id'], post_info['user_id']))
 
 
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-
-    #t = get_connection()
-    #t = t['Main']['Problems']
-    #x = t.find_one({"_id": bson.ObjectId("61898d4d14c76c04b63be258")}, {"_id": 0, "text": 1, "tests": 1, "start_date": 1, "end_date": 1, "time_limit": 1})
-    x = {'text': '```javascript\nvar s = "Test syntax highlighting";\nalert( s );\n```\n\n# Test\n\n1. Test item\n\n2. Test item 2\n\n3. Test item 3\n\n- Unordered test item\n\n- Unordered test item\n\n- Unordered test item\n\n', 'tests': [{'input': '12', 'output': '123', 'is_hidden': True, 'time_limit': '200'}, {'input': '186', 'output': '123', 'is_hidden': True, 'time_limit': '200'}], 'start_date': datetime.datetime(2021, 11, 12, 22, 46), 'end_date': datetime.datetime(2021, 11, 25, 22, 46), 'time_limit': ''}
-    return jsonify(x)
-    #return 'This is the debug page for the backend api. (API works)'
+    inst = HandleProblemsClass(get_connection())
+    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
+    #return jsonify({"test": "api test"})
 
 
 if __name__ == '__main__':
