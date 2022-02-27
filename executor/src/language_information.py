@@ -38,7 +38,7 @@ class Language(ABC):
                                 stdout=subprocess.PIPE,
                                 timeout=timeout)
         except subprocess.TimeoutExpired as timeout_error:
-            return f"Process timed out after {timeout} seconds", timeout_error.stderr, 1
+            return f"Изпълненият тест надвиши времевия лимит от {timeout} секунди", timeout_error.stderr, 1
         except Exception as ex:
             return f"Unknown exception caught {ex}", "", 1
 
