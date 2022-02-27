@@ -54,7 +54,7 @@ class Executor:
 
         stdout_path = None
         if stdout is not None:
-            stdout_path = self.__create_file(stdout,  "stdout.txt")
+            stdout_path = self.__create_file(stdout.strip(),  "stdout.txt")
 
         if path != "":
             run_result = RunResult(self.__language.execute(path, stdin_path, timeout=timeout))

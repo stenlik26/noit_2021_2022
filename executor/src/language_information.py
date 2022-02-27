@@ -44,7 +44,7 @@ class Language(ABC):
 
         if stdin_path is not None:
             stdin.close()
-        return result.stdout, result.stderr, result.returncode
+        return result.stdout.strip(), result.stderr, result.returncode
 
     def execute(self, code_path: str, stdin_path: Optional[str] = None, timeout: float = 2) -> tuple:
         pass
