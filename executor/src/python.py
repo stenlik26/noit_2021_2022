@@ -12,4 +12,6 @@ class PythonLanguage(InterpretedLanguage):
         return super().execute_command(self.executable, [code_path], stdin_path, timeout)
 
     def lint(self, code_path) -> tuple:
-        return super().execute_command(self.linter, [code_path, "--exit-zero"])
+        return super().execute_command(self.linter, ["-d", "C0114", "-d", "C0115", "-d", "C0116",
+                                                     code_path, "--exit-zero"
+                                                     ])
