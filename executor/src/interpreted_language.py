@@ -1,4 +1,4 @@
-from language_information import Language
+from src.language_information import Language
 
 
 class InterpretedLanguage(Language):

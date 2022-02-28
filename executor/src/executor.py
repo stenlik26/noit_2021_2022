@@ -1,9 +1,9 @@
 import os
 from typing import Optional
 
-from language_information import Language
-from config import Config
-import csharp
+from src.language_information import Language
+from src.config import Config
+from src.csharp import CsharpLanguage
 
 
 class RunResult:
@@ -37,15 +37,15 @@ class Executor:
         self.__language = language
         self.__config = Config()
 
-    def run(self, code: str) -> RunResult:
+    def run(self, code: str, timeout: float = 2) -> RunResult:
         path = self.__save_code_to_file(code)
 
         if path != "":
-            return RunResult(self.__language.execute(path))
+            return RunResult(self.__language.execute(path, timeout=timeout))
         else:
             return RunResult(("", "Can't execute", 1))
 
-    def run_test(self, code: str, stdin: Optional[str], stdout: Optional[str]) -> (RunResult, Optional[TestResult]):
+    def run_test(self, code: str, stdin: Optional[str] = None, stdout: Optional[str] = None, timeout: float = 2) -> (RunResult, Optional[TestResult]):
         path = self.__save_code_to_file(code)
 
         stdin_path = None
@@ -54,10 +54,10 @@ class Executor:
 
         stdout_path = None
         if stdout is not None:
-            stdout_path = self.__create_file(stdout,  "stdout.txt")
+            stdout_path = self.__create_file(stdout.strip(),  "stdout.txt")
 
         if path != "":
-            run_result = RunResult(self.__language.execute(path, stdin_path))
+            run_result = RunResult(self.__language.execute(path, stdin_path, timeout=timeout))
 
             if stdout_path is not None:
                 output_path = self.__create_file(run_result.stdout, "output.txt")
@@ -81,7 +81,8 @@ class Executor:
         if not os.path.exists(self.__config.work_dir_root):
             os.mkdir(self.__config.work_dir_root)
 
-        if type(self.__language) == csharp.CsharpLanguage:
+        # isinstances doesnt seem to be working correctly in this case - if there is time, rework
+        if "Csharp" in str(type(self.__language)):
 
             csharp_path = os.path.join(self.__config.work_dir_root,
                                        self.__generate_csharp_project_folder())
@@ -127,6 +128,6 @@ class Executor:
     def __compare_outputs(self, program_output_path: str, expected_output_path: str) -> TestResult:
         # TODO - This is not ideal - consider moving `execute_command` somewhere else
         stdout, _, rc = self.__language.execute_command("diff",
-                                                        [program_output_path, expected_output_path])
+                                                        ["-y", program_output_path, expected_output_path])
 
         return TestResult(rc == 0, stdout)
