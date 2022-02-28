@@ -2,8 +2,8 @@ import os
 import re
 from typing import Optional
 
-from compiled_language import CompiledLanguage
-from config import Config
+from src.compiled_language import CompiledLanguage
+from src.config import Config
 
 
 class JavaLanguage(CompiledLanguage):
@@ -14,7 +14,7 @@ class JavaLanguage(CompiledLanguage):
     def compile(self, code_path: str) -> tuple:
         return super().execute_command(self.executable, [code_path])
 
-    def execute(self, code_path: str, stdin_path: Optional[str] = None) -> tuple:
+    def execute(self, code_path: str, stdin_path: Optional[str] = None, timeout: float = 2) -> tuple:
         out, err, return_code = self.compile(code_path)
 
         with open(code_path, 'r') as file:
@@ -25,10 +25,10 @@ class JavaLanguage(CompiledLanguage):
         compiled_name = compiled_name.replace('class ', '')
 
         if return_code == 0:
-            return super().execute_command('java', ['-cp', self.__config.work_dir_root, compiled_name], stdin_path)
+            return super().execute_command('java', ['-cp', self.__config.work_dir_root, compiled_name], stdin_path, timeout)
 
         return out, err, return_code
 
     def lint(self, code_path):
-        print('No java linter implemented')
-        return None
+        return super().execute_command(self.linter.format(code_path), [])
+

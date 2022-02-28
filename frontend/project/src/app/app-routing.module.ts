@@ -47,6 +47,14 @@ const routes: Routes = [
     loadChildren: () => import('./my-groups/my-groups.module').then(m => m.MyGroupsModule)
   },
   {
+    path: 'my_solutions',
+    loadChildren: () => import('./my-solutions/my-solutions.module').then(m => m.MySolutionsModule)
+  },
+  {
+    path: 'show_solution',
+    loadChildren: () => import('./show-solution/show-solution.module').then(m => m.ShowSolutionModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }

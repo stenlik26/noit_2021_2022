@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 import flask_cors
-from language_executors import LanguageExecutors
+from src.language_executors import LanguageExecutors
 from src.executor import RunResult, Executor
 
 app = Flask(__name__)
@@ -27,7 +27,9 @@ def run_code():
     post_info = request.get_json()
     executor: Executor = language_executors.get_executor(post_info['language'])
 
-    result: RunResult = executor.run(post_info['code'])
+    timeout = 2 if 'timeout' not in post_info else post_info['timeout']
+
+    result: RunResult = executor.run(post_info['code'], timeout=timeout)
 
     return jsonify({
         "status": "OK",
@@ -43,7 +45,8 @@ def run_test():
     stdin = post_info['stdin'] if 'stdin' in post_info else None
     expected_stdout = post_info['expected_stdout'] if 'expected_stdout' in post_info else None
 
-    run_result, test_result = executor.run_test(post_info['code'], stdin, expected_stdout)
+    timeout = 2 if 'timeout' not in post_info else float(post_info['timeout'])
+    run_result, test_result = executor.run_test(post_info['code'], stdin, expected_stdout, timeout)
 
     run_result_dict: dict = run_result.to_dict()
 

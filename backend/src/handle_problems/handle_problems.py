@@ -230,4 +230,102 @@ class HandleProblemsClass:
             'problem_name': problem_name['title']
         }
 
+    def get_problem_by_solution_id(self, solution_id: str):
+        if not ObjectId.is_valid(solution_id):
+            return {"status": "error_invalid_solution_id", "message": "Invalid solution_id."}
+
+        try:
+            problem_info = self.db_problems.find_one({
+                'solutions': {
+                    '$elemMatch': {
+                        'solution_id': ObjectId(solution_id)
+                    }
+                }
+            },{
+                'title': 1,
+                '_id': 1,
+                'public': 1,
+                'solutions.$': 1
+            })
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+        problem_info['score'] = problem_info['solutions'][0]['score']
+        problem_info['comments'] = problem_info['solutions'][0]['comments']
+        del problem_info['solutions']
+        return problem_info
+
+    def get_my_solutions(self, user_id: str):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
+
+        data_to_get = {
+            'test_failed': 0,
+            'code': 0,
+            'comments': 0,
+            'author_id': 0
+        }
+
+        try:
+            results = self.db_code.find({'author_id': ObjectId(user_id)}, data_to_get)
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        results = list(results)
+
+        locale.setlocale(locale.LC_ALL, 'bg_BG')
+
+        for problem in results:
+            problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            problem['timestamp'] = problem['timestamp'].strftime('%x %X')
+
+        return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
+
+    def get_code_info(self, code_id, user_id):
+
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
+
+        if not ObjectId.is_valid(code_id):
+            return {"status": "error_invalid_code_id", "message": "Invalid code_id."}
+
+        try:
+            info = self.db_code.find_one({'_id': ObjectId(code_id)})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        if info['author_id'] != ObjectId(user_id) and info['shared'] == 0:
+            return {'status': 'error_no_access', 'message': 'User doesnt have access to this code'}
+
+        try:
+            author_name = self.db_users.find_one({'_id': ObjectId(info['author_id'])},
+                                                 {'name': 1, '_id': 0})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        locale.setlocale(locale.LC_ALL, 'bg_BG')
+        info['timestamp'] = info['timestamp'].strftime('%x %X')
+
+        problem_info = self.get_problem_by_solution_id(info['solution_id'])
+
+        info['problem_name'] = problem_info['title']
+        info['problem_public'] = problem_info['public']
+        info['author_name'] = author_name['name']
+        info['comments'] = problem_info['comments']
+
+        return {'status': 'OK', 'message': loads(bson.json_util.dumps(info))}
+
+    def share_solution(self, code_id, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
+
+        if not ObjectId.is_valid(code_id):
+            return {"status": "error_invalid_code_id", "message": "Invalid code_id."}
+
+        try:
+            self.db_code.update_one({'_id': ObjectId(code_id)}, {'$set': {'shared': 1}})
+            self.db_users.update_one({'_id': ObjectId(user_id)}, {'$push': {'shared_code_ids': ObjectId(code_id)}})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        return {'status': 'OK', 'message': 'Successfully shared the code.'}
 
