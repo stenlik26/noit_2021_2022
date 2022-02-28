@@ -25,6 +25,12 @@ export class EditCodeComponent implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute) {
     this.problem_id = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if (this.problem_id != null) {
+      this.load_code();
+    }
+
+    this.code = "bla";
   }
 
   ngOnInit(): void {
@@ -148,5 +154,33 @@ export class EditCodeComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => this.upload_code_output(json.message));
+  }
+
+  private load_code() {
+    console.log("Problem_id = ", this.problem_id);
+
+    let requestBody = {
+      user_id: UserTokenHandling.getUserId(),
+      token: UserTokenHandling.getUserToken(),
+      code_id: this.problem_id
+    };
+
+    fetch(('http://127.0.0.1:5100/get_codeplayground'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        const filename_field: HTMLInputElement = document.getElementById("filename_input") as HTMLInputElement;
+        filename_field.value = json.name;
+        const selector = document.getElementById("language-selector") as HTMLSelectElement;
+        selector.value = json.language;
+
+        this.code = json.code;
+        // @ts-ignore
+        monaco.editor.setModelLanguage(this.editor.getModel(), json.language);
+
+      });
   }
 }

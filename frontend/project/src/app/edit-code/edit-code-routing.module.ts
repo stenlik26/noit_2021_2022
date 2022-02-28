@@ -25,8 +25,4 @@ const routes: Routes = [
   exports: [RouterModule]
 })
 export class EditCodeRoutingModule {
-  constructor(private activatedRoute: ActivatedRoute) {
-    console.log("!");
-    console.log(this.activatedRoute.snapshot.paramMap.get('id'));
-  }
 }

@@ -11,6 +11,8 @@ from backend.src.handle_groups.handle_groups import HandleGroupsClass
 from backend.src.solve_problem.solve_problem import SolveProblemClass
 from backend.src.upload_codeplayground.upload_codeplayground import UploadCodePlaygroundClass
 
+from backend.src.upload_codeplayground.load_codeplayground import LoadCodePlayground
+
 app = Flask(__name__)
 flask_cors.CORS(app)
 
@@ -614,6 +616,24 @@ def upload_codeplayground():
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
     return jsonify(inst.upload_code(post_info))
+
+
+@app.route('/get_codeplayground', methods=['POST'])
+def get_codeplayground():
+    inst = LoadCodePlayground(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_code_by_object_id(post_info))
 
 
 @app.route('/', methods=['POST', 'GET'])

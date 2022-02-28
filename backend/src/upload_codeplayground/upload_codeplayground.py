@@ -1,11 +1,7 @@
 from bson.objectid import ObjectId
-from json import dumps, loads
 from pymongo.errors import ConnectionFailure
 from typing import Dict, Optional
-import datetime
 from backend.src.mongo_connection.mongo_connection import get_executor_address
-import requests
-import codecs
 
 
 class UploadCodePlaygroundClass:
