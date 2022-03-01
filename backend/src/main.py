@@ -1,4 +1,6 @@
 import datetime
+import json
+
 from flask import Flask, request, jsonify
 import flask_cors
 import requests
@@ -9,6 +11,8 @@ from backend.src.login_user.login_user import LoginUserClass
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
 from backend.src.solve_problem.solve_problem import SolveProblemClass
+from backend.src.handle_user.handle_user import HandleUserClass
+from backend.src.upload_picture.upload_picture import PictureUpload
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -612,6 +616,20 @@ def get_my_solutions():
     return jsonify(inst.get_my_solutions(post_info['user_id']))
 
 
+@app.route('/get_shared_solutions', methods=['POST'])
+def get_shared_solutions():
+    inst = HandleProblemsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_shared_solutions(post_info['user_id']))
+
+
 @app.route('/get_code_info', methods=['POST'])
 def get_code_info():
     inst = HandleProblemsClass(get_connection())
@@ -640,10 +658,67 @@ def share_solution():
     return jsonify(inst.share_solution(post_info['code_id'], post_info['user_id']))
 
 
+@app.route('/get_user_info', methods=['POST'])
+def get_user_info():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'profile_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'profile_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_profile_info(post_info['profile_id']))
+
+
+@app.route('/change_user_name', methods=['POST'])
+def change_user_name():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'new_name'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'new_name'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.change_profile_name(post_info['user_id'], post_info['new_name']))
+
+
+@app.route('/change_user_desc', methods=['POST'])
+def change_user_desc():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'new_desc'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'new_desc'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.change_description(post_info['user_id'], post_info['new_desc']))
+
+
+@app.route('/upload_profile_pic', methods=['POST'])
+def upload_profile_pic():
+    inst = PictureUpload(get_connection())
+    post_info = json.loads(request.form['uploadData'])
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    file = request.files['uploadedImage']
+    return jsonify(inst.upload_picture_for_approval(post_info['user_id'], file))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     inst = HandleProblemsClass(get_connection())
-    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
+    return jsonify(inst.get_shared_solutions('616ae290a08c9e9401c2e636'))
     #return jsonify({"test": "api test"})
 
 

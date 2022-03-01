@@ -1,0 +1,32 @@
+.grid-item{
+    display: flex;
+    flex-direction: column;
+    float: left;
+    width: 40%;
+    margin: 2vw;
+}
+.firstColumnItem{
+    padding: 0.5vw;
+}
+
+#uploadButton{
+    margin: 0.5vw;
+    border: none;
+    border-radius: 0.5em;
+}
+
+.panel_p{
+    margin: 2vw;
+    height: 50vh;
+    border-radius: 0.5em;
+    background-color: #212529;
+}
+
+#uploadButton
+{
+    width: 100%;
+}
+
+#previewImage{
+    width: 40vh;
+}
