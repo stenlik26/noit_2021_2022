@@ -9,6 +9,7 @@ from backend.src.login_user.login_user import LoginUserClass
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
 from backend.src.solve_problem.solve_problem import SolveProblemClass
+from backend.src.admin_panel.admin_panel import AdminPanelClass
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -640,10 +641,89 @@ def share_solution():
     return jsonify(inst.share_solution(post_info['code_id'], post_info['user_id']))
 
 
+@app.route('/has_access_to_admin_panel', methods=['POST'])
+def has_access_to_admin_panel():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.check_for_access(post_info['user_id']))
+
+
+@app.route('/get_admin_panel_info', methods=['POST'])
+def get_admin_panel_info():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.admin_panel_info())
+
+
+@app.route('/make_user_admin_on_site', methods=['POST'])
+def make_user_admin_on_site():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.make_user_admin(post_info['to_set_user_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/revoke_user_admin_on_site', methods=['POST'])
+def make_user_admin():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.revoke_user_admin(post_info['to_set_user_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/delete_group', methods=['POST'])
+def delete_group():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.delete_group(post_info['group_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    inst = HandleProblemsClass(get_connection())
-    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
+    inst = AdminPanelClass(get_connection())
+    return jsonify(inst.admin_panel_info())
     #return jsonify({"test": "api test"})
 
 

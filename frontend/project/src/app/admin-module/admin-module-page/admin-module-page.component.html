@@ -1,0 +1,85 @@
+<div class="w3-panel w3-light-grey" id="adminPanel" style="display: none;">
+    <h2>Администраторски панел:</h2>
+
+    <div class="tab">
+        <button class="tablinks" (click)="switchTab('usersList')">Членове</button>
+        <button class="tablinks" (click)="switchTab('groupsList')">Групи</button>
+        <button class="tablinks" (click)="switchTab('picturesList')">Снимки</button>
+      </div>
+
+    <div id="usersList" class="tabcontent">
+        <h4>Потребители:</h4>
+        <ul id="members_list">
+            <div class="user_box" *ngFor="let user of users">
+              <img src="{{user.picture}}">
+      
+              <div class="user_box_text">
+                <p>{{user.get_username()}}</p>
+                <p>{{user.get_user_status()}}</p>
+                <p>{{user.get_email()}}</p>
+              </div>
+              <div class="user_box_buttons">
+                <button routerLink="/profile/{{user.get_user_id()}}" 
+                class="button-green">Профил</button>
+                <button *ngIf="!user.get_user_is_admin()"(click)="make_user_admin(user.get_user_id())"
+                class="button-green">Направи администратор</button>
+                <button *ngIf="user.get_user_is_admin()" (click)="revoke_user_admin(user.get_user_id())"
+                class="button-green">Премахни администраторски права</button>
+
+                <button routerLink="/profile/{{user.get_user_id()}}" 
+                class="button-red">Изтрии профил</button>
+            </div>
+            </div>
+          </ul>
+    </div>
+
+    <div id="groupsList" class="tabcontent"> 
+        <h4>Групи:</h4>
+        <ul id="members_list">
+            <div class="user_box" *ngFor="let gr of groups">
+      
+              <div class="user_box_text">
+                <p>Име на групата: <b>{{gr.group_title}}</b></p>
+                <p>Потребители в групата: <b>{{gr.ammount_of_users}}</b></p>
+              </div>
+              <div class="user_box_buttons">
+                <button  
+                class="button-green">Преглед</button>
+                <button (click)="delete_group(gr.group_id)"
+                class="button-red">Изтрии групата</button>
+            </div>
+            </div>
+          </ul>
+    </div>
+
+    <div id="picturesList" class="tabcontent"> 
+        <h4>Снимки:</h4>
+        <ul>
+            <div class="user_box" *ngFor="let image of unapproved_pictures">
+                <img src="{{image.getPicPath()}}" class="thumbnail" />
+                <div class="user_box_text">
+                    <p class='imageInfo'>{{image.getUserName()}}</p>
+                    <p class='imageInfo'>{{image.getTime()}}</p>
+                </div>
+                <div class='user_box_buttons'>
+                    <button (click)="this.approvePic(image.getId())"
+                        class="button-green">Одобри</button>
+                    <button (click)="this.deleteImage(image.getId())"
+                        class="button-red">Премахни</button>
+                    <button (click)="this.viewImage(image)"
+                        class="button-green">Преглед</button>
+
+                </div>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div class="w3-panel w3-light-grey" id="adminPanelNoAccess" style="display: none;">
+    <h2 id="adminPanelPreMessage">Нямате достъп до тази страница.</h2>
+</div>
+
+
+<div class="w3-panel w3-light-grey" id="adminPanelWait">
+    <h2 id="adminPanelPreMessage">Моля изчакайте.</h2>
+</div>

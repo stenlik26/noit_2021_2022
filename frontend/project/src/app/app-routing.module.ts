@@ -55,6 +55,10 @@ const routes: Routes = [
     loadChildren: () => import('./show-solution/show-solution.module').then(m => m.ShowSolutionModule)
   },
   {
+    path: 'admin_page',
+    loadChildren: () => import('./admin-module/admin-module.module').then(m => m.AdminModuleModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }
