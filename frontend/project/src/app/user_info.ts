@@ -4,6 +4,8 @@ export class UserInfo{
     object_id: string = '';
     is_admin: boolean = false;
     email: string = '';
+    description: string = '';
+    shared_code_ids: Array<String> = new Array<String>();
 
     constructor(user_json: any)
     {
@@ -19,6 +21,15 @@ export class UserInfo{
             this.is_admin = user_json.is_admin;
         }
         this.email = user_json.email;
+        this.description = user_json.description;
+
+        if(user_json.shared_code_ids !== undefined)
+        {
+            user_json.shared_code_ids.forEach((element: any) => {
+                this.shared_code_ids.push(element.$oid);
+            });
+        }
+
     }
 
     get_username(): string{
@@ -43,5 +54,9 @@ export class UserInfo{
 
     get_email(): string{
         return this.email;
+    }
+
+    get_description(): string{
+        return this.description;
     }
 }
