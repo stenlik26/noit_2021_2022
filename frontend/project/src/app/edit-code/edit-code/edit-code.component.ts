@@ -29,8 +29,6 @@ export class EditCodeComponent implements OnInit {
     if (this.problem_id != null) {
       this.load_code();
     }
-
-    this.code = "bla";
   }
 
   ngOnInit(): void {
