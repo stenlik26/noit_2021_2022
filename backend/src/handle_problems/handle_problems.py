@@ -280,6 +280,33 @@ class HandleProblemsClass:
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
 
+    def get_shared_solutions(self, user_id: str):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
+
+        data_to_get = {
+            'test_failed': 0,
+            'code': 0,
+            'comments': 0,
+            'score': 0,
+            'author_id': 0
+        }
+
+        try:
+            results = self.db_code.find({'author_id': ObjectId(user_id), 'shared': 1}, data_to_get)
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
+
+        results = list(results)
+
+        locale.setlocale(locale.LC_ALL, 'bg_BG')
+
+        for problem in results:
+            problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            problem['timestamp'] = problem['timestamp'].strftime('%x %X')
+
+        return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
+
     def get_code_info(self, code_id, user_id):
 
         if not ObjectId.is_valid(user_id):
