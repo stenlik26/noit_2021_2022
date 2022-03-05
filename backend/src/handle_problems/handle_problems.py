@@ -275,7 +275,8 @@ class HandleProblemsClass:
         locale.setlocale(locale.LC_ALL, 'bg_BG')
 
         for problem in results:
-            problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            if 'solution_id' in problem:
+                problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
@@ -302,7 +303,8 @@ class HandleProblemsClass:
         locale.setlocale(locale.LC_ALL, 'bg_BG')
 
         for problem in results:
-            problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            if 'solution_id' in problem:
+                problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
@@ -331,13 +333,17 @@ class HandleProblemsClass:
 
         locale.setlocale(locale.LC_ALL, 'bg_BG')
         info['timestamp'] = info['timestamp'].strftime('%x %X')
-
-        problem_info = self.get_problem_by_solution_id(info['solution_id'])
-
-        info['problem_name'] = problem_info['title']
-        info['problem_public'] = problem_info['public']
         info['author_name'] = author_name['name']
-        info['comments'] = problem_info['comments']
+
+        if 'solution_id' in info:
+            problem_info = self.get_problem_by_solution_id(info['solution_id'])
+            info['problem_name'] = problem_info['title']
+            info['problem_public'] = problem_info['public']
+            info['comments'] = problem_info['comments']
+        else:
+            info['problem_name'] = info['name'] + "(Кодова площадка)"
+            info['problem_public'] = True
+            info['comments'] = []
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(info))}
 

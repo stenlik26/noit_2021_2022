@@ -9,18 +9,24 @@
             <p>Език: <b>{{current_code.get_language()}}</b></p>
         </div>
         <button *ngIf="access" (click)="show_share_modal()" class="gr_btn button-green">Сподели</button>
-        <button *ngIf="access" (click)="show_comments_modal()" class="gr_btn button-secondary">Коментари</button>
+        <button *ngIf="access && !is_code_playground" (click)="show_comments_modal()" class="gr_btn button-secondary">Коментари</button>
     </div>
 
 
 
 
     <div id="main_part">
-        <div id="monaco_editor">
+        <div id="monaco_editor" *ngIf="!is_code_playground">
             <ngx-monaco-editor id="m_editor" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)">
             </ngx-monaco-editor>
         </div>
-        <div id="problem_tests" class="tabcontent panel-darkbg">
+
+        <div id="monaco_editor_full" *ngIf="is_code_playground">
+            <ngx-monaco-editor id="m_editor" [options]="editorOptions" [(ngModel)]="code" (onInit)="onInit($event)">
+            </ngx-monaco-editor>
+        </div>
+
+        <div id="problem_tests" *ngIf="!is_code_playground" class="tabcontent panel-darkbg">
             <h4 id="test_tab_message2"></h4>
             <textarea readonly="true" id="error_textarea" style="display: none;"></textarea>
             <p id="success_message">Всички тестове преминаха успешно.</p>

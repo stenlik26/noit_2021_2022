@@ -11,16 +11,28 @@ export class MySolution{
     score: string = '';
 
     constructor(data: any){
-        this.language = data.language;
-        this.code_id = data._id.$oid;
-        this.problem_public = data.problem.public;
-        this.problem_title = data.problem.title;
-        this.problem_id = data.problem._id.$oid;
-        this.solution_id = data.solution_id.$oid;
-        this.tests_passed = data.tests_passed;
-        this.tests_total = data.tests_total;
-        this.timestamp = data.timestamp;
-        this.score = data.problem.score.toString();
+
+        if(data.name !== undefined)
+        {
+            this.language = data.language;
+            this.code_id = data._id.$oid;
+            this.timestamp = data.timestamp;
+            this.problem_title = data.name + " (Кодова площадка)";
+            this.score = "-1";
+        }
+        else{
+            this.language = data.language;
+            this.code_id = data._id.$oid;
+            this.problem_public = data.problem.public;
+            this.problem_title = data.problem.title;
+            this.problem_id = data.problem._id.$oid;
+            this.solution_id = data.solution_id.$oid;
+            this.tests_passed = data.tests_passed;
+            this.tests_total = data.tests_total;
+            this.timestamp = data.timestamp;
+            this.score = data.problem.score.toString();
+        }
+
     }
 
     get_test_score(): string{

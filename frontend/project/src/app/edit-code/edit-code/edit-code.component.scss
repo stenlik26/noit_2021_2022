@@ -1,0 +1,182 @@
+@import '../../../styles';
+
+#content{
+  display: grid;
+  grid-template-columns: 70% 30%;
+  grid-template-rows: 5% 95%;
+  margin: 0vw 1vw;
+  gap: 0.2em 0.5em;
+}
+
+#language-selector{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: rgba(255, 255, 255, 0.342);
+  color: white;
+  width: 32.8%;
+  height: 2.5em;
+}
+
+#language-selector:focus{
+  border: 0.1em solid;
+  border-radius: .5em;
+  border-color: greenyellow;
+  color: white;
+}
+
+
+#editor{
+  height: 100%;
+}
+
+.accordion-button{
+  color: white;
+}
+
+#problem_text_editor{
+  height: 100%;
+  display: block;
+}
+
+#options{
+  height: 71.45vh;
+  width: 100%;
+  display: block;
+  padding: 5%;
+}
+
+.tab{
+  overflow: hidden;
+  background-color: #202225;
+  display: flex;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.problem_title_class{
+  text-align: center;
+  grid-column: 1 / 3;
+}
+
+.tab button {
+  background-color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0.5em;
+  color: white;
+}
+
+.tabcontent {
+  display: none;
+}
+
+#tabs{
+  width: 100%;
+  border-radius: .5em;
+  height: 2.5em;
+  line-height: 2.5em;
+}
+
+.buttons{
+  padding: 0.4em 0.4em;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+  height: 2.5em;
+  width: 32.8%;
+  margin-left: 0.2em;
+}
+
+#problem_tests > ul {
+  padding-left: 0;
+}
+
+
+#code_buttons{
+  display: flex;
+  height: 3em;
+  justify-content: space-between;
+  column-gap: 0.5em;
+}
+
+
+.buttons_tests{
+  background-color: #202225;
+  padding: 0.4em 0.4em;
+  border: none;
+  cursor: pointer;
+  opacity: 0.9;
+  border-radius: .5em;
+  height: 2.5em;
+  margin: 1em 0em;
+  display: flex;
+}
+
+.test_info_field{
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+}
+
+.test_info_field_right{
+  display: flex;
+  color: rgb(150,150,150);
+}
+
+.icon_class{
+  margin: 0.1em 0.1em;
+  align-items: center;
+}
+
+.test_successful{
+  color: green
+}
+
+.test_failed{
+  color: red
+}
+
+.test_not_done{
+  color: yellow
+}
+
+#monaco_editor {
+  width: 100%;
+  height: 73vh;
+}
+
+ngx-monaco-editor{
+  height: 100%;
+  .editor-container{
+    height: 100%;
+  }
+}
+
+.editor_test_class{
+  .editor-container{
+    height: 100%;
+  }
+}
+
+.accordion-item{
+  margin-bottom: 1em;
+}
+
+#stdout, #stdin {
+  background-color: $editor-bg;
+  color: $color-white;
+  margin-bottom: 5%;
+}
+
+#filename_input {
+  font-size: 1em;
+  height: 80%;
+  width: 20%;
+}
+p {
+  line-height: 1vw;
+  margin: 0;
+}

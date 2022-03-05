@@ -1,8 +1,7 @@
 import datetime
-import json
-
 from flask import Flask, request, jsonify
 import flask_cors
+import json
 import requests
 from backend.src.mongo_connection.mongo_connection import get_executor_address
 from backend.src.mongo_connection.mongo_connection import get_connection
@@ -11,6 +10,8 @@ from backend.src.login_user.login_user import LoginUserClass
 from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
 from backend.src.solve_problem.solve_problem import SolveProblemClass
+from backend.src.upload_codeplayground.upload_codeplayground import UploadCodePlaygroundClass
+from backend.src.upload_codeplayground.load_codeplayground import LoadCodePlayground
 from backend.src.admin_panel.admin_panel import AdminPanelClass
 from backend.src.handle_user.handle_user import HandleUserClass
 from backend.src.upload_picture.upload_picture import PictureUpload
@@ -847,10 +848,50 @@ def approve_profile_pic():
         return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
 
 
+
+@app.route('/upload_codeplayground', methods=['POST'])
+def upload_codeplayground():
+    inst = UploadCodePlaygroundClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'language', 'code'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.upload_code(post_info))
+
+
+@app.route('/get_codeplayground', methods=['POST'])
+def get_codeplayground():
+    inst = LoadCodePlayground(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'code_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    if not inst.check_if_author(post_info['user_id'], post_info['code_id']):
+        return jsonify({'status': 'error_no_access', 'message': 'User doesn\'t have access'})
+
+    return jsonify(inst.get_code_by_object_id(post_info))
+
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    inst = PictureUpload(get_connection())
-    return jsonify(inst.approve_profile_picture('62229a3855ab079896ddf1c4'))
+    inst = HandleProblemsClass(get_connection())
+    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
     #return jsonify({"test": "api test"})
 
 

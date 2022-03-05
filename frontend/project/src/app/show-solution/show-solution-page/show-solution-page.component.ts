@@ -19,7 +19,7 @@ export class ShowSolutionPageComponent implements OnInit {
   editorOptions = { theme: 'vs-dark', language: '', readOnly: 'true' };
   code = '';
   editor = null;
-  show_tests:boolean = true;
+  show_tests: boolean = true;
   test_tab_message: any;
   success_message: any;
   author_name: string = '';
@@ -29,6 +29,7 @@ export class ShowSolutionPageComponent implements OnInit {
   problem_shared: boolean = false;
   error_occured: boolean = false;
   comments_modal: any;
+  is_code_playground: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute) {
     if (!UserTokenHandling.isUserLoggedIn()) {
@@ -55,16 +56,16 @@ export class ShowSolutionPageComponent implements OnInit {
     // @ts-ignore
     monaco.editor.setModelLanguage(this.editor.getModel(), this.current_code.get_language());
   }
-  
-  show_share_modal(): void{
+
+  show_share_modal(): void {
     this.share_modal.show();
   }
 
-  show_comments_modal(): void{
+  show_comments_modal(): void {
     this.comments_modal.show();
   }
 
-  get_code_info(): void{
+  get_code_info(): void {
     const requestBody = {
       code_id: this.code_id,
       user_id: UserTokenHandling.getUserId(),
@@ -79,15 +80,22 @@ export class ShowSolutionPageComponent implements OnInit {
       .then(json => {
         if (json.status === 'OK') {
           this.current_code = new SubmissionInfo(json.message);
+
           this.problem_title = json.message.problem_name;
-          this.update_tests();
+
+          if (json.message.name === undefined) {
+            this.is_code_playground = false;
+            this.update_tests();
+          }
+          else{
+            this.is_code_playground = true;
+          }
           this.author_name = json.message.author_name;
           this.access = (UserTokenHandling.getUserId() === json.message.author_id.$oid);
           this.problem_public = json.message.problem_public;
           this.problem_shared = json.message.shared;
         }
-        else if(json.status === 'error_no_access')
-        {
+        else if (json.status === 'error_no_access') {
           window.location.href = projectConfig.site_url + 'not_found';
         }
       });
@@ -106,9 +114,8 @@ export class ShowSolutionPageComponent implements OnInit {
     }
   }
 
-  share_solution(): void{
-    if(this.problem_shared)
-    {
+  share_solution(): void {
+    if (this.problem_shared) {
       return;
     }
 
@@ -127,8 +134,7 @@ export class ShowSolutionPageComponent implements OnInit {
         if (json.status === 'OK') {
           this.problem_shared = true;
         }
-        else 
-        {
+        else {
           this.error_occured = true;
         }
       });

@@ -1,13 +1,22 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {Routes, RouterModule, ActivatedRoute} from '@angular/router';
 
-import { EditCodePageComponent} from './edit-code-page/edit-code-page.component';
+import { SolveTaskPageComponent} from './solve-task-page/solve-task-page.component';
+import {EditCodeComponent} from "./edit-code/edit-code.component";
 
 
 const routes: Routes = [
   {
+    path: '',
+    component: EditCodeComponent
+  },
+  {
     path: ':id',
-    component: EditCodePageComponent
+    component: EditCodeComponent
+  },
+  {
+    path: 'solve/:id',
+    component: SolveTaskPageComponent
   }
 ];
 
@@ -15,4 +24,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class EditCodeRoutingModule { }
+export class EditCodeRoutingModule {
+}
