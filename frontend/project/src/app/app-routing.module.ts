@@ -55,6 +55,18 @@ const routes: Routes = [
     loadChildren: () => import('./show-solution/show-solution.module').then(m => m.ShowSolutionModule)
   },
   {
+    path: 'profile',
+    loadChildren: () => import('./profile-page/profile-page.module').then(m => m.ProfilePageModule)
+  },
+  {
+    path: 'upload_picture',
+    loadChildren: () => import('./upload-picture/upload-picture.module').then(m => m.UploadPictureModule)
+  },
+  {
+    path: 'admin_page',
+    loadChildren: () => import('./admin-module/admin-module.module').then(m => m.AdminModuleModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }

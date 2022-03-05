@@ -1,0 +1,77 @@
+#content{
+    padding: 1em;
+    display: grid;
+    grid-template-columns: 30% 70%;
+}
+
+#options{
+    display: grid;
+}
+
+#solutions_table{
+   margin: auto;
+    width: 90%;
+}
+
+.button-profile{
+    border: none;
+    border-radius: 0.5em;
+    padding: 0.5em;
+}
+
+.itemsClass{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.itemsClass > h5 {
+    margin: 1em;
+}
+
+.itemsClass > input{
+    margin-right: 1em;
+}
+
+.thumbnail{
+    max-width: 25vh;
+    max-height: 25vh; 
+}
+
+#profilePic{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bottomButtons
+{
+    margin-top: 0.5em;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#solutions_table > ul{
+    overflow-y: scroll;
+    height: 38vh;
+    margin: 0;
+    padding: 0;
+}
+
+input{
+    width: 100%;
+    padding: 1em;
+    height: 3em;
+    border: 0.1em solid;
+    background:transparent;
+    border-radius: .5em;
+    border-color: white;
+    color: rgba(160, 160, 160);
+    text-align: left;
+}
+
+input:focus{
+    outline: none;
+    border-color: yellowgreen;
+    color: white
+  }

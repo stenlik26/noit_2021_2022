@@ -1,0 +1,29 @@
+<div class="panel_p" id="uploadProfilePicMain">
+
+    <div class="grid-item">
+        <h2 class="firstColumnItem">Качване на профилна снимка:</h2>
+        <div class="firstColumnItem">Внимание! Вашата снимка трябва да бъде одобрена от администратор преди да бъде поставена във вашия профил.</div>
+        <div class="firstColumnItem">Качване на снимка:</div>
+        <input type="file" name="myImage" id="fileToUpload" accept="image/*" (change)="previewImage()" class="firstColumnItem">
+        <button (click)="upload()" id="uploadButton" class="firstColumnItem button-green">Качи</button>
+    </div>
+
+    <div class="grid-item">
+        <img id="previewImage">
+    </div>
+</div>
+
+<div class="w3-panel w3-light-gray" id="uploadProfilePicWait" style="display: none;">
+    <h2 class="firstColumnItem">Моля изчайакте.</h2>
+    <h4 class="firstColumnItem">Вашата снимка се качва.</h4>
+</div>
+
+<div class="w3-panel w3-light-gray" id="uploadProfilePicDone" style="display: none;">
+    <h2 class="firstColumnItem">Снимката ви е успешно качена.</h2>
+    <h4 class="firstColumnItem">Вашата снимка трябва да бъде одобрена от администратор преди да бъде поставена във профила ви.</h4>
+</div>
+
+<div class="w3-panel w3-light-gray" id="uploadProfilePicError" style="display: none;">
+    <h2 class="firstColumnItem">Възникна грешка.</h2>
+    <h4 class="firstColumnItem">Моля опитайте по-късно.</h4>
+</div>

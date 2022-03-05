@@ -66,6 +66,9 @@ input[type=checkbox]{
 .button-green {
   background-color: $accent-green;
   color: white;
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.25em 1em 0.25em 1em;
 }
 
 .button-gray{
@@ -76,11 +79,17 @@ input[type=checkbox]{
 .button-secondary{
   background-color: $secondary-color;
   color: white;
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.25em 1em 0.25em 1em;
 }
 
 .button-red{
   background-color: $red_color;
   color: white;
+  border: none;
+  border-radius: 0.25em;
+  padding: 0.25em 1em 0.25em 1em;
 }
 
 .panel-darkbg{

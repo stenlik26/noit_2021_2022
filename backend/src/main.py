@@ -10,8 +10,10 @@ from backend.src.handle_problems.handle_problems import HandleProblemsClass
 from backend.src.handle_groups.handle_groups import HandleGroupsClass
 from backend.src.solve_problem.solve_problem import SolveProblemClass
 from backend.src.upload_codeplayground.upload_codeplayground import UploadCodePlaygroundClass
-
 from backend.src.upload_codeplayground.load_codeplayground import LoadCodePlayground
+from backend.src.admin_panel.admin_panel import AdminPanelClass
+from backend.src.handle_user.handle_user import HandleUserClass
+from backend.src.upload_picture.upload_picture import PictureUpload
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -600,6 +602,7 @@ def get_my_groups():
 
     return jsonify(inst.get_users_groups(post_info['user_id']))
 
+
 @app.route('/get_my_solutions', methods=['POST'])
 def get_my_solutions():
     inst = HandleProblemsClass(get_connection())
@@ -642,6 +645,195 @@ def share_solution():
     return jsonify(inst.share_solution(post_info['code_id'], post_info['user_id']))
 
 
+@app.route('/has_access_to_admin_panel', methods=['POST'])
+def has_access_to_admin_panel():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.check_for_access(post_info['user_id']))
+
+
+@app.route('/get_admin_panel_info', methods=['POST'])
+def get_admin_panel_info():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.admin_panel_info())
+
+
+@app.route('/make_user_admin_on_site', methods=['POST'])
+def make_user_admin_on_site():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.make_user_admin(post_info['to_set_user_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/revoke_user_admin_on_site', methods=['POST'])
+def make_user_admin():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.revoke_user_admin(post_info['to_set_user_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/delete_group', methods=['POST'])
+def delete_group():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'group_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.delete_group(post_info['group_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/get_user_info', methods=['POST'])
+def get_user_info():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'profile_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'profile_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_profile_info(post_info['profile_id']))
+
+
+@app.route('/change_user_name', methods=['POST'])
+def change_user_name():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'new_name'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'new_name'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.change_profile_name(post_info['user_id'], post_info['new_name']))
+
+
+@app.route('/change_user_desc', methods=['POST'])
+def change_user_desc():
+    inst = HandleUserClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'new_desc'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'new_desc'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.change_description(post_info['user_id'], post_info['new_desc']))
+
+
+@app.route('/upload_profile_pic', methods=['POST'])
+def upload_profile_pic():
+    inst = PictureUpload(get_connection())
+    post_info = json.loads(request.form['uploadData'])
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    file = request.files['uploadedImage']
+    return jsonify(inst.upload_picture_for_approval(post_info['user_id'], file))
+
+
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'to_set_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.delete_user(post_info['to_set_user_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/remove_unapproved_picture', methods=['POST'])
+def remove_unapproved_picture():
+    inst = AdminPanelClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'picture_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'picture_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst.remove_unapproved_picture(post_info['picture_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+@app.route('/approve_profile_pic', methods=['POST'])
+def approve_profile_pic():
+    inst = AdminPanelClass(get_connection())
+    inst2 = PictureUpload(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'picture_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'picture_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if inst.check_for_access(post_info['user_id'])['status'] == 'OK':
+        return jsonify(inst2.approve_profile_picture(post_info['picture_id']))
+    else:
+        return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
+
+
+
 @app.route('/upload_codeplayground', methods=['POST'])
 def upload_codeplayground():
     inst = UploadCodePlaygroundClass(get_connection())
@@ -678,6 +870,7 @@ def get_codeplayground():
         return jsonify({'status': 'error_no_access', 'message': 'User doesn\'t have access'})
 
     return jsonify(inst.get_code_by_object_id(post_info))
+
 
 
 @app.route('/', methods=['POST', 'GET'])
