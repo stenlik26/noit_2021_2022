@@ -674,6 +674,9 @@ def get_codeplayground():
     if not is_user_valid(post_info['token'], post_info['user_id']):
         return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
 
+    if not inst.check_if_author(post_info['user_id'], post_info['code_id']):
+        return jsonify({'status': 'error_no_access', 'message': 'User doesn\'t have access'})
+
     return jsonify(inst.get_code_by_object_id(post_info))
 
 

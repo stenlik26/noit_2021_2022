@@ -2,7 +2,7 @@ from bson.objectid import ObjectId
 from pymongo.errors import ConnectionFailure
 from typing import Dict, Optional
 from backend.src.mongo_connection.mongo_connection import get_executor_address
-
+import datetime
 
 class UploadCodePlaygroundClass:
     def __init__(self, mongo_client):
@@ -15,7 +15,7 @@ class UploadCodePlaygroundClass:
             return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
 
         name = info['name']
-        existing_code_id = self.__get_user_code_id_with_name(author_id, name)['_id']
+        existing_code_id = self.__get_user_code_id_with_name(author_id, name)
 
         print(f"Existing code id = {existing_code_id}")
         if existing_code_id is None:
@@ -24,7 +24,7 @@ class UploadCodePlaygroundClass:
         else:
             # Update
             print("Updating...")
-            code_id = existing_code_id
+            code_id = existing_code_id['_id']
             self.__update_code(info['code'], info['language'], code_id)
 
         return {'status': 'OK', 'message': str(code_id)}
@@ -35,6 +35,7 @@ class UploadCodePlaygroundClass:
             'name': name,
             'language': language,
             'shared': 0,
+            'timestamp': datetime.datetime.utcnow(),
             'author_id': ObjectId(author_id),
             'comments': []
         }

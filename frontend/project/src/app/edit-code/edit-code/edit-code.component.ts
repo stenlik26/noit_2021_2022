@@ -163,13 +163,18 @@ export class EditCodeComponent implements OnInit {
       code_id: this.problem_id
     };
 
-    fetch(('http://127.0.0.1:5100/get_codeplayground'), {
+    fetch((projectConfig.api_url + 'get_codeplayground'), {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: { 'Content-type': 'application/json' }
     })
       .then(response => response.json())
       .then(json => {
+
+        if(json.status !== undefined)
+        {
+          window.location.href = projectConfig.site_url + 'not_found';
+        }
         const filename_field: HTMLInputElement = document.getElementById("filename_input") as HTMLInputElement;
         filename_field.value = json.name;
         const selector = document.getElementById("language-selector") as HTMLSelectElement;
