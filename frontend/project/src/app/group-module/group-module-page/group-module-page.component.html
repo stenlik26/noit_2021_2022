@@ -51,7 +51,7 @@
           <p>{{user.get_user_status()}}</p>
         </div>
         <div class="user_box_buttons">
-          <button class="button-green solve_button">Профил</button>
+          <button routerLink="/profile/{{user.get_user_id()}}" class="button-green solve_button">Профил</button>
         </div>
       </div>
     </ul>

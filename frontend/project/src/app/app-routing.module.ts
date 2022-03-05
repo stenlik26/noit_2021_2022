@@ -63,6 +63,10 @@ const routes: Routes = [
     loadChildren: () => import('./upload-picture/upload-picture.module').then(m => m.UploadPictureModule)
   },
   {
+    path: 'admin_page',
+    loadChildren: () => import('./admin-module/admin-module.module').then(m => m.AdminModuleModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }

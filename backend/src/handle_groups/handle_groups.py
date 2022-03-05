@@ -209,8 +209,12 @@ class HandleGroupsClass:
 
         try:
             group = self.db_groups.find_one({'users': {'$in': [ObjectId(user_id)]}, '_id': ObjectId(group_id)})
+            user_site_admin = self.db_users.find_one({'_id': ObjectId(user_id)}, {'role': 1})
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
+
+        if user_site_admin['role'] == "1":
+            return {"status": 'OK', "message": 'site_admin'}
 
         if group is None:
             return {"status": 'error_no_access', "message": 'User doesn\'t have access to this group.'}

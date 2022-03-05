@@ -1,0 +1,140 @@
+.w3-panel{
+    margin: 0em 1em 0em 1em;
+}
+
+#twoLists{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 90% 10%;
+    margin: 2vw;
+}
+
+.thumbnail {
+    padding: 1vw;
+    max-width: 20%;
+    max-height: 100%; 
+}
+.imageInfo{
+  color: white;
+}
+
+ul {
+    height:28vw;
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+}
+
+#members_list{
+  overflow-y: scroll;
+  height: 63vh;
+  width: 70%;
+  margin: auto;
+}
+
+#picturesList{
+  height: 63vh;
+  width: 70%;
+  margin: auto;
+}
+
+.user_box{
+  display: flex;
+  background-color: #202225;
+  border-radius: 0.5em;
+  margin: 1em;
+  align-items: center;
+}
+
+.user_box > img{
+  height: 5em;
+}
+
+.user_box_text > p{
+  margin: 0.5em;
+  padding: 0;
+}
+
+.user_box_text{
+  flex-grow: 3;
+}
+
+.user_box_buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 1em;
+}
+
+
+.image-panel{
+    height: 11vw;
+    width: 100%;
+    background-color: #3066BE;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    border-radius: 0.5vw;
+}
+
+.rightBox{
+    display: flex;
+    flex-direction: column;
+}
+
+.midBox
+{
+    flex-grow: 8;
+}
+
+
+.tab{
+    overflow: hidden;
+    background-color: #202225;
+    display: flex;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: .5em;
+    width: 100%;
+  }
+  
+  .tab button {
+    background-color: inherit;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 0.5em;
+    color: white;
+  }
+  
+  .tab button:hover {
+    background-color: rgb(66, 66, 66);
+  }
+  
+  .tab button:active {
+    background-color: rgb(66, 66, 66);
+  }
+  
+  .tab button:focus {
+    background-color: rgb(55, 55, 55);
+  }
+  
+  .tabcontent {
+    display: none;
+    padding: 6px 12px;
+  }
+  
+  .tabcontent-opened {
+    display: block;
+    padding: 6px 12px;
+  }
+
+  .user_box_buttons > button{
+    margin: 0.5em;
+    width: 25vw;
+  }
