@@ -1,3 +1,7 @@
+import os
+import pathlib
+import shutil
+
 import bson.json_util
 from bson.objectid import ObjectId
 from json import dumps, loads
@@ -38,6 +42,7 @@ class AdminPanelClass:
 
         for entry in picture_for_approval:
             usrName = self.db_users.find_one({'_id': ObjectId(entry['userId'])}, {'name': 1})
+            entry['_id'] = str(entry['_id'])
             entry['user_name'] = usrName['name']
             entry['time'] = datetime.fromtimestamp(float(entry['time'])).strftime('%x %X')
 
@@ -89,6 +94,32 @@ class AdminPanelClass:
 
         return {'status': 'OK', 'message': 'Deleted this group.'}
 
+    def delete_user(self, user_id):
+        if not ObjectId.is_valid(user_id):
+            return {"status": "error_invalid_user_id", "message": "Invalid user_id."}
 
+        try:
+            self.db_users.delete_one({'_id': ObjectId(user_id)})
+        except ConnectionFailure:
+            raise ConnectionError("Failed to connect to db")
 
+        return {'status': 'OK', 'message': 'Deleted this user.'}
+
+    def remove_unapproved_picture(self, picture_id):
+
+        try:
+            query = {'_id': ObjectId(picture_id)}
+            res = self.db_pictures.find_one(query)
+
+            filePath = res['path_Full']
+            if os.path.exists(filePath):
+                self.db_pictures.delete_one(query)
+                os.remove(filePath)
+                return {'status': 'OK', 'message': 'Picture successfully deleted.'}
+            else:
+                self.db_pictures.delete_one(query)
+                return {'status': 'error_file_doesnt_exist', 'message': 'The file doesnt exist.'}
+
+        except ConnectionFailure:
+            return {'status': 'error', 'message': 'Cant connect to db.'}
 

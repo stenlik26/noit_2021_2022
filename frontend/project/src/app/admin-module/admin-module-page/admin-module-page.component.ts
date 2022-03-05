@@ -4,6 +4,7 @@ import projectConfig from '../../../assets/conf.json';
 import { UserInfo } from 'src/app/user_info';
 import { UnapprovedPicture } from '../UnapprovedPicture';
 import { AdminGroupInfo } from '../AdminGroupInfo';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-admin-module-page',
@@ -12,7 +13,7 @@ import { AdminGroupInfo } from '../AdminGroupInfo';
 })
 export class AdminModulePageComponent implements OnInit {
 
-  constructor() { }
+  constructor(private domSanitizer: DomSanitizer) { }
 
   admin_panel: HTMLDivElement = null!;
   deny_access_panel: HTMLDivElement = null!;
@@ -41,7 +42,6 @@ export class AdminModulePageComponent implements OnInit {
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
       if (json.status === 'OK') {
         this.showAdminPanel();
       }
@@ -67,15 +67,16 @@ export class AdminModulePageComponent implements OnInit {
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
       if (json.status === 'OK') {
         json.users.forEach((element: any) => {
           this.users.push(new UserInfo(element));
         });
 
         json.pictures.forEach((element: any) => {
+          console.log(element)
           this.unapproved_pictures.push(new UnapprovedPicture(
-            element._id.$oid,
+            element._id,
+            element.userId,
             element.user_name,
             element.path_Full,
             element.time))
@@ -102,6 +103,11 @@ export class AdminModulePageComponent implements OnInit {
   {
     this.wait_panel.style.display = 'none';
     this.deny_access_panel.style.display = 'grid';
+  }
+
+  get_image(image: UnapprovedPicture)
+  {
+    return this.domSanitizer.bypassSecurityTrustUrl(image.getPicPath());
   }
 
   switchTab(name: string) {
@@ -152,28 +158,26 @@ export class AdminModulePageComponent implements OnInit {
   }
 
   viewImage(pic: UnapprovedPicture): void{
-    /*
+    
     let path = pic.getPicPath();
     path = path.replace('\\', '/');
     window.open(path);
-    */
+    
   }
 
   deleteImage(imageIdArg: string): void{
-    /*
+    
     const data = {
       token: UserTokenHandling.getUserToken(),
-      userId: UserTokenHandling.getUserId(),
-      pictureId: imageIdArg
+      user_id: UserTokenHandling.getUserId(),
+      picture_id: imageIdArg
     };
-    console.log(data);
 
-    fetch(conf.url + 'deleteUnapprovedPicture', {
+    fetch(projectConfig.api_url + 'remove_unapproved_picture', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
       if (json.status === 'OK') {
         alert('Снимката е успешно премахната.');
         location.reload();
@@ -182,7 +186,7 @@ export class AdminModulePageComponent implements OnInit {
         console.log(json.message);
       }
     });
-    */
+    
   }
 
   make_user_admin(user_to_make_id: string): void{
@@ -197,7 +201,6 @@ export class AdminModulePageComponent implements OnInit {
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
       if (json.status === 'OK') {
         this.load_admin_info();
       }
@@ -219,7 +222,6 @@ export class AdminModulePageComponent implements OnInit {
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
       if (json.status === 'OK') {
         this.load_admin_info();
       }
@@ -242,7 +244,27 @@ export class AdminModulePageComponent implements OnInit {
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
     }).then(response => response.json()).then(json => {
-      console.log(json);
+      if (json.status === 'OK') {
+        this.load_admin_info();
+      }
+      else{
+        console.log(json);
+      }
+    });
+  }
+
+  delete_user(to_delete_user_id: string): void{
+    const data = {
+      token: UserTokenHandling.getUserToken(),
+      user_id: UserTokenHandling.getUserId(),
+      to_set_user_id: to_delete_user_id
+    };
+
+    fetch(projectConfig.api_url + 'delete_user', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-type': 'application/json' }
+    }).then(response => response.json()).then(json => {
       if (json.status === 'OK') {
         this.load_admin_info();
       }

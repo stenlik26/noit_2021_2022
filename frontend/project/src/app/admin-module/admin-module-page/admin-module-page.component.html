@@ -26,7 +26,7 @@
                 <button *ngIf="user.get_user_is_admin()" (click)="revoke_user_admin(user.get_user_id())"
                 class="button-green">Премахни администраторски права</button>
 
-                <button routerLink="/profile/{{user.get_user_id()}}" 
+                <button (click)="delete_user(user.get_user_id())" 
                 class="button-red">Изтрии профил</button>
             </div>
             </div>
@@ -43,7 +43,7 @@
                 <p>Потребители в групата: <b>{{gr.ammount_of_users}}</b></p>
               </div>
               <div class="user_box_buttons">
-                <button  
+                <button routerLink="/group/{{gr.group_id}}"
                 class="button-green">Преглед</button>
                 <button (click)="delete_group(gr.group_id)"
                 class="button-red">Изтрии групата</button>
@@ -56,7 +56,7 @@
         <h4>Снимки:</h4>
         <ul>
             <div class="user_box" *ngFor="let image of unapproved_pictures">
-                <img src="{{image.getPicPath()}}" class="thumbnail" />
+                <img [src]="get_image(image)" class="thumbnail" />
                 <div class="user_box_text">
                     <p class='imageInfo'>{{image.getUserName()}}</p>
                     <p class='imageInfo'>{{image.getTime()}}</p>
