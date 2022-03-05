@@ -1,6 +1,7 @@
 import datetime
 from flask import Flask, request, jsonify
 import flask_cors
+import json
 import requests
 from backend.src.mongo_connection.mongo_connection import get_executor_address
 from backend.src.mongo_connection.mongo_connection import get_connection
@@ -615,6 +616,20 @@ def get_my_solutions():
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
     return jsonify(inst.get_my_solutions(post_info['user_id']))
+
+
+@app.route('/get_shared_solutions', methods=['POST'])
+def get_shared_solutions():
+    inst = HandleProblemsClass(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    return jsonify(inst.get_shared_solutions(post_info['user_id']))
 
 
 @app.route('/get_code_info', methods=['POST'])

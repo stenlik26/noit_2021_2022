@@ -303,7 +303,8 @@ class HandleProblemsClass:
         locale.setlocale(locale.LC_ALL, 'bg_BG')
 
         for problem in results:
-            problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            if 'solution_id' in problem:
+                problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
