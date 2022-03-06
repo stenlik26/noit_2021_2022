@@ -97,7 +97,7 @@ export class GroupModulePageComponent implements OnInit {
   solve_problem(time_limit: string, object_id: string){
     if(time_limit === "-1")
     {
-      window.location.href = projectConfig.site_url + '/solve/' + object_id;
+      window.location.href = projectConfig.site_url + '/code/solve/' + object_id;
     }
     else{
       this.time_limit_modal.show();
@@ -108,7 +108,7 @@ export class GroupModulePageComponent implements OnInit {
   solve_problem_time_limit(object_id: string)
   {
     this.time_limit_modal.hide();
-    window.location.href = projectConfig.site_url + '/solve/' + object_id;
+    window.location.href = projectConfig.site_url + '/code/solve/' + object_id;
   }
 
   change_group_name(): void{

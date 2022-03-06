@@ -251,6 +251,7 @@ export class SolveTaskPageComponent implements OnInit {
       json.time_limit,
       json.title);
 
+    console.log(json);
     if (json.time_limit != "-1") {
       this.get_elapsed_time(json.time_limit);
     }

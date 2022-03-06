@@ -1,4 +1,3 @@
-import datetime
 from flask import Flask, request, jsonify
 import flask_cors
 import json
@@ -21,18 +20,20 @@ flask_cors.CORS(app)
 
 
 def is_user_valid(token: str, user_id: str) -> bool:
-    # TODO: implement this
-    return True
+    res = LoginUserClass.get_user_id_from_token(token)
+    if res['status'] == 'OK':
+        return res['message'] == user_id
+    else:
+        return False
 
 
 def is_guest_token_valid(token: str) -> bool:
-    # TODO: implement this
-    return True
+    res = LoginUserClass.validate_token(token)
 
-
-def is_user_admin_for_group(user_id: str, group_id: str) -> bool:
-    # TODO: implement this
-    return True
+    if res['status'] == 'OK':
+        return res['userType'] == 'guest'
+    else:
+        return False
 
 
 def check_for_post_params(needed_params: tuple, given_params: dict) -> bool:
@@ -399,7 +400,7 @@ def user_access_to_problem():
     if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    return jsonify(inst.does_user_have_access(post_info['user_id'],post_info['problem_id']))
+    return jsonify(inst.does_user_have_access(post_info['user_id'], post_info['problem_id']))
 
 
 @app.route('/get_all_problems', methods=['POST'])
@@ -848,7 +849,6 @@ def approve_profile_pic():
         return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
 
 
-
 @app.route('/upload_codeplayground', methods=['POST'])
 def upload_codeplayground():
     inst = UploadCodePlaygroundClass(get_connection())
@@ -887,12 +887,10 @@ def get_codeplayground():
     return jsonify(inst.get_code_by_object_id(post_info))
 
 
-
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     inst = HandleProblemsClass(get_connection())
     return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
-    #return jsonify({"test": "api test"})
 
 
 if __name__ == '__main__':

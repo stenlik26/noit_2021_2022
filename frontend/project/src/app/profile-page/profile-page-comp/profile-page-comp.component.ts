@@ -21,6 +21,7 @@ export class ProfilePageCompComponent implements OnInit {
   current_change_string: string = ''; 
   change_modal: any;
   status:string = '';
+  user_is_me_and_admin: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute) { 
     if (!UserTokenHandling.isUserLoggedIn()) {
@@ -36,6 +37,26 @@ export class ProfilePageCompComponent implements OnInit {
     this.get_shared_solutions();
     //@ts-ignore
     this.change_modal = new Modal(document.getElementById('change_modal'));
+    if (this.my_profile)
+    {
+      this.check_for_admin_panel_access();
+    }
+  }
+
+  check_for_admin_panel_access(): void
+  {
+    const data = {
+      token: UserTokenHandling.getUserToken(),
+      user_id: UserTokenHandling.getUserId()
+    };
+
+    fetch(projectConfig.api_url + 'has_access_to_admin_panel', {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-type': 'application/json' }
+    }).then(response => response.json()).then(json => {
+      this.user_is_me_and_admin = json.status === 'OK';
+    });
   }
 
   get_profile_info(): void{
@@ -52,6 +73,7 @@ export class ProfilePageCompComponent implements OnInit {
       .then(response => response.json())
       .then(json => {
         if (json.status === 'OK') {
+          console.log(json.message);
           this.profile_info = new UserInfo(json.message);
         }
       });

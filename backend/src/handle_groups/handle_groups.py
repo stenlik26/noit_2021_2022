@@ -213,7 +213,7 @@ class HandleGroupsClass:
         except ConnectionFailure:
             raise ConnectionError("Failed to connect to db")
 
-        if user_site_admin['role'] == "1":
+        if user_site_admin['role'] == "1" and group is None:
             return {"status": 'OK', "message": 'site_admin'}
 
         if group is None:

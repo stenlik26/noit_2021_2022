@@ -25,6 +25,8 @@
     <div class="bottomButtons">
         <button *ngIf="my_profile" routerLink="/upload_picture" class="button-profile w3-btn w3-round button-secondary w3-text-shadow w3-ripple">Промяна на
             профилна снимка</button>
+        <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile w3-btn w3-round button-secondary w3-text-shadow w3-ripple">
+            Администраторски панел</button>
     
     </div>
 </div>

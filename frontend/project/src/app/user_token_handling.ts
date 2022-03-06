@@ -61,7 +61,8 @@ export class UserTokenHandling {
         return localStorage.getItem('userId') !== null;
     }
     static logOut(): void {
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userToken');
+        //localStorage.removeItem('userId');
+        //localStorage.removeItem('userToken');
+        localStorage.clear();
     }
 }

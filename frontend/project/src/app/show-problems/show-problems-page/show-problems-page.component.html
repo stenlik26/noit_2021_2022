@@ -28,7 +28,7 @@
 
   <div id="search_by_name">
     <input type="text" placeholder="Търсене по име" id="problem_name" name="problem_name">
-    <button class="button-green solve_button" (click)="search_by_name()">Търсене</button>
+    <button class="button-green" (click)="search_by_name()">Търсене</button>
   </div>
 </div>
 
@@ -49,7 +49,7 @@
         <th>{{problem.title}}</th>
         <td class="text-center">{{problem.difficulty}}</td>
         <td>{{problem.get_tags()}}</td>
-        <td *ngIf="show_solve" class="text-center"><button routerLink="/solve/{{problem.object_id}}"class="button-green solve_button">Реши</button></td>
+        <td *ngIf="show_solve" class="text-center"><button routerLink="/code/solve/{{problem.object_id}}"class="button-green">Реши</button></td>
       </tr>
     </ng-container>
   </tbody>
