@@ -14,11 +14,11 @@
   <a routerLink="/my_solutions" class="menu-item" *ngIf="is_user_logged_in">
     Моите решения
   </a>
-  <a routerLink="/" class="menu-item" *ngIf="is_user_logged_in">
+  <a routerLink="/my_friends" class="menu-item" *ngIf="is_user_logged_in">
     Приятели
   </a>
   <a routerLink="/code" class="menu-item" *ngIf="is_user_logged_in">
-    Пясъчник
+    Кодова площадка
   </a>
   <a routerLink="/profile/{{my_user_id}}" class="menu-item" *ngIf="is_user_logged_in">
     Профил

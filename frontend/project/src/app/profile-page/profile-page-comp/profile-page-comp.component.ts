@@ -22,6 +22,8 @@ export class ProfilePageCompComponent implements OnInit {
   change_modal: any;
   status:string = '';
   user_is_me_and_admin: boolean = false;
+  friends_list_status: string = '';
+  friend_status_message: string = '';
 
   constructor(private activatedRoute: ActivatedRoute) { 
     if (!UserTokenHandling.isUserLoggedIn()) {
@@ -41,6 +43,7 @@ export class ProfilePageCompComponent implements OnInit {
     {
       this.check_for_admin_panel_access();
     }
+    this.get_friend_status();
   }
 
   check_for_admin_panel_access(): void
@@ -160,6 +163,72 @@ export class ProfilePageCompComponent implements OnInit {
           this.status = '';
           input_field.value = '';
         } 
+      });
+  }
+
+  get_friend_status(): void{
+    const data = {
+      token: UserTokenHandling.getUserToken(),
+      user_id: UserTokenHandling.getUserId(),
+      friend_id: this.profile_id
+    }
+
+    fetch((projectConfig.api_url + 'is_my_friend'), {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.status === 'OK') {
+
+          this.friend_status_message = json.message;
+
+          switch (this.friend_status_message) {
+            case 'friends': {
+              this.friends_list_status = 'Вие сте приятели с този потребител.';
+              break;
+            }
+            case 'friend_request_sent': {
+              this.friends_list_status = 'Вие сте изпратили покана за приятество на този потребител.';
+              break;
+            }
+            case 'friend_request_received': {
+              this.friends_list_status = 'Вие сте получили покана за приятество от този потребител.';
+              break;
+            }
+            case 'same_acc': {
+              this.friends_list_status = 'Това е вашият профил.';
+              break;
+            }
+          }
+        }
+        else {
+          console.log(json.status + ' = ' + json.message);
+        }
+      });
+  }
+
+  send_friend_request(): void{
+    const data = {
+      token: UserTokenHandling.getUserToken(),
+      from_user_id: UserTokenHandling.getUserId(),
+      to_user_id: this.profile_id
+    }
+
+    fetch((projectConfig.api_url + 'send_friend_request'), {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if (json.status === 'OK') {
+          location.reload();
+        }
+        else {
+          console.log(json.status + ' = ' + json.message);
+        }
       });
   }
 
