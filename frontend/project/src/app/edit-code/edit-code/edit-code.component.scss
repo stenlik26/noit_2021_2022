@@ -3,7 +3,7 @@
 #content{
   display: grid;
   grid-template-columns: 70% 30%;
-  grid-template-rows: 5% 95%;
+  grid-template-rows: 8% 92%;
   margin: 0vw 1vw;
   gap: 0.2em 0.5em;
 }
@@ -33,9 +33,33 @@
   color: white;
 }
 
+input[type=text]{
+
+  border: 0.1em solid;
+  background:transparent;
+  border-radius: .5em;
+  border-color: rgba(160, 160, 160);
+  color: rgba(160, 160, 160);;
+  background-color: transparent;
+  text-align: left;
+}
+
+input[type=text]:focus{
+  outline: none;
+  border-color: yellowgreen;
+  color: white;
+  background-color: transparent;
+}
+
+
 #problem_text_editor{
   height: 100%;
   display: block;
+}
+
+textarea{
+  resize: none;
+
 }
 
 #options{

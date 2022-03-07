@@ -71,6 +71,10 @@ const routes: Routes = [
     loadChildren: () => import('./friends-module/friends-module.module').then(m => m.FriendsModuleModule)
   },
   {
+    path: 'see_problem',
+    loadChildren: () => import('./see-problem/see-problem.module').then(m => m.SeeProblemModule)
+  },
+  {
     path: '**',
     redirectTo: '/not_found'
   }

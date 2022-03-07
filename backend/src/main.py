@@ -298,11 +298,15 @@ def get_problem_info():
     if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+    if check_if_empty(('token', 'problem_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    if not is_user_valid(post_info['token'], post_info['user_id']):
-        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    if post_info['user_id'] is not None:
+        if not is_user_valid(post_info['token'], post_info['user_id']):
+            return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    else:
+        if not is_guest_token_valid(post_info['token']):
+            return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
     return jsonify(inst.get_problem_info(post_info['problem_id']))
 
@@ -416,8 +420,12 @@ def get_all_problems():
     if check_if_empty(('token', 'difficulty', 'tags'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    if not is_guest_token_valid(post_info['token']):
-        return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
+    if post_info['user_id'] is not None:
+        if not is_user_valid(post_info['token'], post_info['user_id']):
+            return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    else:
+        if not is_guest_token_valid(post_info['token']):
+            return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
     return jsonify(inst.get_all_problems(post_info['difficulty'], post_info['tags'], post_info['name']))
 

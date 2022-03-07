@@ -10,7 +10,9 @@ import { ProblemInformationPick } from 'src/app/problem_info_pick';
 })
 export class ShowProblemsPageComponent implements OnInit {
 
-  constructor() { }
+  constructor() { 
+    this.not_logged_in = !UserTokenHandling.isUserLoggedIn();
+  }
 
   problems: Array<ProblemInformationPick> = new Array<ProblemInformationPick>();
   current_difficulty: string = 'any';
@@ -18,6 +20,7 @@ export class ShowProblemsPageComponent implements OnInit {
   current_search_name: string = '';
   show_solve: boolean = true;
   name_input: any;
+  not_logged_in: boolean = false;
 
   get_problems(): void{
 

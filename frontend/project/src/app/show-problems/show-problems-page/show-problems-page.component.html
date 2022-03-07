@@ -32,25 +32,32 @@
   </div>
 </div>
 
-<table class="table table-dark" id="problems_table">
-  <thead>
-    <tr>
-      <th class="text-center" scope="col">#</th>
-      <th scope="col">Име</th>
-      <th class="text-center" scope="col">Трудност</th>
-      <th scope="col">Тагове</th>
-      <th *ngIf="show_solve" scope="col"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <ng-container *ngFor="let problem of problems">
+<div id="problems_table_div">
+  <table class="table table-dark" id="problems_table">
+    <thead>
       <tr>
-        <th class="text-center" scope="row">{{problem.num}}</th>
-        <th>{{problem.title}}</th>
-        <td class="text-center">{{problem.difficulty}}</td>
-        <td>{{problem.get_tags()}}</td>
-        <td *ngIf="show_solve" class="text-center"><button routerLink="/code/solve/{{problem.object_id}}"class="button-green">Реши</button></td>
+        <th class="text-center" scope="col">#</th>
+        <th scope="col">Име</th>
+        <th class="text-center" scope="col">Трудност</th>
+        <th scope="col">Тагове</th>
+        <th *ngIf="show_solve" scope="col"></th>
       </tr>
-    </ng-container>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let problem of problems">
+        <tr>
+          <th class="text-center" scope="row">{{problem.num}}</th>
+          <th>{{problem.title}}</th>
+          <td class="text-center">{{problem.difficulty}}</td>
+          <td>{{problem.get_tags()}}</td>
+          <td *ngIf="show_solve && !not_logged_in" class="text-center">
+            <button routerLink="/code/solve/{{problem.object_id}}" class="button-green">Реши</button>
+          </td>
+          <td *ngIf="show_solve && not_logged_in" class="text-center">
+            <button routerLink="/see_problem/{{problem.object_id}}" class="button-green">Преглед</button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
