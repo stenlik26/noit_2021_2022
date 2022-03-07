@@ -1014,10 +1014,26 @@ def get_friends_list():
     return jsonify(inst.get_friends_list(post_info['user_id']))
 
 
+@app.route('/remove_friend', methods=['POST'])
+def remove_friend():
+    inst = FriendsModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.remove_friend(post_info['friend_id'], post_info['user_id']))
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    inst = HandleProblemsClass(get_connection())
-    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
+    return 'API Works!'
 
 
 if __name__ == '__main__':

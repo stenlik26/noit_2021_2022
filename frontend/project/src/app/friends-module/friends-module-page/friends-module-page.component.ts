@@ -117,6 +117,7 @@ export class FriendsModulePageComponent implements OnInit {
         if(json.status === 'OK')
         {
           this.get_my_invites();
+          this.get_my_friends();
         }
       }); 
   }
@@ -160,6 +161,28 @@ export class FriendsModulePageComponent implements OnInit {
         json.message.forEach((element: any) => {
           this.my_friends.push(new UserInfo(element))
         });
+      });
+  }
+
+  remove_friend(friend_id: string): void{
+    
+    const requestBody = {
+      token: UserTokenHandling.getUserToken(),
+      user_id: UserTokenHandling.getUserId(),
+      friend_id: friend_id
+    };
+
+    fetch((projectConfig.api_url + 'remove_friend'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status === 'OK')
+        {
+          this.get_my_friends();
+        }
       });
   }
 }

@@ -16,7 +16,7 @@
           
           <img class="pic_thumbnail" src="{{fr.get_picture()}}">
           <p>{{fr.get_username()}}</p>
-          <button class="button-red to_group_button" >Премахни</button>
+          <button (click)="remove_friend(fr.get_user_id())" class="button-red to_group_button" >Премахни</button>
           <button routerLink="/profile/{{fr.get_user_id()}}" class="button-green to_group_button">Профил</button>
         </div>
 
