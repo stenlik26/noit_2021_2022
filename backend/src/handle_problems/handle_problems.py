@@ -275,7 +275,7 @@ class HandleProblemsClass:
         locale.setlocale(locale.LC_ALL, 'bg_BG')
 
         for problem in results:
-            if 'solution_id' in problem:
+            if 'solution_id' in problem.keys():
                 problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
@@ -303,7 +303,7 @@ class HandleProblemsClass:
         locale.setlocale(locale.LC_ALL, 'bg_BG')
 
         for problem in results:
-            if 'solution_id' in problem:
+            if 'solution_id' in problem.keys():
                 problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 

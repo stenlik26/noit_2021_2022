@@ -8,7 +8,7 @@
     <div id="options" class="grid-container">
         <div class="itemsClass">
             <h5>Потребителско име: <b>{{profile_info.get_username()}}</b></h5>
-            <button (click)="show_change_modal(1)" *ngIf="my_profile" class="button-profile w3-btn w3-round button-green w3-text-shadow w3-ripple">Промяна</button>
+            <button (click)="show_change_modal(1)" *ngIf="my_profile" class="button-profile button-green ">Промяна</button>
         </div>
 
         <div class="itemsClass">
@@ -17,16 +17,24 @@
 
         <div class="itemsClass">
             <h5>Информация: {{profile_info.get_description()}}</h5>
-            <button (click)="show_change_modal(2)" *ngIf="my_profile" class="button-profile w3-btn w3-round button-green w3-text-shadow w3-ripple"
+            <button (click)="show_change_modal(2)" *ngIf="my_profile" class="button-profile button-green "
             >Промяна</button>
         </div>
+
     </div>
 
     <div class="bottomButtons">
-        <button *ngIf="my_profile" routerLink="/upload_picture" class="button-profile w3-btn w3-round button-secondary w3-text-shadow w3-ripple">Промяна на
+        <button *ngIf="my_profile" routerLink="/upload_picture" class="button-profile button-secondary ">Промяна на
             профилна снимка</button>
+        <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile button-secondary ">
+            Администраторски панел</button>
     
     </div>
+
+    <div class="itemsClass">
+      <h5>{{friends_list_status}}</h5>
+      <button *ngIf="friend_status_message === 'not_friends'" (click)='send_friend_request()' class="button-secondary">Изпращане на покана за приятелство</button>
+  </div>
 </div>
 
 <div id="solutions_table">

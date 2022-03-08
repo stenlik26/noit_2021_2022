@@ -1,0 +1,112 @@
+.wrapper{
+    gap: 1em;
+    width: 98%;
+    height: 39vh;
+    margin-bottom: 2%;
+    margin-left: 1%;
+}
+#red_circle{
+    position: absolute;
+    background-color: red;
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+}
+
+#head_part{
+    display: flex;
+}
+
+#head_part > h3{
+    flex-grow: 3;
+}
+
+
+.invite_panel{
+    display: flex;
+    padding: 0.5em;
+    margin: 0.5em;
+    border-radius: 0.5em;
+}
+
+#invites_modal > ul{
+    margin: 0;
+    padding: 0;
+    height: 50vh;
+    overflow-y: scroll;
+}
+
+.invite_panel > h5{
+    flex-grow: 3;
+}
+
+.invite_panel > button{
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+.top_button{
+    margin-left: 0.25em;
+    margin-right: 0.25em;
+}
+
+input[type=text]{
+
+    width: 100%;
+    padding: 1em;
+    margin: 1em 0;
+    border: 0.1em solid;
+    background:transparent;
+    border-radius: .5em;
+    border-color: white;
+    color: white;
+    text-align: center;
+    height: 2em;
+  }
+  
+  input[type=text]:focus {
+    outline: none;
+    border-color: yellowgreen;
+    color: white
+}
+
+  
+.user_panel{
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+    margin: 0.5em 0 0.5em 0;
+    padding: 0 0.5em 0 0.5em;
+    width: 99%;
+    border-radius: .5em;
+    height: 5em;
+}
+  
+.user_panel > p{
+margin: 0;
+flex-grow: 2;
+}
+
+#search_modal > ul{
+    max-height: 20em;
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+}
+
+#main_part > ul{
+    max-height: 35em;
+    padding: 0;
+    margin: 0;
+    overflow-y: scroll;
+}
+
+#search_bar{
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+
+#search_bar > button{
+    height: 2em;
+}

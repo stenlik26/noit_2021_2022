@@ -18,8 +18,8 @@ export class MyGroupsPageComponent implements OnInit {
 
 
   ngOnInit(): void {
-    if (!UserTokenHandling.isUserTokenSet) {
-      UserTokenHandling.setGuestToken();
+    if (!UserTokenHandling.isUserLoggedIn()) {
+      window.location.href = projectConfig.site_url + 'not_found';
     }
     this.get_my_groups();
     this.get_my_invites();

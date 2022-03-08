@@ -57,15 +57,15 @@ class LoginUserClass:
             return {'status': 'OK', 'userType': 'user', 'siteAccess': True}
 
     @staticmethod
-    def get_user_id_from_token(token: str) -> str:
+    def get_user_id_from_token(token: str) -> dict:
         try:
             result = jwt.decode(token, get_jwt_key(), algorithms=['HS256'])
         except jwt.ExpiredSignatureError:
-            return dumps({'status': 'error_token_expired', 'message': 'Expired token!'})
+            return {'status': 'error_token_expired', 'message': 'Expired token!'}
         except jwt.InvalidTokenError:
-            return dumps({'status': 'error_invalid_token', 'message': 'Invalid token!'})
+            return {'status': 'error_invalid_token', 'message': 'Invalid token!'}
 
-        return result['sub']
+        return {'status': 'OK', 'message': result['sub']}
 
     def login_panel(self, input_email: str, input_pass: str, mongo_connection) -> dict:
         db = mongo_connection['Main']

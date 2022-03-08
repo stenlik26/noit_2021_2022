@@ -40,7 +40,7 @@
         
 
         <label *ngIf="select_groups" for="groups">Групи:</label>
-        <select *ngIf="select_groups" id="groups" class="form-select bg-dark dropdown" multiple>
+        <select *ngIf="select_groups" id="groups" class="form-select bg-dark dropdown">
             <option *ngFor='let group of groups' value="{{group._id}}">{{group.name}}</option>
         </select>
 

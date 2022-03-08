@@ -9,8 +9,8 @@
 }
 
 #solutions_table{
-   margin: auto;
-    width: 90%;
+    margin-left: 1em;
+    margin-right: 1em;
 }
 
 .button-profile{
@@ -48,7 +48,8 @@
 {
     margin-top: 0.5em;
     display: flex;
-    justify-content: space-evenly;
+    gap: 0.5em;
+    justify-content: space-between;
 }
 
 #solutions_table > ul{

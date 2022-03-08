@@ -78,22 +78,26 @@ export class ShowSolutionPageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
+ 
+        this.current_code = new SubmissionInfo(json.message);
+
+        this.problem_title = json.message.problem_name;
+
+        this.author_name = json.message.author_name;
+        this.access = (UserTokenHandling.getUserId() === json.message.author_id.$oid);
+        this.problem_public = json.message.problem_public;
+        this.problem_shared = json.message.shared;
+
         if (json.status === 'OK') {
-          this.current_code = new SubmissionInfo(json.message);
-
-          this.problem_title = json.message.problem_name;
-
-          if (json.message.name === undefined) {
+          if (!json.message.hasOwnProperty('name')) {
             this.is_code_playground = false;
             this.update_tests();
           }
           else{
             this.is_code_playground = true;
+            (document.getElementById('problem_tests') as HTMLDivElement).style.display = 'none';
           }
-          this.author_name = json.message.author_name;
-          this.access = (UserTokenHandling.getUserId() === json.message.author_id.$oid);
-          this.problem_public = json.message.problem_public;
-          this.problem_shared = json.message.shared;
+
         }
         else if (json.status === 'error_no_access') {
           window.location.href = projectConfig.site_url + 'not_found';

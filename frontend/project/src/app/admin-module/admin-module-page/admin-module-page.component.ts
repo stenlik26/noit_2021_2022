@@ -132,15 +132,15 @@ export class AdminModulePageComponent implements OnInit {
   
   approvePic(imageIdArg: string): void
   {
-    /*
+    
     const data = {
       token: UserTokenHandling.getUserToken(),
-      userId: UserTokenHandling.getUserId(),
-      pictureId: imageIdArg
+      user_id: UserTokenHandling.getUserId(),
+      picture_id: imageIdArg
     };
     console.log(data);
 
-    fetch(conf.url + 'approveUploadedPicture', {
+    fetch(projectConfig.api_url + 'approve_profile_pic', {
       method: 'POST',
       body: JSON.stringify(data),
       headers: { 'Content-type': 'application/json' }
@@ -154,7 +154,7 @@ export class AdminModulePageComponent implements OnInit {
         console.log(json.message);
       }
     });
-    */
+    
   }
 
   viewImage(pic: UnapprovedPicture): void{

@@ -1,0 +1,73 @@
+<div class="wrapper">
+    <div id="head_part">
+        <h3>Моите приятели:</h3>
+        <div class="top_button">
+            <div *ngIf="has_invites" id="red_circle"></div>
+            <button class="button-green" (click)="show_my_invites()">Покани</button>
+        </div>
+        <div class="top_button">
+            <button class="button-green" (click)="show_search_modal()">Търсене</button>
+        </div>        
+    </div>
+
+    <div id="main_part">
+      <ul>
+        <div class="user_panel panel-gray" *ngFor="let fr of my_friends">
+          
+          <img class="pic_thumbnail" src="{{fr.get_picture()}}">
+          <p>{{fr.get_username()}}</p>
+          <button (click)="remove_friend(fr.get_user_id())" class="button-red to_group_button" >Премахни</button>
+          <button routerLink="/profile/{{fr.get_user_id()}}" class="button-green to_group_button">Профил</button>
+        </div>
+
+      </ul>
+    </div>
+</div>
+
+<div class="modal fade" id="invites_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal_label">Получени покани за приятелство</h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="invites_modal" class="modal-body">
+            <p *ngIf="!has_invites">Нямате получени покани за приятелство.</p>
+            <ul>
+              <div class="invite_panel panel-gray" *ngFor="let invite of my_invites">
+                <h5><b>{{invite.name}}</b> ви изпрати покана за приятелство.</h5>
+                <button (click)="decline_friend_request(invite.requestId)" class="button-red to_group_button" >Отхвърли</button>
+                <button (click)="approve_friend_request(invite.requestId)" class="button-green to_group_button">Приеми</button>
+              </div>
+
+            </ul>
+        </div>
+      </div>
+    </div>
+</div>
+
+<div class="modal fade" id="search_modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="modal_label">Търсене на потребители</h4>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="search_modal" class="modal-body">
+            <div id="search_bar">
+                <label>Име:</label>
+                <input id="name_search_input" type="text">
+                <button (click)="search_users_by_name()" class="button-green">Търси</button>
+            </div>
+            <ul>
+                <div class="user_panel panel-gray" *ngFor="let user of all_users">
+
+                    <img class="pic_thumbnail" src="{{user.get_picture()}}">
+                    <p>{{user.get_username()}}</p>
+                    <button class="button-green" (click)="open_user_page(user.get_user_id())">Профил</button>
+                </div>
+            </ul>
+        </div>
+      </div>
+    </div>
+</div>

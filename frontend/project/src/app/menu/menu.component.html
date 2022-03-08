@@ -1,15 +1,53 @@
-<nav class="navbar navbar-expand-sm bg-dark">
-  <div class="container-fluid">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 1</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 2</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Link 3</a>
-      </li>
-    </ul>
+<div id="main">
+  <div id="logo">
+    <img src="../../assets/icons/user.png" style="height: 2em">
   </div>
-</nav>
+  <a routerLink="/" class="menu-item">
+    Начало
+  </a>
+  <a routerLink="/show_problems" class="menu-item">
+    Задачи
+  </a>
+  <a routerLink="/my_groups" class="menu-item" *ngIf="is_user_logged_in">
+    Моите групи
+  </a>
+  <a routerLink="/my_solutions" class="menu-item" *ngIf="is_user_logged_in">
+    Моите решения
+  </a>
+  <a routerLink="/my_friends" class="menu-item" *ngIf="is_user_logged_in">
+    Приятели
+  </a>
+  <a routerLink="/code" class="menu-item" *ngIf="is_user_logged_in">
+    Кодова площадка
+  </a>
+  <a routerLink="/profile/{{my_user_id}}" class="menu-item" *ngIf="is_user_logged_in">
+    Профил
+  </a>
+  <a routerLink="/create_problem" class="menu-item" *ngIf="is_user_logged_in">
+    Създай задача
+  </a>
+  <a routerLink="/create_group" class="menu-item" *ngIf="is_user_logged_in">
+    Създай група
+  </a>
+  
+  <div style="flex-grow:7">
+
+  </div>
+
+  <div class="right_part" *ngIf="is_user_logged_in">
+    <img id="user-profile-pic" style="height: 2em">
+    <a class="menu-item" (click)="logout()">
+      {{user_name}}
+    </a>
+  </div>
+
+  <div class="right_part" *ngIf="!is_user_logged_in">
+    <a routerLink="/login" class="menu-item">
+      Вход
+    </a>
+    <a routerLink="/register" class="menu-item">
+      Регистрация
+    </a>
+  </div>
+  
+</div>

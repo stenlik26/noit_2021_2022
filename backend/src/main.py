@@ -1,4 +1,3 @@
-import datetime
 from flask import Flask, request, jsonify
 import flask_cors
 import json
@@ -15,24 +14,27 @@ from backend.src.upload_codeplayground.load_codeplayground import LoadCodePlaygr
 from backend.src.admin_panel.admin_panel import AdminPanelClass
 from backend.src.handle_user.handle_user import HandleUserClass
 from backend.src.upload_picture.upload_picture import PictureUpload
+from backend.src.friends_module.friends_module import FriendsModule
 
 app = Flask(__name__)
 flask_cors.CORS(app)
 
 
 def is_user_valid(token: str, user_id: str) -> bool:
-    # TODO: implement this
-    return True
+    res = LoginUserClass.get_user_id_from_token(token)
+    if res['status'] == 'OK':
+        return res['message'] == user_id
+    else:
+        return False
 
 
 def is_guest_token_valid(token: str) -> bool:
-    # TODO: implement this
-    return True
+    res = LoginUserClass.validate_token(token)
 
-
-def is_user_admin_for_group(user_id: str, group_id: str) -> bool:
-    # TODO: implement this
-    return True
+    if res['status'] == 'OK':
+        return res['userType'] == 'guest'
+    else:
+        return False
 
 
 def check_for_post_params(needed_params: tuple, given_params: dict) -> bool:
@@ -296,11 +298,15 @@ def get_problem_info():
     if not check_for_post_params(('token', 'user_id', 'problem_id'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
+    if check_if_empty(('token', 'problem_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    if not is_user_valid(post_info['token'], post_info['user_id']):
-        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    if post_info['user_id'] is not None:
+        if not is_user_valid(post_info['token'], post_info['user_id']):
+            return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    else:
+        if not is_guest_token_valid(post_info['token']):
+            return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
     return jsonify(inst.get_problem_info(post_info['problem_id']))
 
@@ -399,7 +405,7 @@ def user_access_to_problem():
     if check_if_empty(('token', 'user_id', 'problem_id'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
 
-    return jsonify(inst.does_user_have_access(post_info['user_id'],post_info['problem_id']))
+    return jsonify(inst.does_user_have_access(post_info['user_id'], post_info['problem_id']))
 
 
 @app.route('/get_all_problems', methods=['POST'])
@@ -408,11 +414,18 @@ def get_all_problems():
 
     inst = HandleProblemsClass(get_connection())
 
-    if not check_for_post_params(('token', 'user_id', 'difficulty', 'tags', 'name'), post_info):
+    if not check_for_post_params(('token', 'difficulty', 'tags', 'name'), post_info):
         return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
 
-    if check_if_empty(('token', 'user_id', 'difficulty', 'tags'), post_info):
+    if check_if_empty(('token', 'difficulty', 'tags'), post_info):
         return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if post_info['user_id'] is not None:
+        if not is_user_valid(post_info['token'], post_info['user_id']):
+            return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+    else:
+        if not is_guest_token_valid(post_info['token']):
+            return jsonify({'status': 'error_invalid_guest_token', 'message': 'Guest token is invalid'})
 
     return jsonify(inst.get_all_problems(post_info['difficulty'], post_info['tags'], post_info['name']))
 
@@ -848,7 +861,6 @@ def approve_profile_pic():
         return jsonify({'status': 'error_no_access', 'message': 'No access to admin panel.'})
 
 
-
 @app.route('/upload_codeplayground', methods=['POST'])
 def upload_codeplayground():
     inst = UploadCodePlaygroundClass(get_connection())
@@ -887,12 +899,149 @@ def get_codeplayground():
     return jsonify(inst.get_code_by_object_id(post_info))
 
 
+@app.route('/is_my_friend', methods=['POST'])
+def is_my_friend():
+    inst = FriendsModule(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.is_my_friend(post_info['user_id'], post_info['friend_id']))
+
+
+@app.route('/send_friend_request', methods=['POST'])
+def send_friend_request():
+    inst = FriendsModule(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'from_user_id', 'to_user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'from_user_id', 'to_user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['from_user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.send_friend_request(post_info['from_user_id'], post_info['to_user_id']))
+
+
+@app.route('/get_friend_requests', methods=['POST'])
+def get_friend_requests():
+    inst = FriendsModule(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_friend_requests(post_info['user_id']))
+
+
+@app.route('/search_for_user', methods=['POST'])
+def search_for_user():
+    inst = FriendsModule(get_connection())
+
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'searched_name'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'searched_name'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.search_for_user(post_info['searched_name']))
+
+
+@app.route('/approve_friend_request', methods=['POST'])
+def approve_friend_request():
+    inst = FriendsModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'request_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'request_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.approve_friend_request(post_info['request_id']))
+
+
+@app.route('/remove_friend_request', methods=['POST'])
+def remove_friend_request():
+    inst = FriendsModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'request_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'request_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.remove_friend_request(post_info['request_id']))
+
+
+@app.route('/get_friends_list', methods=['POST'])
+def get_friends_list():
+    inst = FriendsModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_friends_list(post_info['user_id']))
+
+
+@app.route('/remove_friend', methods=['POST'])
+def remove_friend():
+    inst = FriendsModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'friend_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.remove_friend(post_info['friend_id'], post_info['user_id']))
+
 
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
-    inst = HandleProblemsClass(get_connection())
-    return jsonify(inst.get_code_info('61f44a4d32dc6703d7ff38f3', '616ae290a08c9e9401c2e636'))
-    #return jsonify({"test": "api test"})
+    return 'API Works!'
 
 
 if __name__ == '__main__':
