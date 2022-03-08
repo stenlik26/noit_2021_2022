@@ -1039,6 +1039,13 @@ def remove_friend():
     return jsonify(inst.remove_friend(post_info['friend_id'], post_info['user_id']))
 
 
+@app.route('/get_number_of_tasks', methods=['GET'])
+def get_number_of_tasks():
+    db = get_connection()['Main']['Problems']
+    problems = list(db.find({'public': True}))
+    return {'status': 'OK', 'message': len(problems)}
+
+
 @app.route('/', methods=['POST', 'GET'])
 def debug_page():
     return 'API Works!'

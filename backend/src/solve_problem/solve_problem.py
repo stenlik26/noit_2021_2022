@@ -149,7 +149,7 @@ class SolveProblemClass:
             'tests_passed': info['passed'],
             'tests_total': info['total'],
             'test_failed': info['results'],
-            'timestamp': datetime.datetime.utcnow(),
+            'timestamp': datetime.datetime.now(),
             'author_id': ObjectId(info['user_id']),
             'solution_id': ObjectId(info['solution_id']),
             'comments': []
@@ -240,7 +240,7 @@ class SolveProblemClass:
             'score': -1,
             'comments': [],
             'code_ids': [],
-            'time_of_start': datetime.datetime.utcnow()
+            'time_of_start': datetime.datetime.now()
         }
 
         try:
@@ -261,7 +261,7 @@ class SolveProblemClass:
 
         if self.__does_user_have_a_solution(info['user_id'], info['problem_id']):
             time_start_timestamp = self.__get_solution_time_of_start(info['user_id'], info['problem_id'])
-            now = datetime.datetime.utcnow()
+            now = datetime.datetime.now()
             delta = now - time_start_timestamp
             if delta.seconds < allowed_time_for_solution:
                 return {'status': 'OK', 'message': (allowed_time_for_solution - delta.seconds)}

@@ -2,7 +2,7 @@ import bson.json_util
 from bson.objectid import ObjectId
 from json import dumps, loads
 from pymongo.errors import ConnectionFailure
-from datetime import datetime
+from datetime import datetime, timedelta
 import re
 import locale
 from operator import itemgetter
@@ -277,6 +277,7 @@ class HandleProblemsClass:
         for problem in results:
             if 'solution_id' in problem.keys():
                 problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            problem['timestamp'] += timedelta(hours=2)
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}
@@ -305,6 +306,8 @@ class HandleProblemsClass:
         for problem in results:
             if 'solution_id' in problem.keys():
                 problem['problem'] = self.get_problem_by_solution_id(problem['solution_id'])
+            print(problem['timestamp'])
+            problem['timestamp'] += timedelta(hours=2)
             problem['timestamp'] = problem['timestamp'].strftime('%x %X')
 
         return {'status': 'OK', 'message': loads(bson.json_util.dumps(results))}

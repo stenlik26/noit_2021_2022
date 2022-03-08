@@ -3,8 +3,38 @@
     margin: 1em;
     border-radius: 0.5em;
     padding: 1em;
+    display: flex;
+    font-size: large;
 }
+
 
 #text_part{
     padding-left: 2em;
+    padding-top: 2em;
+    width: 40%;
+}
+
+#text_part > p{
+    margin-top: 3em;
+    margin-bottom: 3em;
+}
+
+#image_part{
+    justify-content: center;
+    display: flex;
+    flex-grow: 3;
+}
+
+#image_part > img{
+    width: 50%;
+}
+
+#images {
+    display: flex;
+    width: 6em;
+    height: 6em;
+}
+
+#images > img{
+    margin: 1em;
 }
