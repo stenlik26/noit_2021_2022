@@ -36,8 +36,11 @@
 
   <div class="right_part" *ngIf="is_user_logged_in">
     <img id="user-profile-pic" style="height: 2em">
-    <a class="menu-item" (click)="logout()">
+    <a class="profile-item">
       {{user_name}}
+    </a>
+    <a (click)="logout()" class="menu-item">
+      Изход
     </a>
   </div>
 

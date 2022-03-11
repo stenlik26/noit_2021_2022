@@ -14,7 +14,7 @@
   width:3%;
 }
 
-.menu-item{
+.menu-item, .profile-item{
   height: 100%;
   padding: 0.9em 1em 0.9em 1em;
   display: flex;
@@ -24,10 +24,16 @@
   text-decoration: none;
 }
 
+.profile-item:hover{
+  color: white;
+}
+
 .menu-item:hover{
     color: white;
     background-color: #477731;
+    cursor: pointer;
 }
+
 
 .right_part{
   display: flex;
