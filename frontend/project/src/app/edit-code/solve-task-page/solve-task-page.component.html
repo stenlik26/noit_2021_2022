@@ -55,7 +55,7 @@
     <div id="problem_tests" class="tabcontent panel-darkbg">
       <h4 id="test_tab_message">Няма изпълнени тестове.</h4>
       <textarea readonly="true" id="error_textarea" style="display: none;"></textarea>
-      <p id="success_message">Всички тестове преминаха успешно.</p>
+      <p id="success_message" style="display: none;">Всички тестове преминаха успешно.</p>
       <ul *ngIf="show_tests">
         <div id="tests" class="accordion">
           <div class="accordion-item" *ngFor="let test of problem_information.test_fields">

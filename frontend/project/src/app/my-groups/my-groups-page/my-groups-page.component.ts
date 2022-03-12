@@ -15,6 +15,7 @@ export class MyGroupsPageComponent implements OnInit {
   has_invites: boolean = false;
   my_invites: any;
   invites_modal: any;
+  is_in_groups: boolean = false;
 
 
   ngOnInit(): void {
@@ -47,6 +48,10 @@ export class MyGroupsPageComponent implements OnInit {
         if(json.status === 'OK')
         {
           this.my_groups = json.message;
+          console.log(this.my_groups);
+          this.is_in_groups = (this.my_groups.length !== 0);
+          
+          
         }
       });
   }

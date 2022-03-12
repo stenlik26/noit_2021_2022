@@ -8,6 +8,7 @@
     </div>
 
     <div id="main_part">
+      <i *ngIf="!is_in_groups">Няма групи, в които вие членувате.</i>
         <ul id="groups_list">
             <div class="group_bar" *ngFor="let group of my_groups">
                 <h5>{{group.name}}</h5>
