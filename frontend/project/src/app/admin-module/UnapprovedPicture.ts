@@ -1,3 +1,5 @@
+import projectConfig from '../../assets/conf.json';
+
 export class UnapprovedPicture {
     user_id = '';
     userName = '';
@@ -10,7 +12,7 @@ export class UnapprovedPicture {
         this.id = pic_id;
         this.user_id = user_id;
         this.userName = user_name;
-        this.path_full = pic_path;
+        this.path_full = projectConfig.picture_url + pic_path;
         this.time = time;
     }
 
