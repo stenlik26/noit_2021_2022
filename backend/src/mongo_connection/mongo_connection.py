@@ -4,7 +4,8 @@ import os
 
 
 def get_connection():
-    with open('mongo_connection/app_config.json') as json_file:
+    print(os.getcwd())
+    with open('/var/www/noit_2021_2022/backend/src/mongo_connection/app_config.json') as json_file:
         data = json.load(json_file)
 
         if data['user'] == 'localhost':
@@ -19,12 +20,12 @@ def get_connection():
 
 
 def get_executor_address():
-    with open('mongo_connection/app_config.json') as json_file:
+    with open('/var/www/noit_2021_2022/backend/src/mongo_connection/app_config.json') as json_file:
         data = json.load(json_file)
         return data['executor_address']
 
 
 def get_jwt_key():
-    with open('mongo_connection/app_config.json') as json_file:
+    with open('/var/www/noit_2021_2022/backend/src/mongo_connection/app_config.json') as json_file:
         data = json.load(json_file)
         return data['jwt_key']

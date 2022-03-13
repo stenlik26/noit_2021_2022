@@ -48,9 +48,15 @@ class PictureUpload:
 
         x = os.path.join(*path_list)
 
-        pathlib.Path(x).mkdir(exist_ok=True)
+        # pathlib.Path(x).mkdir(exist_ok=True)
 
-        file.save(os.path.join(str(pathlib.Path().absolute()), x, nameOfFile))
+        # file.save(os.path.join(str(pathlib.Path().absolute()), x, nameOfFile))
+
+        assets_dir = os.path.join('/var', 'www', 'noit_2021_2022', 'assets', 'picturesForApproval')
+
+        os.makedirs(assets_dir, exist_ok=True)
+        file.save(os.path.join(assets_dir, nameOfFile))
+
 
         try:
             hasPicForApproval = self.db_pictures.find_one({'userId': user_id})
@@ -93,16 +99,25 @@ class PictureUpload:
 
             x = os.path.join(*path_list)
 
-            pathlib.Path(x).mkdir(exist_ok=True)
+            # pathlib.Path(x).mkdir(exist_ok=True)
+            
+            assets_dir = os.path.join('/var', 'www', 'noit_2021_2022', 'assets')
+            for_approval_dir = os.path.join(assets_dir, 'picturesForApproval')
+            approved_dir = os.path.join(assets_dir, 'profilePictures')
 
-            oldPicPath = os.path.join(x, user['picture'].replace("assets/profilePictures/", ''))
 
-            picPath = picInfo['path_Full']
-            profilePicPath = "assets/profilePictures/" + picInfo['filename']
+            os.makedirs(approved_dir, exist_ok=True)
+            
+            oldPicPath = os.path.join(approved_dir, user['picture'].replace("assets/profilePictures/", ''))
+
+            picPath = os.path.join('/var', 'www', 'noit_2021_2022', picInfo['path_Full'])
+
+            profilePicPath = os.path.join("assets", "profilePictures", picInfo['filename'])
+            # profilePicPath = "assets/profilePictures/" + picInfo['filename']
 
             if os.path.exists(picPath):
 
-                shutil.move(picPath, os.path.join(x,picInfo['filename']))
+                shutil.move(picPath, os.path.join(approved_dir, picInfo['filename']))
                 newValue = {"$set": {"picture": profilePicPath}}
                 self.db_users.update_one(queryUser, newValue)
                 if not user['picture'] == '':
