@@ -1,3 +1,5 @@
+import projectConfig from '../assets/conf.json';
+
 export class UserInfo{
     username: string = '';
     picture: string = '';
@@ -11,7 +13,7 @@ export class UserInfo{
     {
         this.username = user_json.name;
         if(user_json.picture != ""){
-            this.picture = user_json.picture;
+            this.picture = projectConfig.picture_url + user_json.picture;
         }
         else{
             this.picture = '../assets/icons/user.png';
