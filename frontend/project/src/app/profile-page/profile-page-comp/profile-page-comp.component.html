@@ -1,74 +1,77 @@
-<div id="content" class="grid-container panel">
+<div class="wrapper panel-darkbg">
+
+  <div id="content" class="grid-container panel">
 
     <div id='profilePic'>
-        <img class="thumbnail" src="{{profile_info.get_picture()}}">
+      <img class="thumbnail" src="{{profile_info.get_picture()}}">
     </div>
 
 
     <div id="options" class="grid-container">
-        <div class="itemsClass">
-            <h5>Потребителско име: <b>{{profile_info.get_username()}}</b></h5>
-            <button (click)="show_change_modal(1)" *ngIf="my_profile" class="button-profile button-green ">Промяна</button>
-        </div>
+      <div class="itemsClass">
+        <h5>Потребителско име: <b>{{profile_info.get_username()}}</b></h5>
+        <button (click)="show_change_modal(1)" *ngIf="my_profile" class="button-profile button-green ">Промяна</button>
+      </div>
 
-        <div class="itemsClass">
-            <h5>Имейл: {{profile_info.get_email()}}</h5>
-        </div>
+      <div class="itemsClass">
+        <h5>Имейл: {{profile_info.get_email()}}</h5>
+      </div>
 
-        <div class="itemsClass">
-            <h5>Информация: {{profile_info.get_description()}}</h5>
-            <button (click)="show_change_modal(2)" *ngIf="my_profile" class="button-profile button-green "
-            >Промяна</button>
-        </div>
+      <div class="itemsClass">
+        <h5>Информация: {{profile_info.get_description()}}</h5>
+        <button (click)="show_change_modal(2)" *ngIf="my_profile" class="button-profile button-green ">Промяна</button>
+      </div>
 
     </div>
 
     <div class="bottomButtons">
-        <button *ngIf="my_profile" routerLink="/upload_picture" class="button-profile button-secondary ">Промяна на
-            профилна снимка</button>
-        <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile button-secondary ">
-            Администраторски панел</button>
-    
+      <button *ngIf="my_profile" routerLink="/upload_picture" class="button-profile button-secondary ">Промяна на
+        профилна снимка</button>
+      <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile button-secondary ">
+        Администраторски панел</button>
+
     </div>
 
     <div class="itemsClass">
       <h5>{{friends_list_status}}</h5>
-      <button *ngIf="friend_status_message === 'not_friends'" (click)='send_friend_request()' class="button-secondary">Изпращане на покана за приятелство</button>
+      <button *ngIf="friend_status_message === 'not_friends'" (click)='send_friend_request()'
+        class="button-secondary">Изпращане на покана за приятелство</button>
+    </div>
   </div>
-</div>
 
-<div id="solutions_table">
+  <div id="solutions_table">
     <h5>Споделени задачи:</h5>
     <ul *ngIf="has_shared_solutions">
-        <table class="table table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Задача</th>
-                <th class="text-center" scope="col">Дата</th>
-                <th class="text-center" scope="col">Език</th>
-                <th class="text-center" scope="col">Резултат от тестове</th>
-                <th class="text-center"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <ng-container *ngFor="let sol of shared_solutions">
-                <tr>
-            
-                  <td class="align-middle">{{sol.problem_title}}</td>
-                  <td class="text-center align-middle">{{sol.timestamp}}</td>
-                  <td class="text-center align-middle">{{sol.language}}</td>
-                  <td class="text-center align-middle">{{sol.get_test_score()}}</td>
-                  <td class="text-center align-middle"><button class="button-profile button-green" routerLink="/show_solution/{{sol.code_id}}">Преглед</button></td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-    </ul>
-   
-    <p *ngIf="!has_shared_solutions"><i>Потребителят няма споделени задачи.</i></p>
-</div>
+      <table class="table table-dark">
+        <thead>
+          <tr>
+            <th scope="col">Задача</th>
+            <th class="text-center" scope="col">Дата</th>
+            <th class="text-center" scope="col">Език</th>
+            <th class="text-center" scope="col">Резултат от тестове</th>
+            <th class="text-center"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let sol of shared_solutions">
+            <tr>
 
-<div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <td class="align-middle">{{sol.problem_title}}</td>
+              <td class="text-center align-middle">{{sol.timestamp}}</td>
+              <td class="text-center align-middle">{{sol.language}}</td>
+              <td class="text-center align-middle">{{sol.get_test_score()}}</td>
+              <td class="text-center align-middle"><button class="button-profile button-green"
+                  routerLink="/show_solution/{{sol.code_id}}">Преглед</button></td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </ul>
+
+    <p *ngIf="!has_shared_solutions"><i>Потребителят няма споделени задачи.</i></p>
+  </div>
+
+  <div class="modal fade" id="change_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -76,12 +79,14 @@
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <p>{{this.status}}</p>
-            <input id="change_input">
+          <p>{{this.status}}</p>
+          <input id="change_input">
         </div>
         <div class="modal-footer">
-            <button (click)="change_info()" type="button" class="button-profile button-green">Промени</button>
+          <button (click)="change_info()" type="button" class="button-profile button-green">Промени</button>
         </div>
       </div>
     </div>
+  </div>
+
 </div>

@@ -1,9 +1,10 @@
 .wrapper{
     gap: 1em;
     width: 98%;
-    height: 39vh;
     margin-bottom: 2%;
     margin-left: 1%;
+    padding: 1em;
+    border-radius: 0.5em;
 }
 
 .to_group_button{
@@ -40,7 +41,6 @@
 
 .group_bar{
     display: flex;
-    background-color: #202225;
     padding: 1em;
     margin: 1em;
     border-radius: 0.5em;
