@@ -279,6 +279,14 @@ export class GroupModulePageComponent implements OnInit {
   }
 
   send_group_invites(): void{
+
+    if(this.users_to_invite.length === 0)
+    {
+      this.success_modal_show(this.invite_modal, 'Няма избрани потребители.');
+      return;
+    }
+    
+
     const requestBody = {
       token: UserTokenHandling.getUserToken(),
       user_id: UserTokenHandling.getUserId(),

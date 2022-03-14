@@ -5,7 +5,18 @@
     color: white;
     height: 2.5em;
 }
-  
+
+
+.wrapper{
+    gap: 1em;
+    width: 98%;
+    margin-bottom: 2%;
+    margin-left: 1%;
+    padding-top: 1em;
+    border-radius: 0.5em;
+}
+
+
 .selector_box:focus{
     border: 0.1em solid;
     border-radius: .5em;

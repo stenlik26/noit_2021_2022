@@ -19,6 +19,10 @@ export class FriendsModulePageComponent implements OnInit {
   search_modal: Modal = undefined!;
   all_users: Array<UserInfo> = new Array<UserInfo>();
   my_friends: Array<UserInfo> = new Array<UserInfo>();
+  remove_friend_id: string = '';
+  remove_friend_name: string = '';
+  remove_friend_modal: any;
+  no_friends: boolean = false;
 
   ngOnInit(): void {
     if (!UserTokenHandling.isUserLoggedIn()) {
@@ -30,6 +34,8 @@ export class FriendsModulePageComponent implements OnInit {
     this.invites_modal = new Modal(document.getElementById('invites_modal'));
     //@ts-ignore
     this.search_modal = new Modal(document.getElementById('search_modal'));
+    //@ts-ignore
+    this.remove_friend_modal = new Modal(document.getElementById('remove_ask_again_modal'));
     this.get_my_friends();
   }
 
@@ -52,6 +58,13 @@ export class FriendsModulePageComponent implements OnInit {
           console.log(this.my_invites);
         }
       });
+  }
+
+  remove_freind_modal(name: string, id: string)
+  {
+    this.remove_friend_name = name;
+    this.remove_friend_id = id;
+    this.remove_friend_modal.show();
   }
 
   show_my_invites(): void{
@@ -158,18 +171,23 @@ export class FriendsModulePageComponent implements OnInit {
     })
       .then(response => response.json())
       .then(json => {
+        this.no_friends = (json.message.length === 0);
+
         json.message.forEach((element: any) => {
+
           this.my_friends.push(new UserInfo(element))
         });
       });
   }
 
-  remove_friend(friend_id: string): void{
+  remove_friend(): void{
+
+    this.remove_friend_modal.hide();
     
     const requestBody = {
       token: UserTokenHandling.getUserToken(),
       user_id: UserTokenHandling.getUserId(),
-      friend_id: friend_id
+      friend_id: this.remove_friend_id
     };
 
     fetch((projectConfig.api_url + 'remove_friend'), {
