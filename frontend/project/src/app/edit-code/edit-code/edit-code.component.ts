@@ -149,27 +149,19 @@ export class EditCodeComponent implements OnInit {
       }
     }
 
-
     const element = document.createElement('a');
-    
-    //A blob is a data type that can store binary data
-    // "type" is a MIME type
-    // It can have a different value, based on a file you want to save
+
     const blob = new Blob([content], { type: 'plain/text' });
 
-    //createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
     const fileUrl = URL.createObjectURL(blob);
     
-    //setAttribute() Sets the value of an attribute on the specified element.
-    element.setAttribute('href', fileUrl); //file location
-    element.setAttribute('download', filename); // file name
+    element.setAttribute('href', fileUrl);
+    element.setAttribute('download', filename);
     element.style.display = 'none';
     
-    //use appendChild() method to move an element from one element to another
     document.body.appendChild(element);
     element.click();
     
-    //The removeChild() method of the Node interface removes a child node from the DOM and returns the removed node
     document.body.removeChild(element);
   }
 
