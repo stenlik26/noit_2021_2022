@@ -22,6 +22,13 @@ export class EditCodeComponent implements OnInit {
   toastEl: any;
   toast_content: any;
 
+  language_extention: {[name: string]:string} = {
+    "java": ".java",
+    "python": ".py",
+    "cpp": ".cpp"
+
+  }
+
 
   constructor(private activatedRoute: ActivatedRoute) {
     this.problem_id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -123,6 +130,38 @@ export class EditCodeComponent implements OnInit {
       json.title);
     return problem_information;
   }
+
+  download_code()
+  {
+    //@ts-ignore
+    const content = this.editor.getValue();
+
+    const filename_field: HTMLInputElement = document.getElementById("filename_input") as HTMLInputElement;
+    let filename = filename_field.value;
+
+    if(filename === "" || filename === null)
+    {
+      filename = "code";
+    }
+
+    filename += this.language_extention[this.getLanguageFromSelect()];
+
+    const element = document.createElement('a');
+
+    const blob = new Blob([content], { type: 'plain/text' });
+
+    const fileUrl = URL.createObjectURL(blob);
+    
+    element.setAttribute('href', fileUrl);
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    
+    document.body.appendChild(element);
+    element.click();
+    
+    document.body.removeChild(element);
+  }
+
 
   upload_code_output(json: any)
   {
