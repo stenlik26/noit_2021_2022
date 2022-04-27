@@ -22,6 +22,13 @@ export class EditCodeComponent implements OnInit {
   toastEl: any;
   toast_content: any;
 
+  language_extention: {[name: string]:string} = {
+    "java": ".java",
+    "python": ".py",
+    "cpp": ".cpp"
+
+  }
+
 
   constructor(private activatedRoute: ActivatedRoute) {
     this.problem_id = this.activatedRoute.snapshot.paramMap.get('id');
@@ -132,22 +139,12 @@ export class EditCodeComponent implements OnInit {
     const filename_field: HTMLInputElement = document.getElementById("filename_input") as HTMLInputElement;
     let filename = filename_field.value;
 
-    switch(this.getLanguageFromSelect())
+    if(filename === "" || filename === null)
     {
-      case "cpp":
-        {
-          filename += ".cpp";
-          break;
-        }
-      case "java":{
-        filename += ".java";
-        break;
-      }
-      case "python":{
-        filename += ".py";
-        break;
-      }
+      filename = "code";
     }
+
+    filename += this.language_extention[this.getLanguageFromSelect()];
 
     const element = document.createElement('a');
 
