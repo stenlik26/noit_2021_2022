@@ -33,6 +33,16 @@
 
     </button>
 
+    <button class="button-green buttons" (click)="show_github_gist_modal()">
+      <p>
+        <i class="fab fa-github"></i>
+        Запази в Github Gist
+      </p>
+
+    </button>
+
+
+
     <button class="button-green buttons" (click)="download_code()">
       <p>
         <i class="fas fa-download"></i>
@@ -72,4 +82,43 @@
     </div>
   </div>
 
+</div>
+
+
+<div class="modal fade" id="github_gist_modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal_label">Запазване в Github Gists</h4>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div id="github_gist_modal" class="modal-body">
+
+        <div *ngIf="has_github_token && !should_wait" id="github_has_token">
+          
+          <div id="modal_body_text">
+            <p>Текущият код ще бъде качен като Github Gist във вашият профил.</p>
+            <br>
+            <label for="github_desc">Описание: </label>
+            <textarea type="text" rows=4 id="github_desc"></textarea>
+            <label for="public_checkbox">Публичен: <input id="public_checkbox" type="checkbox"></label>
+          </div>
+        </div>
+
+        <div *ngIf="!has_github_token  && !should_wait">
+          <p>Трябва да зададете вашият Github токен преди да използвате функцията Github Gists.</p>
+          <br>
+          <p>Това можете да го направите от профил страницата.</p>
+        </div>
+
+        <div *ngIf="should_wait"><p id="wait_text">Моля изчакайте...</p></div>
+
+
+      </div>
+      <div class="modal-footer">
+        <button *ngIf="has_github_token && !should_wait" (click)="create_github_gist()"
+          class="gr_btn button-green">Запази</button>
+      </div>
+    </div>
+  </div>
 </div>

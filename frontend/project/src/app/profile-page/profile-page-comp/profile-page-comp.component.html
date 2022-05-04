@@ -29,6 +29,7 @@
         профилна снимка</button>
       <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile button-secondary ">
         Администраторски панел</button>
+      <button (click)="show_github_modal()" class="button-profile button-secondary">Github token</button>
 
     </div>
 
@@ -88,5 +89,34 @@
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="github_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="github_modal">Задаване на Github token</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>За да използвате запазването на код в Github gists, трябва да въведете вашият
+            <a
+              href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">
+              Github Personal Access Token.
+            </a>
+          </p>
+
+          <p *ngIf="has_github_token">Текущ Github токен: <b>{{this.github_token}}</b></p>
+          <p *ngIf="!has_github_token">Нямате зададен Github токен</p>
+
+          <input id="token_input">
+
+        </div>
+        <div class="modal-footer">
+          <button (click)="set_github_token()" type="button" class="button-profile button-green">Запази</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 </div>

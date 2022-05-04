@@ -4,6 +4,8 @@ import {Toast} from "bootstrap";
 import {ProblemInformation} from "../../problem_information";
 import {UserTokenHandling} from "../../user_token_handling";
 import projectConfig from "../../../assets/conf.json";
+import { Octokit } from 'octokit';
+import { Modal } from 'bootstrap';
 
 @Component({
   selector: 'app-edit-code',
@@ -21,6 +23,10 @@ export class EditCodeComponent implements OnInit {
   toast: any;
   toastEl: any;
   toast_content: any;
+  github_gist_modal: any;
+  has_github_token: boolean = false;
+  github_token: string = "";
+  should_wait: boolean = false;
 
   language_extention: {[name: string]:string} = {
     "java": ".java",
@@ -45,6 +51,9 @@ export class EditCodeComponent implements OnInit {
     //@ts-ignore
     this.toast = new Toast(this.toastEl);
     console.log(this.toast);
+    //@ts-ignore
+    this.github_gist_modal = new Modal(document.getElementById("github_gist_modal"));
+
   }
 
   // @ts-ignore
@@ -67,6 +76,80 @@ export class EditCodeComponent implements OnInit {
     else{
       stdout_area.value = "Грешка при заявката";
     }
+  }
+
+  async create_github_gist(){
+      //@ts-ignore
+      const content = this.editor.getValue();
+
+      const filename_field: HTMLInputElement = document.getElementById("filename_input") as HTMLInputElement;
+      let filename = filename_field.value;
+  
+      if(filename === "" || filename === null)
+      {
+        filename = "code" + Date.now();
+      }
+  
+      filename += this.language_extention[this.getLanguageFromSelect()];
+
+      console.log(filename);
+      
+      const octokit = new Octokit({
+        auth: this.github_token
+      })
+
+      const description_Text = (document.getElementById("github_desc") as HTMLTextAreaElement).value;
+
+      const is_public = (document.getElementById("public_checkbox") as HTMLInputElement).checked;
+
+      this.should_wait = true;
+
+
+      const resp = await octokit.request("POST /gists", {
+        files:{
+          [filename]: {"content": content}
+        },
+        description: description_Text,
+        public: is_public
+      })
+
+      window.open(resp.data.html_url);
+      
+      (document.getElementById("wait_text") as HTMLParagraphElement).textContent = "Кодът е успешно качен в Github Gists.";
+
+  }
+
+  show_github_gist_modal(): void
+  {
+    this.should_wait = false;
+    const requestBody = {
+      user_id: UserTokenHandling.getUserId(),
+      token: UserTokenHandling.getUserToken()
+    }
+    
+    fetch((projectConfig.api_url + 'get_github_token'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status === 'OK')
+        {
+          if(json.message != "-1")
+          {
+            this.has_github_token = true;
+            this.github_token = json.message;
+          }
+          else{
+            this.has_github_token = false;
+            this.github_token = "";
+          }
+        } 
+      });
+
+
+    this.github_gist_modal.show();
   }
 
   showToast(message: string){
