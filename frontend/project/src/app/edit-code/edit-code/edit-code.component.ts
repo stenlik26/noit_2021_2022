@@ -31,7 +31,9 @@ export class EditCodeComponent implements OnInit {
   language_extention: {[name: string]:string} = {
     "java": ".java",
     "python": ".py",
-    "cpp": ".cpp"
+    "cpp": ".cpp",
+    "js": ".js",
+    "c": ".c"
 
   }
 
