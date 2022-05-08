@@ -24,6 +24,9 @@ export class ProfilePageCompComponent implements OnInit {
   user_is_me_and_admin: boolean = false;
   friends_list_status: string = '';
   friend_status_message: string = '';
+  github_modal: any;
+  github_token: string = '';
+  has_github_token: boolean = false;
 
   constructor(private activatedRoute: ActivatedRoute) { 
     if (!UserTokenHandling.isUserLoggedIn()) {
@@ -39,6 +42,8 @@ export class ProfilePageCompComponent implements OnInit {
     this.get_shared_solutions();
     //@ts-ignore
     this.change_modal = new Modal(document.getElementById('change_modal'));
+    //@ts-ignore
+    this.github_modal = new Modal(document.getElementById('github_modal'));
     if (this.my_profile)
     {
       this.check_for_admin_panel_access();
@@ -117,6 +122,64 @@ export class ProfilePageCompComponent implements OnInit {
         break;
 
     }
+  }
+
+  show_github_modal():void {
+
+    const requestBody = {
+      user_id: this.profile_id,
+      token: UserTokenHandling.getUserToken()
+    }
+    
+    fetch((projectConfig.api_url + 'get_github_token'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status === 'OK')
+        {
+          if(json.message != "-1")
+          {
+            this.has_github_token = true;
+            this.github_token = json.message;
+          }
+          else{
+            this.has_github_token = false;
+            this.github_token = "";
+          }
+          this.github_modal.show();
+        } 
+      });
+
+
+
+
+  }
+
+  set_github_token(): void{
+
+    let input_field = document.getElementById('token_input') as HTMLInputElement;
+
+    const requestBody = {
+      github_token: input_field.value,
+      user_id: this.profile_id,
+      token: UserTokenHandling.getUserToken()
+    }
+    
+    fetch((projectConfig.api_url + 'set_github_token'), {
+      method: 'POST',
+      body: JSON.stringify(requestBody),
+      headers: { 'Content-type': 'application/json' }
+    })
+      .then(response => response.json())
+      .then(json => {
+        if(json.status === 'OK')
+        {
+          this.github_modal.hide();
+        } 
+      });
   }
 
   change_info(): void{

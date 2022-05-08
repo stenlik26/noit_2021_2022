@@ -15,6 +15,7 @@ from backend.src.admin_panel.admin_panel import AdminPanelClass
 from backend.src.handle_user.handle_user import HandleUserClass
 from backend.src.upload_picture.upload_picture import PictureUpload
 from backend.src.friends_module.friends_module import FriendsModule
+from backend.src.gist_handler.gist_handler import GistModule
 
 app = Flask(__name__)
 flask_cors.CORS(app)
@@ -1044,6 +1045,40 @@ def get_number_of_tasks():
     db = get_connection()['Main']['Problems']
     problems = list(db.find({'public': True}))
     return {'status': 'OK', 'message': len(problems)}
+
+
+@app.route('/get_github_token', methods=['POST'])
+def get_github_token():
+    inst = GistModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.get_github_token(post_info['user_id']))
+
+
+@app.route('/set_github_token', methods=['POST'])
+def set_github_token():
+    inst = GistModule(get_connection())
+    post_info = request.get_json()
+
+    if not check_for_post_params(('token', 'user_id', 'github_token'), post_info):
+        return jsonify({'status': 'error_missing_params', 'message': 'Needed params are missing'})
+
+    if check_if_empty(('token', 'user_id', 'github_token'), post_info):
+        return jsonify({'status': 'error_fields_not_filled', 'message': 'Needed fields are empty'})
+
+    if not is_user_valid(post_info['token'], post_info['user_id']):
+        return jsonify({'status': 'error_invalid_user', 'message': 'User is invalid'})
+
+    return jsonify(inst.set_github_token(post_info['github_token'], post_info['user_id']))
 
 
 @app.route('/', methods=['POST', 'GET'])
