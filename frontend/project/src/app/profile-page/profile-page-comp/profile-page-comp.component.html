@@ -29,7 +29,7 @@
         профилна снимка</button>
       <button *ngIf="user_is_me_and_admin" routerLink="/admin_page" class="button-profile button-secondary ">
         Администраторски панел</button>
-      <button (click)="show_github_modal()" class="button-profile button-secondary">Github token</button>
+      <button *ngIf="my_profile" (click)="show_github_modal()" class="button-profile button-secondary">Github token</button>
 
     </div>
 
